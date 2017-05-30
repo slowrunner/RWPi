@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Alan Added to Python .gitignore
+# ignore captured jpgs
+*.[jJ][pP][gG]
+
 # C extensions
 *.so
 
