@@ -26,7 +26,6 @@ import PDALib
 import myPDALib
 import myPyLib
 import time
-from currentsensor import current_sense
 
 
 ServoDwellTime = 0.01  #seconds to stay at each position
@@ -36,13 +35,13 @@ PANSERVO = 1
 
 ServoStep = 10  # must be integer for range func
 
-PanLimitL = 2000
+PanLimitL = 2500
 PanCenter = 1500
-PanLimitR = 1000
+PanLimitR =  630
 
-TiltLimitUp = 700
+TiltLimitUp = 700  #550
 TiltCenter = 1375
-TiltLimitDn = 1900
+TiltLimitDn = 1900 #2435
 
 
 def setup_servo_pins():
@@ -74,7 +73,6 @@ def main():
     for panpos in range(PanCenter,PanLimitL+1, ServoStep ):   # move from center to full left
       PDALib.servoWrite(PANSERVO,panpos)                    # set to new position
       print "panpos: %d" % panpos
-      current_sense(10,1)
       time.sleep(ServoDwellTime)
 
     print "At left limit"
@@ -83,7 +81,6 @@ def main():
     for panpos in range(PanLimitL,PanLimitR-1, -ServoStep ):   # move from full left to full right
       PDALib.servoWrite(PANSERVO,panpos)                 # set to new position
       print "panpos: %d" % panpos
-      current_sense(10,1)
       time.sleep(ServoDwellTime)
 
     print "At right limit"
@@ -92,7 +89,6 @@ def main():
     for panpos in range(PanLimitR, PanCenter, ServoStep ):   # move from full right to center
       PDALib.servoWrite(PANSERVO,panpos)                 # set to new position
       print "panpos: %d" % panpos
-      current_sense(10,1)
       time.sleep(ServoDwellTime)
 
     print "At center"
@@ -102,7 +98,6 @@ def main():
     for tiltpos in range(TiltCenter,TiltLimitUp-1, -ServoStep ):   # move from center to full up
       PDALib.servoWrite(TILTSERVO,tiltpos)                      # set to new position
       print "tiltpos: %d" % (tiltpos)
-      current_sense(10,1)
       time.sleep(ServoDwellTime)
 
     print "At full up"
@@ -111,7 +106,6 @@ def main():
     for tiltpos in range(TiltLimitUp,TiltLimitDn+1,ServoStep ):   # move from full up to full down
       PDALib.servoWrite(TILTSERVO, tiltpos)                 # set to new position
       print "tiltpos: %d" % (tiltpos)
-      current_sense(10,1)
       time.sleep(ServoDwellTime)
 
     print "At full down"
@@ -120,16 +114,13 @@ def main():
     for tiltpos in range(TiltLimitDn, TiltCenter, -ServoStep ):   # move from full down back to center
       PDALib.servoWrite(TILTSERVO, tiltpos)                     # set to new position
       print "tiltpos: %d" % (tiltpos)
-      current_sense(10,1)
       time.sleep(ServoDwellTime)
 
     print "At center"
     time.sleep(1)
     center_servos()
-    current_sense(10,1)
     servos_off()
     print "servos off"
-    current_sense(10,1)
     print "tiltPan Test Main end"
 
   except SystemExit:

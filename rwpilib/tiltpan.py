@@ -35,13 +35,13 @@ PANSERVO = 1
 
 ServoStep = 10  # must be integer for range func
 
-PanLimitL = 2000
+PanLimitL = 2500
 PanCenter = 1500
-PanLimitR = 1000
+PanLimitR =  630
 
-TiltLimitUp = 700
+TiltLimitUp = 700  #550
 TiltCenter = 1375
-TiltLimitDn = 1900
+TiltLimitDn = 1900 #2435
 
 
 def setup_servo_pins():

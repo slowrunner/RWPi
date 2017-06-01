@@ -79,11 +79,33 @@ def clearCallback():
     hPi_Callback.cancel()
 
 
+#
+# read SPI data from MCP3208 chip, 8 possible adc's (0 thru 7)
+#
+
+def analogRead12bit(adcnum):
+ with PDALib.dio_lock:
+  if adcnum < 0:
+    return -1   
+  if adcnum > 7:
+    return -1   
+  PDALib.spi.open(0,1) 
+  r = PDALib.spi.xfer2(PDALib.req12[adcnum])
+  PDALib.spi.close()
+  adcout = ((r[1] & 0b1111) << 8) + r[2]
+  return adcout
+
+
 
 # ##################
 #  readVoltage(adcPin)  return voltage in Volts
 #
-VperBit = (4.87/1024)  #4.89 gives same value as multi-meter at 4.68v
+# MCP3208 12bit
+VperBit = (4.94/4095)    # measured 5v with multi meter at ADC
+
+# MCP3008  10bit  (original ADC with PiDroidAlpha)
+# VperBit = (4.87/1024)  #4.89 gives same value as multi-meter at 4.68v
+
 #
 # adcPin values between 0..7 (others return -1)
 # returns voltage in Volts or -1 Error
@@ -91,6 +113,9 @@ VperBit = (4.87/1024)  #4.89 gives same value as multi-meter at 4.68v
 def readVoltage(adcPin):
   if ( (adcPin <0) | (adcPin>7) ):
     return -1
-  return (VperBit * PDALib.analogRead(adcPin))
+  # obsolete 10bit
+  # return (VperBit * PDALib.analogRead(adcPin))
+
+  return (VperBit * analogRead12bit(adcPin))
   
 

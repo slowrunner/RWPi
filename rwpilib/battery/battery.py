@@ -113,7 +113,11 @@ def printLifeTable():
   for v in testVs:
     print "%0.1f  %0.1f" % (v, hoursOfLifeRemaining(v))
 
+BatteryCutOff = 6.5
 
+def batteryTooLow():
+  if (volts() < BatteryCutOff): return True
+  else:                         return False
 
 
 # ##### MAIN ######
@@ -123,6 +127,7 @@ def main():
       print "\n"
       # printLifeTable()
       printStatus()
+      print "batteryTooLow(): ",batteryTooLow()
       time.sleep(1)
   #end while
   myPDALib.PiExit()

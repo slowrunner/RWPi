@@ -6,6 +6,7 @@ __pycache__/
 # Alan Added to Python .gitignore
 # ignore captured jpgs
 *.[jJ][pP][gG]
+*.bak
 
 # C extensions
 *.so

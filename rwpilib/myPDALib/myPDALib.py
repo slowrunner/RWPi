@@ -100,11 +100,11 @@ def analogRead12bit(adcnum):
 # ##################
 #  readVoltage(adcPin)  return voltage in Volts
 #
-# MCP3008
-# VperBit = (4.87/1024)  #4.89 gives same value as multi-meter at 4.68v
-
 # MCP3208 12bit
 VperBit = (4.94/4095)    # measured 5v with multi meter at ADC
+
+# MCP3008  10bit  (original ADC with PiDroidAlpha)
+# VperBit = (4.87/1024)  #4.89 gives same value as multi-meter at 4.68v
 
 #
 # adcPin values between 0..7 (others return -1)
@@ -113,6 +113,9 @@ VperBit = (4.94/4095)    # measured 5v with multi meter at ADC
 def readVoltage(adcPin):
   if ( (adcPin <0) | (adcPin>7) ):
     return -1
+  # obsolete 10bit
+  # return (VperBit * PDALib.analogRead(adcPin))
+
   return (VperBit * analogRead12bit(adcPin))
   
 

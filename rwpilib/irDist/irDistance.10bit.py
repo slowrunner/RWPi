@@ -1,7 +1,8 @@
 #!/usr/bin/python
 #
-# irDist.py   IR DISTANCE SENSOR OBJECT
-#
+# irDistance.10bit.py   IR DISTANCE SENSOR OBJECT - 10 Bit version
+#  This file is for Pi Droid Alpha with original MCP3008 which was 10 bit 
+#         (I replaced with 3208 12-bit device)
 # At 12" -   7 readings = 3% uncertainty (0.4), 75 readings = 1% (0.1 inch)
 # At 48" - 150 readings = 3% uncertainty (1.4), 75 readings = 6% (3.0 inches)
 

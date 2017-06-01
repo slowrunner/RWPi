@@ -14,6 +14,7 @@ from bumpersClass import Bumpers
 import time
 from datetime import datetime
 import os
+import sys
 
 # Return CPU temperature as a character string                                      
 def getCPUtemperature():
@@ -77,6 +78,10 @@ def main():
   try:
     while True:
         printStatus()
+        if (battery.batteryTooLow()):
+          print ("BATTERY %.2f volts BATTERY - SHUTTING DOWN NOW" % battery.volts())
+          os.system("sudo shutdown -h now")
+          sys.exit(0)
         time.sleep(3)
     #end while
   except SystemExit:

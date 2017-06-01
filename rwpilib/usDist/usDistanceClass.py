@@ -32,7 +32,7 @@ class UltrasonicDistance:
 
   # My configuration
   TrigPin = 26    #GPIO26 is pin 37 of the PiB+ and Pi3B 40pin connector
-  EchoPin = 5	 #PDALib "pin" = Servo3 connector (of 1-8) (GPIO18)
+  EchoPin = 5	 #PDALib "pin" = Servo6 connector (of 1-8) (GPIO23)
 
  
 

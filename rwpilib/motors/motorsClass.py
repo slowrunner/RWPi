@@ -763,11 +763,11 @@ def main():
     trn1=Motors.CCW90
     trn2=Motors.CW180
     trn3=Motors.CCW90
-    motors.turn(trn1, Motors.MEDIUM)
+    motors.turn(trn1)
     time.sleep(5)
-    motors.turn(trn2, Motors.MEDIUM)
+    motors.turn(trn2)
     time.sleep(5)
-    motors.turn(trn3, Motors.MEDIUM)
+    motors.turn(trn3)
     time.sleep(5)
 
    
