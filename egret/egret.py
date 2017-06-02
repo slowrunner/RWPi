@@ -3,18 +3,18 @@
 # egret.py   EGRET ROBOT
 #
 
-import PDALib
-import myPDALib
-import myPyLib
-from bumpersClass import Bumpers
-from usDistanceClass import UltrasonicDistance
-import motorsClass
-from motorsClass import Motors
+import rwpilib.PDALib as PDALib
+import rwpilib.myPDALib as myPDALib
+import rwpilib.myPyLib as myPyLib
+from rwpilib.bumpersClass import Bumpers
+from rwpilib.usDistanceClass import UltrasonicDistance
+import rwpilib.motorsClass
+from rwpilib.motorsClass import Motors
 import time
 import traceback
-import tiltpan
-import printStatus
-import encoders
+import rwpilib.tiltpan as tiltpan
+import rwpilib.printStatus as printStatus
+import rwpilib.encoders as encoders
 
 
 class Robot():
