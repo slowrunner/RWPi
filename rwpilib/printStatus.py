@@ -51,7 +51,7 @@ def PrintStatus(self):
   print  "irDistance.inInches: %0.1f" %  irDistance.inInches()
   print  "usDistance.inInches: %0.1f" %  self.usDistance.inInches()
   print  "bumpers:",self.bumpers.toStr(self.bumpers.status())
-
+  print  "\n"
 
 
 # ##### MAIN ######

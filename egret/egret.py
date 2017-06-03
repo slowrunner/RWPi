@@ -24,10 +24,14 @@ class Robot():
   THINKING=2
   WALKING=3
   STOPPING=4
-  AVOIDING=5
-  BUMPED=6
-  ESCAPING=7
-  DONE=8
+  STOPPED=5
+  AVOIDING=6
+  BUMPED=7
+  ESCAPING=8
+  MOVING=9
+  EGRET=10
+  SHUTDOWN=11
+  DONE=12
 
   lastState=OFF      # create an instance var self.lastState
   currentState=OFF
@@ -38,11 +42,13 @@ class Robot():
   def newState(self,new):
     self.lastState = self.currentState
     self.currentState = new
+    print "New state: %s" % str(self.currentState)
     
   def revertState(self,old):
     self.currentState = self.lastState
     self.lastState = old
- 
+    print "New state: %s" % str(self.currentState)
+
   MyDiaInInches=7.0
 
   def __init__(self):
@@ -88,36 +94,35 @@ class Robot():
               self.revertState(Robot.ESCAPING)
             else:
               escapeSpin = Motors.CCW45
+          self.revertState(Robot.ESCAPING)
               
   def check_clear(self,bodyLengths=2):
-    print "Checking if path is clear"
+    print "Checking if path is clear for %d bodyLengths" % bodyLengths
     usDist = self.usDistance.inInches(UltrasonicDistance.AVERAGE)
     clearLengths = int(usDist / self.MyDiaInInches)
     print "Forward path is clear for: %d lengths" % clearLengths
-    return (clearLengths > bodyLengths)
+    return (clearLengths >= bodyLengths)
     
               
   def do_avoid(self,bodyLengths=2):
-    while ((check_clear(bodyLengths) != True):
+    while (self.check_clear(bodyLengths) != True):
         if (self.currentState != Robot.AVOIDING): 
             self.newState(Robot.AVOIDING)
-            # Choose an avoidance spin (hard coded right now)
-            avoidSpin = Motors.CW45  
-            # spin to avoidDir
-            if (avoidSpin != Motors.NONE):
-                # print "avoidSpin:",avoidSpin
-                print "\n* Turning to %s" % self.motors.dirToStr(avoidSpin)
-                self.motors.turn(avoidSpin)
-                self.motors.waitForStopped()
+        # Choose an avoidance spin (hard coded right now)
+        avoidSpin = Motors.CW45  
+        # spin to avoidDir
+        print "\n* Turning to %s" % self.motors.dirToStr(avoidSpin)
+        self.motors.turn(avoidSpin)
+        self.motors.waitForStopped()
     if (self.currentState == Robot.AVOIDING):
         self.revertState(Robot.AVOIDING)
           
   def be_THINKING(self):
+    numThoughts=0
     if (self.currentState != Robot.THINKING):
         print "\nI'm THINKING now"
         self.newState(Robot.THINKING)
         self.printStatus(self)
-        numThoughts=0
     while (numThoughts < 300):    # think for about 30 seconds
         numThoughts += 1    
         if (self.bumpers.status() != Bumpers.NONE):
@@ -127,8 +132,9 @@ class Robot():
             self.do_escape()  
             self.revertState(Robot.THINKING)              
         time.sleep(0.1)      
-     
-'''  egret(): egret inspired behavior
+    self.revertState(Robot.THINKING)
+
+  '''  egret(): egret inspired behavior
   loop until "tired*":
      (Look straight ahead)
      loop until "tired of standing here":
@@ -143,19 +149,21 @@ class Robot():
 * tired: remaining battery life estimated to be 20%
 * path clear:  ultrasonic distance > 4 body diameters
 * forward some:   3 body diameters
- '''
- 
+  '''
+
   def be_egret(self):
+    self.newState(Robot.EGRET)
     while (self.currentState != Robot.DONE):
         self.be_THINKING()
-        if (check_clear(4) == True):
+        self.newState(Robot.EGRET)
+        if (self.check_clear(4) == True):
             self.newState(Robot.MOVING)
-            self.motors.travel(self.MyDiaInInches*3,Motors.MEDIUM)
+            self.motors.travel(self.MyDiaInInches*3,Motors.FAST)
             self.motors.waitForStopped()
             self.newState(Robot.STOPPED)
-        elif (check_clear(2) == True):
+        elif (self.check_clear(2) == True):
             self.newState(Robot.MOVING)
-            self.motors.travel(self.MyDiaInInches,Motors.SLOW)
+            self.motors.travel(self.MyDiaInInches,Motors.MEDIUM)
             self.motors.waitForStopped()
             self.newState(Robot.STOPPED)
         else:
@@ -167,10 +175,13 @@ class Robot():
   
   def cancel(self):
      print "robot.cancel() called"
-     self.bumpers.cancel()
      self.motors.cancel()
+     self.newState(Robot.SHUTDOWN)
+     self.printStatus(self)
+     self.bumpers.cancel()
      self.usDistance.cancel()
      encoders.cancel()
+     self.newState(Robot.DONE)
 
 #end Robot() class
 
