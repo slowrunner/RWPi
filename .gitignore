@@ -7,6 +7,7 @@ __pycache__/
 # ignore captured jpgs
 *.[jJ][pP][gG]
 *.bak
+.DS_Store
 
 # C extensions
 *.so
