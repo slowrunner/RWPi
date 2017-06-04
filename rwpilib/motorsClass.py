@@ -60,21 +60,23 @@
 # INTERNAL VARS
 #
 #   motorsMode
-#   debugLevel  0=off 1=basic 99=all
+#   self.debugLevel  0=off 1=basic 99=all
 
+import sys
+# uncomment when testing below rwpilib\ 
+sys.path.insert(0,'..')
 
 import PDALib
 import myPDALib
 import myPyLib
 from myPyLib import sign, clamp
 import time
-import sys
 import threading
 import traceback
 import datetime
 import encoders
 
-debugLevel = 0
+
 class Motors():
 
   # CLASS VARS (Avail to all instances)
@@ -82,6 +84,7 @@ class Motors():
 
   pollThreadHandle=None   # the SINGLE read sensor thread for the Motors class   
   tSleep=0.1            # time for read_sensor thread to sleep 
+  debugLevel=0          # set self.debugLevel (or motors.debugLevel) =99 for all, =1 for some
 
   # Empirical settings for minimum drive to turn each wheel
   # PWM_frequency dependent, PiDALib default is 490
@@ -249,6 +252,12 @@ class Motors():
     currentMeanCount = ( currentLeftCount + currentRightCount) / 2.0
     countsTraveled = (currentMeanCount - self.initialMeanCount)
     distance=countsTraveled * encoders.InchesPerCount
+    if (self.debugLevel > 1): 
+       print "motorsClass:distanceTraveled: called"
+       print "encoder status:"
+       encoders.printStatus()
+       print "distance traveled:", distance
+
     return distance
     
 
@@ -269,7 +278,7 @@ class Motors():
     Motors.pollThreadHandle = threading.Thread( target=self.pollMotors, 
                                                args=(Motors.tSleep,))
     Motors.pollThreadHandle.start()
-    if (debugLevel >0):  print "Motors worker thread told to start",datetime.datetime.now()
+    if (self.debugLevel >0):  print "Motors worker thread told to start",datetime.datetime.now()
     time.sleep(0.01)  # give time for motor control thread to start
   #end init()
 
@@ -280,15 +289,15 @@ class Motors():
     while getattr(t, "do_run", True):  # check the do_run thread attribute
       self.control()
       time.sleep(tSleep)
-    if (debugLevel >0):  print("do_run went false. Stopping pollMotors thread at %s" % datetime.datetime.now())
+    if (self.debugLevel >0):  print("do_run went false. Stopping pollMotors thread at %s" % datetime.datetime.now())
 
   # RAMP FROM CURRENT TO TARGET IN STEP (TARGET BETWEEN -100 to +100)
   #
   # usage:  nextCurrent = rampTargetCurrentStep(target, current, rampStep)
   #
   def rampTgtCurStep(self, target, current, rampStep):
-      if (debugLevel >1):   print "\n", datetime.datetime.now()
-      if (debugLevel >1):   print "tgt: %d cur: %d  ramp: %d" % (target, current, rampStep)
+      if (self.debugLevel >1):   print "\n", datetime.datetime.now()
+      if (self.debugLevel >1):   print "tgt: %d cur: %d  ramp: %d" % (target, current, rampStep)
       nextCurrent = current
       if (nextCurrent != target):
         if (target >= 0):
@@ -306,7 +315,7 @@ class Motors():
           elif (current < target):
             nextCurrent += rampStep
             nextCurrent = clamp(nextCurrent,-100,target)
-      if (debugLevel >1):   print "nextCurrent: %d" % nextCurrent
+      if (self.debugLevel >1):   print "nextCurrent: %d" % nextCurrent
       return nextCurrent
 
   # ##### SPEED2PWR 
@@ -349,7 +358,7 @@ class Motors():
 
 
   def controlDrive(self):
-      if (debugLevel >1):   print "handling motorsMode DRIVE"
+      if (self.debugLevel >1):   print "handling motorsMode DRIVE"
       self._currentSpeed = self.rampTgtCurStep(self.driveSpeed, 
                                          self._currentSpeed, 
                                          self.rampStep)
@@ -359,40 +368,41 @@ class Motors():
 
   # ### CONTROL TRAVEL
   def controlTravel(self):
-      if (debugLevel >1):   print "handling motorsMode TRAVEL"
+      if (self.debugLevel >1):   print "handling motorsMode TRAVEL"
       self._currentSpeed = self.rampTgtCurStep(self.driveSpeed, 
                                          self._currentSpeed, 
                                          self.rampStep)
       lPwr,rPwr = self.speed2Pwr(self._currentSpeed,0)  
       self.setMotorsPwr(lPwr,rPwr)  # pwrs=(lPwr,rPwr)
 
-      if (debugLevel >1):   print "controlTravel:",datetime.datetime.now()
+      if (self.debugLevel >1):   print "controlTravel:",datetime.datetime.now()
       if (self.targetTime == 0):
          # tvl_time is based on driveDistance which may be negative - use sign(driveDistance) to fix
          tvl_time = sign(self.driveDistance)* self.driveDistance/self.InchesPerSec[self.driveSpeed]
-         if (debugLevel >1):   print "controlTravel: tvl_time: %.1f" % tvl_time
+         if (self.debugLevel >1):   print "controlTravel: tvl_time: %.1f" % tvl_time
          tgt_secs = int(tvl_time)
          tgt_millisec = int((tvl_time-tgt_secs)*1000)
          tgt_delta=datetime.timedelta(seconds=tgt_secs+5, milliseconds=tgt_millisec)
          self.targetTime = datetime.datetime.now()+tgt_delta
       if (datetime.datetime.now() > self.targetTime):
-         if (debugLevel >0):   print ("controlTravel: hit time limit at %s" % datetime.datetime.now() )
+         if (self.debugLevel >0):   print ("controlTravel: hit time limit at %s" % datetime.datetime.now() )
          self.targetTime = 0
          self.stop()
-      if (self.distanceTraveled() > abs(self.driveDistance)):
-         if (debugLevel >0):   print ("controlTravel: hit distance limit at %s" % datetime.datetime.now() )
+      self.currentDistance = self.distanceTraveled()
+      if (self.currentDistance > abs(self.driveDistance)):
+         if (self.debugLevel >0):   print ("controlTravel: hit distance limit at %s" % datetime.datetime.now() )
          self.targetTime = 0
          self.stop()
       else:
-         if (debugLevel >0): 
-             print "controlTravel: dist: %.1f" % self.distanceTraveled()
+         if (self.debugLevel >0): 
+             print "controlTravel: dist: %.1f" % self.currentDistance
                 
 
       return
 
 
   def controlSpin(self):
-      if (debugLevel >1):   print "handling motorsMode SPIN"
+      if (self.debugLevel >1):   print "handling motorsMode SPIN"
       self._currentSpeed = self.rampTgtCurStep(self.spinSpeed,
                                          self._currentSpeed, 
                                          self.rampStep)
@@ -401,18 +411,18 @@ class Motors():
       return
     
   def controlTurn(self):
-      if (debugLevel >1):   print "handling motorsMode TURN"
+      if (self.debugLevel >1):   print "handling motorsMode TURN"
 
-      if (debugLevel >1):   print "controlTurn:",datetime.datetime.now()
+      if (self.debugLevel >1):   print "controlTurn:",datetime.datetime.now()
       if (self.targetTime == 0):
          trn_time = sign(self.turnDir)*self.turnDir
          tgt_secs = int(trn_time)
          tgt_millisec = int( (trn_time - clamp(tgt_secs,0,60) )*1000)
          tgt_delta=datetime.timedelta(seconds=tgt_secs, milliseconds=tgt_millisec)
          self.targetTime = datetime.datetime.now()+tgt_delta
-         if (debugLevel >1):   print ("tgt_secs: %d tgt_millisec: %d tgt_time: %s" % (tgt_secs, tgt_millisec, self.targetTime))
+         if (self.debugLevel >1):   print ("tgt_secs: %d tgt_millisec: %d tgt_time: %s" % (tgt_secs, tgt_millisec, self.targetTime))
       if (datetime.datetime.now() > self.targetTime):
-         if (debugLevel >1):   print ("controlTurn: hit requested limit at %s" % datetime.datetime.now() )
+         if (self.debugLevel >1):   print ("controlTurn: hit requested limit at %s" % datetime.datetime.now() )
          self.targetTime = 0
 #         self.stop()
          self.spinSpeed     = Motors.NONE
@@ -429,8 +439,8 @@ class Motors():
       return
     
   def controlStop(self):
-      if (debugLevel >1):   print "handling motorsMode STOP"
-      if (debugLevel >1):   print "controlStop:",datetime.datetime.now()
+      if (self.debugLevel >1):   print "handling motorsMode STOP"
+      if (self.debugLevel >1):   print "controlStop:",datetime.datetime.now()
       self._currentSpeed = self.rampTgtCurStep(0, 
                                          self._currentSpeed, 
                                          self.rampStep)
@@ -448,17 +458,17 @@ class Motors():
       return
 
   def controlStopped(self):
-      #if (debugLevel >1):   print "handling motorsMode STOPPED"
-      #if (debugLevel >1):   print "controlStopped:",datetime.datetime.now()
+      #if (self.debugLevel >1):   print "handling motorsMode STOPPED"
+      #if (self.debugLevel >1):   print "controlStopped:",datetime.datetime.now()
       pass
       return
   
 
   def control(self):  #CONTROL THE MOTORS 
-       if (debugLevel >1):   print ("motorsMode: %s " % (self.Modes2Str[self.motorsMode]))
-       if (debugLevel >1):   print ("driveSpeed: %s:%d spinSpeed: %s:%d currentSpeed: %d" % (self.SpeedsToStr[self.driveSpeed], self.driveSpeed, self.SpeedsToStr[self.spinSpeed], self.spinSpeed,self._currentSpeed ) )
-       if (debugLevel >1):   print ("driveDist : %.1f currentDist: %.1f" % (self.driveDistance,self.currentDistance) )
-       if (debugLevel >1):   print ("turnDir   : %d " % self.turnDir)
+       if (self.debugLevel >1):   print ("motorsMode: %s " % (self.Modes2Str[self.motorsMode]))
+       if (self.debugLevel >1):   print ("driveSpeed: %s:%d spinSpeed: %s:%d currentSpeed: %d" % (self.SpeedsToStr[self.driveSpeed], self.driveSpeed, self.SpeedsToStr[self.spinSpeed], self.spinSpeed,self._currentSpeed ) )
+       if (self.debugLevel >1):   print ("driveDist : %.1f currentDist: %.1f" % (self.driveDistance,self.currentDistance) )
+       if (self.debugLevel >1):   print ("turnDir   : %d " % self.turnDir)
 
        if (self.motorsMode == Motors.DRIVE):    self.controlDrive()
        elif (self.motorsMode == Motors.TRAVEL): self.controlTravel()
@@ -467,7 +477,7 @@ class Motors():
        elif (self.motorsMode == Motors.STOP):   self.controlStop()
        elif (self.motorsMode == Motors.STOPPED):self.controlStopped()
        else:
-           if (debugLevel >1):   print "handling motorsMode else"
+           if (self.debugLevel >1):   print "handling motorsMode else"
          
        return   
 
@@ -535,7 +545,7 @@ class Motors():
       encoders.reset()
       self.setInitialCounts()
       self.driveSpeed = speed * sign(distance)
-      if (debugLevel >0):  print ("starting travel %.1f at %d" % (distance, speed))
+      if (self.debugLevel >0):  print ("starting travel %.1f at %d" % (distance, speed))
       return
 
   #   spin(Motors.SPEED)  # ramp spin speed to go ccw(+) or cw(-) at 0-100%
@@ -575,22 +585,22 @@ class Motors():
 
   #   calibrate()        # find minFwdDrive, minBwdDrive, minCCWDrive, minCWDrive, biasFwd, biasBwd
   def calibrate(self):
-      if (debugLevel >0):  print "Calibrate() Started"
+      if (self.debugLevel >0):  print "Calibrate() Started"
       time.sleep(1)
-      if (debugLevel >0):  print "Calibrate minFwdDrive, minBwdDrive"
+      if (self.debugLevel >0):  print "Calibrate minFwdDrive, minBwdDrive"
       time.sleep(1)
-      if (debugLevel >0):  print "Calibrate minCCWDrive, minCWDrive"
+      if (self.debugLevel >0):  print "Calibrate minCCWDrive, minCWDrive"
       time.sleep(1)
-      if (debugLevel >0):  print "Calibrate biasFwd, biasBwd"
+      if (self.debugLevel >0):  print "Calibrate biasFwd, biasBwd"
       time.sleep(1)
 
-      if (debugLevel >0):  print "\n"
-      if (debugLevel >0):  print "*******************"
-      if (debugLevel >0):  print "Calibration Results"
-      if (debugLevel >0):  print ("minFwdDrive: %d  minBwdDrive: %d" % (self.minFwdDrive, self.minBwdDrive))
-      if (debugLevel >0):  print ("minCCWDrive: %d  minCWDrive:  %d" % (self.minCCWDrive, self.minCWDrive))
-      if (debugLevel >0):  print ("biasFwd: %d  biasBwd: %d" % (self.biasFwd, self.biasBwd))
-      if (debugLevel >0):  print "Done"
+      if (self.debugLevel >0):  print "\n"
+      if (self.debugLevel >0):  print "*******************"
+      if (self.debugLevel >0):  print "Calibration Results"
+      if (self.debugLevel >0):  print ("minFwdDrive: %d  minBwdDrive: %d" % (self.minFwdDrive, self.minBwdDrive))
+      if (self.debugLevel >0):  print ("minCCWDrive: %d  minCWDrive:  %d" % (self.minCCWDrive, self.minCWDrive))
+      if (self.debugLevel >0):  print ("biasFwd: %d  biasBwd: %d" % (self.biasFwd, self.biasBwd))
+      if (self.debugLevel >0):  print "Done"
       return
 
 
@@ -602,7 +612,7 @@ class Motors():
      self.halt()
 
   def waitForStopped(self, timeout=60):
-     if (debugLevel >0):  print ("waitForStopped or %.1f" % timeout)
+     if (self.debugLevel >0):  print ("waitForStopped or %.1f" % timeout)
      tWaitForModeChange = 2*Motors.tSleep
      time.sleep(tWaitForModeChange)
      timeout_delta=datetime.timedelta(seconds=int(timeout))
@@ -641,7 +651,7 @@ class Motors():
       PDALib.digitalWrite(Motors.M1DirB,0)  #set to off/coast
 
     # Now power the motors
-    if (debugLevel >1):   print ("setMotorsPwr(lPwr:%d,rPwr:%d) %s" % (lPwr,rPwr,datetime.datetime.now()))
+    if (self.debugLevel >1):   print ("setMotorsPwr(lPwr:%d,rPwr:%d) %s" % (lPwr,rPwr,datetime.datetime.now()))
     PDALib.analogWrite(Motors.LMotor,abs(lPwr))  #set lft motor2
     PDALib.analogWrite(Motors.RMotor,abs(rPwr))  #set rt motor1 
 
