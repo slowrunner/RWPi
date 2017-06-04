@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# motorsClass.py   MOTORS CLASS DISTANCE TEST
+# motorsDist.py   MOTORS CLASS DISTANCE TEST
 #
 # Methods:
 
@@ -16,26 +16,39 @@
 #                                            # minCCWDPwr, minCWPwr, 
 #                                            # biasFwd, biasBwd
 
+from motorsClass import *
+import sys
+sys.path.insert(0,'..')
 
 import PDALib
 import myPDALib
 import myPyLib
-from motorsClass import *
 import time
-import sys
 import traceback
 import datetime
+import encoders
 
+motors = None  # global handle to MotorClass
 
+def motorsDistCancel():
+  global motors
+  motors.cancel()
+  encoders.cancel()
 
 # ##### Motors CLASS DISTANCE TEST METHOD ######
 
 def main():
+  global motors
+
+  encoders.init()
+  encoders.enable_encoder_interrupts()
 
   motors=Motors(readingsPerSec=10)  #create instance and control Motors thread
+  print "motors.debugLevel: %d" % motors.debugLevel
+  motors.debugLevel = 1
+  encoders.debugLevel = 1
 
-
-  myPyLib.set_cntl_c_handler(motors.cancel)  # Set CNTL-C handler 
+  myPyLib.set_cntl_c_handler(motorsDistCancel)  # Set CNTL-C handler 
   try:
     print "\n"
 
