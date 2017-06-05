@@ -160,11 +160,13 @@ class Robot():
         self.be_THINKING()
         self.newState(Robot.State.EGRET)
         if (self.check_clear(4) == True):
+            print "egret.py:be_egret: MOVING 3 body lengths"
             self.newState(Robot.State.MOVING)
             self.motors.travel(self.MyDiaInInches*3,Motors.FAST)
             self.motors.waitForStopped()
             self.newState(Robot.State.STOPPED)
         elif (self.check_clear(2) == True):
+            print "egret.py:be_egret: MOVING 1 body length"
             self.newState(Robot.State.MOVING)
             self.motors.travel(self.MyDiaInInches,Motors.MEDIUM)
             self.motors.waitForStopped()
