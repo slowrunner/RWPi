@@ -172,7 +172,7 @@ class Motors():
   #Speeds
   NONE    = 0
   SLOW    = 1
-  WALK    = 15    # about rampStep + 1
+  WALK    = 5    
   MEDIUM  = 50
   FAST    = 100
 
@@ -372,7 +372,7 @@ class Motors():
 
 
   # ### CONTROL TRAVEL
-  # Travel at set speed until 90% of distance, then WALK
+  # Travel at set speed until 30% of distance, then WALK
   def controlTravel(self):
       if (self.debugLevel >1):   print "handling motorsMode TRAVEL"
       self._currentSpeed = self.rampTgtCurStep(self.driveSpeed, 
@@ -402,9 +402,10 @@ class Motors():
       else:
          if (self.debugLevel >0): 
              print "controlTravel: dist: %.1f" % self.currentDistance
-         if (self.currentDistance > abs(0.9 * self.driveDistance)):
-             self.driveSpeed = sign(self.driveDistance) * Motors.WALK
-             if (self.debugLevel > 0): print "motorsClass:controlTravel:90% there - slow to WALK"       
+         if (abs(self.driveSpeed) > Motors.WALK):
+             if (self.currentDistance > abs(0.3 * self.driveDistance)):
+               self.driveSpeed = sign(self.driveDistance) * Motors.WALK
+               if (self.debugLevel > 0): print "motorsClass:controlTravel:30% there - slow to WALK"       
 
       return
 

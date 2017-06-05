@@ -43,10 +43,10 @@ def main():
   encoders.init()
   encoders.enable_encoder_interrupts()
 
-  motors=Motors(readingsPerSec=10)  #create instance and control Motors thread
+  motors=Motors(readingsPerSec=20)  #create instance and control Motors thread
   print "motors.debugLevel: %d" % motors.debugLevel
   motors.debugLevel = 1
-  encoders.debugLevel = 1
+  encoders.debugLevel = 0
 
   myPyLib.set_cntl_c_handler(motorsDistCancel)  # Set CNTL-C handler 
   try:
@@ -56,27 +56,27 @@ def main():
 # ####### TEST travel()
     print "TEST TRAVEL FWD 12.0 inches MEDIUM:", datetime.datetime.now()
     motors.travel(12.0, Motors.MEDIUM)
-    time.sleep(5.0)
+    time.sleep(10.0)
 
-    print "TEST TRAVEL BWD(-) 6.0 inches MEDIUM:", datetime.datetime.now()
+    print "TEST TRAVEL BWD(-) 12.0 inches MEDIUM:", datetime.datetime.now()
     motors.travel(-12.0, Motors.MEDIUM)
-    time.sleep(5.0)
+    time.sleep(10.0)
 
     print "TEST TRAVEL FWD 6.0 inches SLOW:", datetime.datetime.now()
     motors.travel(6.0, Motors.SLOW)
-    time.sleep(5.0)
+    time.sleep(10.0)
 
     print "TEST TRAVEL BWD(-) 6.0 inches SLOW:", datetime.datetime.now()
     motors.travel(-6.0, Motors.SLOW)
-    time.sleep(5.0)
+    time.sleep(10.0)
 
     print "TEST TRAVEL FWD 18.0 inches FAST:", datetime.datetime.now()
     motors.travel(18.0, Motors.FAST)
-    time.sleep(5.0)
+    time.sleep(10.0)
 
     print "TEST TRAVEL BWD(-) 18.0 inches FAST:", datetime.datetime.now()
     motors.travel(-18.0, Motors.FAST)
-    time.sleep(5.0)
+    time.sleep(10.0)
 
 
    
