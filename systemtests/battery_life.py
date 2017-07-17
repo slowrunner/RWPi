@@ -11,13 +11,16 @@
 #
 # Start this test with $ sudo python battery_life.py
 #
-
-import PDALib
-import myPDALib
-import time
 import sys
+sys.path
+sys.path.append('/home/pi/RWPi')
+
+import rwpilib.PDALib as PDALib
+import rwpilib.myPDALib as myPDALib
+import time
 import signal
-import currentsensor
+import rwpilib.currentsensor as currentsensor
+import rwpilib.battery as battery
 import os
 import datetime
 import sys
@@ -33,13 +36,15 @@ nLow = 0
 while True:
 
   print ("current_sense(): %.0f mA" % currentsensor.current_sense(1000))
-  V_now = myPDALib.readVoltage(6) * 2.0  # 2:1 resistor divider 
+  # V_now = myPDALib.readVoltage(6) * 2.0  # 2:1 resistor divider 
+  V_now = battery.volts()
   if (V_now < 6.53):   #if 7v2 =6.53 10min 6.42 5min to knee!
           nLow+=1
           print "nLow:***************",nLow   
   else: nLow = 0  
   print ( "voltage: %.2f" % V_now)
-  print datetime.datetime.now()
+  print ( "Life Estimate: %.1f" % battery.hoursOfLifeRemaining(V_now) )
+  print datetime.datetime.now().strftime('%m-%d-%Y %H:%M:%S')
   print "\n"
   if (nLow >3):  # four times lower we're out of here         
           os.system("sudo shutdown -h now")
