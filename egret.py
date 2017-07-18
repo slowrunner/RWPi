@@ -15,7 +15,11 @@ import traceback
 import rwpilib.tiltpan as tiltpan
 import rwpilib.printStatus as printStatus
 import rwpilib.encoders as encoders
+import rwpilib.battery as battery
 from enum import Enum
+import os
+import sys
+
 
 class Robot():
   # class constants and vars
@@ -126,6 +130,11 @@ class Robot():
         print "\nI'm THINKING now"
         self.newState(Robot.State.THINKING)
         self.printStatus(self)
+        if (battery.batteryTooLow()):
+            print ("BATTERY %.2f volts BATTERY - SHUTTING DOWN NOW" % battery.volts())
+            os.system("sudo shutdown -h now")
+            sys.exit(0)
+        
     while (numThoughts < 300):    # think for about 30 seconds
         numThoughts += 1    
         if (self.bumpers.status() != Bumpers.NONE):
