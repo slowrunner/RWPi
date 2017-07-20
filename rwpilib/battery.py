@@ -53,37 +53,36 @@ def readingToVolts(reading):
 # hoursOfLifeRemaining(Vbatt)
 #
 # Data points from batery_life.py using 4 times under 6.53v as 0 life remaining 
-# Battery Too Low point (10 min left) is 6.55 7/2017
+# Battery Too Low point (10 min left) is 6.53 7/2017
 #
 # Historical:  
 #   July 2016 8.5h and 10h 55m  (6 new Tenergy cells)
-#   July 2017 6.5, 12.5h, 12.17h  (2x 3yr old EBL cells, 4x 1yr old Tenergy cells)
+#   July 2017 6.5, 12.5h, 12.17h, 12.65h
+#             (2x 3yr old EBL cells, 4x 1yr old Tenergy cells)
 #
 
 #  (V , Time remaining)
 
 lifePoints= (
  (10.0, 13.00),   # guess - exception'd at 9.1v during recharge
- (9.00, 12.75),   # guess    
- (8.50, 12.50),   # guess
- (8.15, 12.17),   # 12h10m 7/18/2017
- (7.96, 12.00),
- (7.54, 11.00),
- (7.27, 10.00),
- (7.16,  9.00),
- (7.10,  8.00),
- (7.07,  7.00),
- (7.02,  6.00),
- (6.96,  5.00),    
- (6.90,  4.00),
- (6.85,  3.00),
- (6.77,  2.00),
- (6.71,  1.00),
- (6.66,  0.50),
- (6.57,  0.21),  # 13 min till unknown
- (6.55,  0.17),  # 10 min - SHUT DOWN NOW #
- (6.53,  0.07),  #  4 min 
- (6.48,  0.00),  # battery_life shutdown 7/2017)
+ (9.00, 12.85),   # guess    
+ (8.50, 12.75),   # guess
+ (8.33, 12.65),   # 12h38mm 7/19/2017
+ (8.14, 12.40),
+ (7.74, 11.40),
+ (7.51, 10.40),
+ (7.45,  9.40),
+ (7.39,  8.40),
+ (7.35,  7.40),
+ (7.31,  6.40),
+ (7.25,  5.40),    
+ (7.20,  4.40),
+ (7.14,  3.40),
+ (7.07,  2.40),
+ (6.97,  1.40),
+ (6.84,  0.40),  # 19 min till unknown
+ (6.53,  0.17),  # 10 min - SHUT DOWN NOW #
+ (6.29,  0.00),  # battery_life shutdown 7/2017)
  (0.00, -1.00)
  )
 
@@ -106,7 +105,7 @@ def printLifeTable():
   for v in testVs:
     print "%0.1f  %0.1f" % (v, hoursOfLifeRemaining(v))
 
-BatteryCutOff = 6.55  # 10 minutes 7/2017
+BatteryCutOff = 6.53  # 10 minutes 7/2017
 
 def batteryTooLow():
   if (volts() < BatteryCutOff): return True
