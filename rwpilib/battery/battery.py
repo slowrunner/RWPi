@@ -7,8 +7,9 @@ import PDALib
 import myPDALib
 import myPyLib
 import datetime
-
+import sys
 import time
+import os
 
 # ########## GET BATTERY VOLTAGE
 # volts(readings=75)
@@ -51,47 +52,38 @@ def readingToVolts(reading):
 # ########## HOURS OF LIFE REMAINING
 # hoursOfLifeRemaining(Vbatt)
 #
-# Data points from batery_life.py using 6.53v as 0 life remaining 
-#   for 10 min safety factor. 
-#  (V , Tremaining)
+# Data points from batery_life.py using 4 times under 6.53v as 0 life remaining 
+# Battery Too Low point (10 min left) is 6.55 7/2017
+#
+# Historical:  
+#   July 2016 8.5h and 10h 55m  (6 new Tenergy cells)
+#   July 2017 6.5, 12.5h, 12.17h  (2x 3yr old EBL cells, 4x 1yr old Tenergy cells)
+#
+
+#  (V , Time remaining)
 
 lifePoints= (
  (10.0, 10.77),   # added - exception'd at 9.1v during recharge
  (9.00, 10.76),       
- (8.30, 10.75),   # 10h55m (w/o 10m safety) life test began off charge
- (7.90, 10.00),
- (7.80, 9.75),
- (7.76, 9.47),
- (7.69, 9.25),
- (7.68, 9.17),
- (7.64, 9.08),
- (7.45, 8.53),   # got 8.5 hrs 7/18/16
- (7.40, 8.42),    
- (7.35, 8.17),
- (7.31, 7.92),
- (7.27, 7.42),
- (7.22, 6.92),
- (7.19, 6.42),
- (7.15, 5.92),
- (7.12, 5.42),
- (7.04, 4.92),
- (7.00, 4.42),
- (6.97, 3.92),
- (6.94, 3.42),
- (6.91, 2.92),
- (6.88, 2.42),
- (6.87, 1.90),
- (6.86, 1.40),
- (6.77, 0.92),
- (6.73, 0.75),
- (6.72, 0.58), 
- (6.70, 0.42), 
- (6.67, 0.25),
- (6.60, 0.08),
- (6.53, 0.00),
- (6.42, -0.08),
- (6.00, -0.16),
- (0.0, -1.0)
+ (8.30, 10.75),   # 10h55m 7/2016
+ (8.15, 12.17),   # 12h10m 7/2017
+ (7.96, 11.00),
+ (7.27, 10.00),
+ (7.16,  9.00),
+ (7.10,  8.00),
+ (7.07,  7.00),
+ (7.02,  6.00),
+ (6.96,  5.00),    
+ (6.90,  4.00),
+ (6.85,  3.00),
+ (6.77,  2.00),
+ (6.71,  1.00),
+ (6.66,  0.50),
+ (6.57,  0.21),  # 13 min till unknown
+ (6.55,  0.17),  # 10 min - SHUT DOWN NOW #
+ (6.53,  0.07),  #  4 min 
+ (6.48,  0.00),  # battery_life shutdown 7/2017)
+ (0.00, -1.00)
  )
 
 hoursOfLifeRemainingArray = myPyLib.InterpolatedArray(lifePoints)
@@ -113,7 +105,7 @@ def printLifeTable():
   for v in testVs:
     print "%0.1f  %0.1f" % (v, hoursOfLifeRemaining(v))
 
-BatteryCutOff = 6.5
+BatteryCutOff = 6.55  # 10 minutes 7/2017
 
 def batteryTooLow():
   if (volts() < BatteryCutOff): return True
@@ -127,7 +119,12 @@ def main():
       print "\n"
       # printLifeTable()
       printStatus()
-      print "batteryTooLow(): ",batteryTooLow()
+      shutdownnow = batteryTooLow()
+      print "batteryTooLow(): ",shutdownnow
+      if (shutdownnow == True):
+          print "Battery.py issuing shutdown -h now"
+          os.system("sudo shutdown -h now")
+          sys.exit(0)
       time.sleep(1)
   #end while
   myPDALib.PiExit()
