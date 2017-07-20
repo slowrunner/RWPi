@@ -63,11 +63,11 @@ def readingToVolts(reading):
 #  (V , Time remaining)
 
 lifePoints= (
- (10.0, 10.77),   # added - exception'd at 9.1v during recharge
- (9.00, 10.76),       
- (8.30, 10.75),   # 10h55m 7/2016
- (8.15, 12.17),   # 12h10m 7/2017
- (7.96, 11.00),
+ (10.0, 13.00),   # guess - exception'd at 9.1v during recharge
+ (9.00, 12.75),   # guess    
+ (8.50, 12.50),   # guess
+ (8.15, 12.17),   # 12h10m 7/18/2017
+ (7.54, 11.00),
  (7.27, 10.00),
  (7.16,  9.00),
  (7.10,  8.00),
