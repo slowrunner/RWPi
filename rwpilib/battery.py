@@ -57,9 +57,9 @@ def readingToVolts(reading):
 #
 # Historical:  
 #   July 2016 8.5h and 10h 55m  (6 new Tenergy cells)
-#   July 2017 6.5, 12.5h, 12.17h, 12.65h, 11h55m
+#   July 2017 6.5, 12.5h, 12.17h, 12.65h, 11h55m,
 #             (2x 3yr old EBL cells, 4x 1yr old Tenergy cells)
-#
+#             
 
 #  (V , Time remaining)
 
@@ -67,14 +67,14 @@ lifePoints= (
  (10.0, 13.00),   # guess - exception'd at 9.1v during recharge
  (9.00, 12.85),   # guess    
  (8.50, 12.75),   # guess
- (8.20, 12.00),   # 11h55mm VoltageTest8.ods
+ (8.20, 12.00),   # 11h55mm VoltageTest9.ods
  (7.69, 11.00),
- (7.27, 10.00),
- (7.19,  9.00),
- (7.17,  8.00),
- (7.13,  7.00),
- (7.09,  6.00),
- (7.05,  5.00),    
+ (7.59, 10.00),   # linear smoothing from 11 to 4h
+ (7.49,  9.00),   # linear smoothing from 11 to 4h 
+ (7.39,  8.00),   # linear smoothing from 11 to 4h
+ (7.30,  7.00),   # linear smoothing from 11 to 4h
+ (7.20,  6.00),   # linear smoothing from 11 to 4h
+ (7.10,  5.00),   # linear smoothing from 11 to 4h   
  (7.00,  4.00),
  (6.95,  3.00),
  (6.87,  2.00),
