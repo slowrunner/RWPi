@@ -66,10 +66,10 @@ PDALib.digitalWrite(M1DirA,1)  #set to forward
 PDALib.digitalWrite(M2DirA,1)  #set to forward
 
 # setting speed will start us going  (zero to fast in one command for this test)
-PDALib.analogWrite(RMotor,127)  #set motor1 to half speed 
-PDALib.analogWrite(LMotor,127)  #set motor2 to half speed
+PDALib.analogWrite(RMotor,200)  #set motor1 speed 
+PDALib.analogWrite(LMotor,200)  #set motor2 speed
 
-time.sleep(7.0)  # drive while asleep at the wheel (seconds) 
+time.sleep(4.0)  # drive while asleep at the wheel (seconds) 
                            # (bad idea but this is a test)
 
 # two ways to stop - set speed to 0 or set direction to off/coast 
