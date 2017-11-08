@@ -15,6 +15,7 @@ import time
 from datetime import datetime
 import os
 import sys
+import speak
 
 # Return CPU temperature as a character string                                      
 def getCPUtemperature():
@@ -76,11 +77,13 @@ def main():
 
   # #### INIT SENSORS 
   b=Bumpers()
-  u=UltrasonicDistance()  
+  u=UltrasonicDistance()
+  speak.say("Starting status loop at %.2f volts" % battery.volts())  
   try:
     while True:
         printStatus()
         if (battery.batteryTooLow()):
+          speak.say("WARNING, WARNING, SHUTTING DOWN NOW")
           print ("BATTERY %.2f volts BATTERY - SHUTTING DOWN NOW" % battery.volts())
           os.system("sudo shutdown -h now")
           sys.exit(0)
