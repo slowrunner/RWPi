@@ -14,11 +14,13 @@ import time
 import traceback
 import rwpilib.tiltpan as tiltpan
 import rwpilib.printStatus as printStatus
+import rwpilib.sayStatus as sayStatus
 import rwpilib.encoders as encoders
 import rwpilib.battery as battery
 from enum import Enum
 import os
 import sys
+from rwpilib.speak import say
 
 
 class Robot():
@@ -58,10 +60,16 @@ class Robot():
 
   MyDiaInInches=7.0
 
+  def report(self,rptstr):
+    print rptstr
+    say(rptstr)
+
+    
   def __init__(self):
       print "Robot__init__"
       self.newState(Robot.State.STARTUP)
       self.printStatus=printStatus.PrintStatus
+      self.sayStatus=sayStatus.SayStatus
       self.bumpers=Bumpers()           # give robot instance bumpers
       self.usDistance=UltrasonicDistance()  # give robot instance ultrasonic sensor
       self.motors=Motors(readingsPerSec=20)
@@ -88,14 +96,18 @@ class Robot():
             # spin to escapeDir
             if (escapeSpin != Motors.NONE):
                # print "escapeSpin:",escapeSpin
-               print "\n* Turning to %s as escape path" % self.motors.dirToStr(escapeSpin)
+               rptstr = "\n* Turning to %s as escape path" % self.motors.dirToStr(escapeSpin)
+               self.report(rptstr)
                self.motors.turn(escapeSpin)
                self.motors.waitForStopped()
-            print "Checking if escape path is clear"
+            rptstr = "Checking if escape path is clear"
+            self.report(rptstr)
             usDist = self.usDistance.inInches(UltrasonicDistance.AVERAGE)
-            print "Forward path is clear for: %d inches" % int(usDist)
+            rptstr = "Forward path is clear for: %d inches" % int(usDist)
+            self.report(rptstr)
             if (usDist > self.MyDiaInInches/2):
-              print "Moving fwd half my size"
+              rptstr = "Moving fwd half my size"
+              self.report(rptstr)
               self.motors.travel(self.MyDiaInInches/2,Motors.SLOW)
               self.motors.waitForStopped()
               self.revertState(Robot.State.ESCAPING)
@@ -104,10 +116,12 @@ class Robot():
           self.revertState(Robot.State.ESCAPING)
               
   def check_clear(self,bodyLengths=2):
-    print "Checking if path is clear for %d bodyLengths" % bodyLengths
+    rptstr = "Checking if path is clear for %d bodyLengths" % bodyLengths
+    self.report(rptstr)
     usDist = self.usDistance.inInches(UltrasonicDistance.AVERAGE)
     clearLengths = int(usDist / self.MyDiaInInches)
-    print "Forward path is clear for: %d lengths" % clearLengths
+    rptstr = "Forward path is clear for: %d lengths" % clearLengths
+    self.report(rptstr)
     return (clearLengths >= bodyLengths)
     
               
@@ -118,7 +132,8 @@ class Robot():
         # Choose an avoidance spin (hard coded right now)
         avoidSpin = Motors.CW45  
         # spin to avoidDir
-        print "\n* Turning to %s" % self.motors.dirToStr(avoidSpin)
+        rptstr =  "\n* Turning to %s" % self.motors.dirToStr(avoidSpin)
+        self.report(rptstr)
         self.motors.turn(avoidSpin)
         self.motors.waitForStopped()
     if (self.currentState == Robot.State.AVOIDING):
@@ -127,11 +142,14 @@ class Robot():
   def be_THINKING(self):
     numThoughts=0
     if (self.currentState != Robot.THINKING):
-        print "\nI'm THINKING now"
+        rptstr = "\nI'm THINKING now"
+        self.report(rptstr)
         self.newState(Robot.State.THINKING)
         self.printStatus(self)
+        self.sayStatus(self)
         if (battery.batteryTooLow()):
-            print ("BATTERY %.2f volts BATTERY - SHUTTING DOWN NOW" % battery.volts())
+            rptstr = ("BATTERY %.2f volts BATTERY - SHUTTING DOWN NOW" % battery.volts())
+            self.report(rptstr)
             os.system("sudo shutdown -h now")
             sys.exit(0)
         
@@ -140,7 +158,8 @@ class Robot():
         if (self.bumpers.status() != Bumpers.NONE):
             self.newState(Robot.State.BUMPED)
             self.bumpDir=self.bumpers.status()
-            print "\nI've been bumped! (%s)" % self.bumpers.toStr(self.bumpDir)       
+            rptstr =  "\nI've been bumped! (%s)" % self.bumpers.toStr(self.bumpDir)       
+            self.report(rptstr)
             self.do_escape()  
             self.revertState(Robot.State.THINKING)              
         time.sleep(0.1)      
@@ -170,12 +189,14 @@ class Robot():
         self.newState(Robot.State.EGRET)
         if (self.check_clear(4) == True):
             print "egret.py:be_egret: MOVING 3 body lengths"
+            self.report("Moving 3 body lengths")
             self.newState(Robot.State.MOVING)
             self.motors.travel(self.MyDiaInInches*3,Motors.FAST)
             self.motors.waitForStopped()
             self.newState(Robot.State.STOPPED)
         elif (self.check_clear(2) == True):
             print "egret.py:be_egret: MOVING 1 body length"
+            self.report("Moving 1 body length")
             self.newState(Robot.State.MOVING)
             self.motors.travel(self.MyDiaInInches,Motors.MEDIUM)
             self.motors.waitForStopped()
@@ -189,6 +210,7 @@ class Robot():
   
   def cancel(self):
      print "robot.cancel() called"
+     self.report("robot.cancel called")
      self.motors.cancel()
      self.newState(Robot.State.SHUTDOWN)
      self.printStatus(self)
