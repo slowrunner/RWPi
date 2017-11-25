@@ -112,7 +112,7 @@ def pos_servo(servo,pos):
     elif (servo == TILTSERVO):
         cpos = myPyLib.clamp(pos,TiltPosLimitUp,TiltPosLimitDn)
     if (debugLevel): print "setting Tilt0Pan1=%d to pos: %d)" % (servo, cpos) 
-    myPDALib.servoWrite(servo, cpos)   # set to new position
+    PDALib.servoWrite(servo, cpos)   # set to new position
     return cpos
 
 def gopigoDeg2panPos(angle):
@@ -186,12 +186,12 @@ def main():
             """
         if key_press.isdigit():
             if int(key_press) in servo_range:
-                enable_servo()
-                servo((8-int(key_press))*30)
+                servos_on()
+                pan_servo((8-int(key_press))*30)
                 time.sleep(1)
-                disable_servo()
+                servos_off()
         elif key_press == '^':
-                enable_servo()
+                servos_on()
                 tiltAngle += 10
                 cmdDeg = tiltAngle
                 print "cmd Tilt Angle: %d", cmdDeg
@@ -200,7 +200,7 @@ def main():
                 time.sleep(1)
                 servos_off()
         elif key_press == 'V':
-                enable_servo()
+                servos_on()
                 tiltAngle -= 10
                 cmdDeg = tiltAngle
                 print "cmd Tilt Angle: %d", cmdDeg
