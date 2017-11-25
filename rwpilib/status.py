@@ -47,7 +47,7 @@ def printStatus():
   print "\n********* RWPi STATUS *****"
   print datetime.now().date(), getUptime()
   vBatt = battery.volts()
-  print "battery.volts(): %0.1f" % vBatt
+  print "battery.volts(): %0.2f" % vBatt
   lifeRem=battery.hoursOfLifeRemaining(vBatt)
   lifeH=int(lifeRem)
   lifeM=(lifeRem-lifeH)*60
