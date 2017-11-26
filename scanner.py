@@ -140,7 +140,7 @@ class Robot():
     if (self.currentState == Robot.State.AVOIDING):
         self.revertState(Robot.State.AVOIDING)
           
-  def be_THINKING(self):
+  def do_thinking(self):
     numThoughts=0
     if (self.currentState != Robot.THINKING):
         rptstr = "\nI'm THINKING now"
@@ -186,7 +186,7 @@ class Robot():
   def be_egret(self):
     self.newState(Robot.State.EGRET)
     while (self.currentState != Robot.State.DONE):
-        self.be_THINKING()
+        self.do_thinking()
         self.newState(Robot.State.EGRET)
         if (self.check_clear(4) == True):
             print "egret.py:be_egret: MOVING 3 body lengths"
@@ -206,12 +206,21 @@ class Robot():
           self.do_avoid()
 
   def be_scanner(self):
-    self.newState(Robot.State.SCANNER)
+    scanDirs=7  # 7 gives 30deg
+    scanDeltaAngle = 180 / (scanDirs-1)
     while (self.currentState != Robot.State.DONE):
-        self.newState(Robot.State.SCANNER)
-        print "scanner.py:be_scanner: Starting SCANNER action"
-            self.report("Starting be scanner")
-
+        self.do_thinking()
+        if (self.currentState != Robot.SCANNER):
+          rptstr = "\nI'm Scanning now"
+          print rptstr
+          self.report(rptstr)
+          self.newState(Robot.State.SCANNER)        
+        for scanAngle in range(180,-1,-scanDeltaAngle):
+          tiltpan.pan_servo(scanAngle)
+          usDist = self.usDistance.inInches(UltrasonicDistance.AVERAGE)
+          print "angle: %d  dist: %d inches" % (scanAngle, usDist)
+          time.sleep(5.0)      
+    
                
 
   
@@ -231,18 +240,18 @@ class Robot():
 # ##### MAIN ######
 def main():
   try:
-    print "Starting Main"
+    print "Starting scanner.py Main"
     tiltpan.setup_servo_pins()
     tiltpan.center_servos()
     
     r=Robot()
     myPyLib.set_cntl_c_handler(r.cancel)  # Set CNTL-C handler 
-    r.be_egret()
+    r.be_scanner()
   except SystemExit:
     myPDALib.PiExit()
-    print "egret main: time for threads to quit"
+    print "scanner main: time for threads to quit"
     time.sleep(1)
-    print "egret.py says: Bye Bye"    
+    print "scanner.py says: Bye Bye"    
   except:
     print "Exception Raised"
     # r.cancel()
