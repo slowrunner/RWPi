@@ -34,10 +34,16 @@ def getThrottled():
     res = os.popen('vcgencmd get_throttled').readline()
     return res.replace("\n","")
 
+def getUptime():
+    res = os.popen('uptime').readline()
+    return res.replace("\n","")
+
+
+
 def PrintStatus(self):
 
   print "\n********* RWPi STATUS *****"
-  print datetime.now()
+  print datetime.now().date(), getUptime()
   vBatt = battery.volts()
   print "battery.volts(): %0.1f" % vBatt
   lifeRem=battery.hoursOfLifeRemaining(vBatt)
@@ -50,7 +56,7 @@ def PrintStatus(self):
   print "%s" % getThrottled()
   print  "irDistance.inInches: %0.1f" %  irDistance.inInches()
   print  "usDistance.inInches: %0.1f" %  self.usDistance.inInches()
-  print  "bumpers:",self.bumpers.toStr(self.bumpers.status())
+  print  "bumpers:",self.bumpers.toStr()
   print  "\n"
 
 
