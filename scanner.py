@@ -217,7 +217,7 @@ class Robot():
         self.do_thinking()
         for scanAngle in range(180,-1,-scanDeltaAngle):
           tiltpan.pan_servo(scanAngle)
-          usDist = self.usDistance.inInches(UltrasonicDistance.AVERAGE)
+          usDist = self.usDistance.inInches()
           print "angle: %d  dist: %d inches" % (scanAngle, usDist)
           time.sleep(5.0)      
     
