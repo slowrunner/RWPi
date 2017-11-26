@@ -208,13 +208,13 @@ class Robot():
   def be_scanner(self):
     scanDirs=7  # 7 gives 30deg
     scanDeltaAngle = 180 / (scanDirs-1)
-    while (self.currentState != Robot.State.DONE):
-        self.do_thinking()
-        if (self.currentState != Robot.SCANNER):
+    if (self.currentState != Robot.SCANNER):
           rptstr = "\nI'm Scanning now"
           print rptstr
           self.report(rptstr)
           self.newState(Robot.State.SCANNER)        
+    while (self.currentState != Robot.State.DONE):
+        self.do_thinking()
         for scanAngle in range(180,-1,-scanDeltaAngle):
           tiltpan.pan_servo(scanAngle)
           usDist = self.usDistance.inInches(UltrasonicDistance.AVERAGE)
