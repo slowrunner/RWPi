@@ -172,18 +172,19 @@ def main():
   try:
     # note: usDistance is object, UltrasonicDistance is class 
     # create instance, start read (timesPerSec) thread
-    usDistance = UltrasonicDistance(readingsPerSec=30)
+    usDistance = UltrasonicDistance(readingsPerSec=1)
     print "usDistance.tSleep:",usDistance.tSleep
+    print "usDistance.MAX_qReadings_QSIZE:",usDistance.MAX_qReadings_QSIZE
     myPyLib.set_cntl_c_handler(usDistance.cancel)  # Set CNTL-C handler 
     while True:
       print "\n"
       print( "AveUsDistanceInCm: %.1f cm" %  usDistance.AveUsDistanceInCm )
-      print  "usDistance.MAX_qReadings_QSIZE:",usDistance.MAX_qReadings_QSIZE
+      print( "usDistanceInCM: %.1f cm" %  usDistance.usDistanceInCm )
       print( "usDistance.inInches(1):%.2f, (%d):%.2f" % (usDistance.inInches(1),
 		usDistance.MAX_qReadings_QSIZE,
 		usDistance.inInches(UltrasonicDistance.MAX_qReadings_QSIZE) ))
       print "qReadings:" , usDistance.readingsList() 
-      time.sleep(1)
+      time.sleep(5)
     #end while
   except SystemExit:
     myPDALib.PiExit()
