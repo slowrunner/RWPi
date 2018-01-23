@@ -75,8 +75,8 @@ lifePoints= (
  (6.95,  4.00),
  (6.90,  3.00),
  (6.84,  2.00),
- (6.77,  1.00),
- (6.55,  0.17),  # 10 min - SHUT DOWN NOW #
+ (6.79,  1.00),
+ (6.65,  0.02),  # 11 min life left, and 1 min to 6.53v shutdown event #
  (6.45,  0.00),  # battery_life shutdown 7/2017)
  (0.00, -1.00)
  )
