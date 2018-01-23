@@ -17,6 +17,7 @@ import rwpilib.printStatus as printStatus
 import rwpilib.sayStatus as sayStatus
 import rwpilib.encoders as encoders
 import rwpilib.battery as battery
+import rwpilib.irDistance as irDistance
 from enum import Enum
 import os
 import sys
@@ -103,6 +104,7 @@ class Robot():
                self.motors.waitForStopped()
             rptstr = "Checking if escape path is clear"
             self.report(rptstr)
+            tiltpan.center_servos()
             usDist = self.usDistance.inInches(UltrasonicDistance.AVERAGE)
             rptstr = "Forward path is clear for: %d inches" % int(usDist)
             self.report(rptstr)
@@ -119,6 +121,7 @@ class Robot():
   def check_clear(self,bodyLengths=2):
     rptstr = "Checking if path is clear for %d bodyLengths" % bodyLengths
     self.report(rptstr)
+    tiltpan.center_servos()
     usDist = self.usDistance.inInches(UltrasonicDistance.AVERAGE)
     clearLengths = int(usDist / self.MyDiaInInches)
     rptstr = "Forward path is clear for: %d lengths" % clearLengths
@@ -146,6 +149,7 @@ class Robot():
         rptstr = "\nI'm THINKING now"
         self.report(rptstr)
         self.newState(Robot.State.THINKING)
+        tiltpan.center_servos()
         self.printStatus(self)
         self.sayStatus(self)
         if (battery.batteryTooLow()):
@@ -206,7 +210,7 @@ class Robot():
           self.do_avoid()
 
   def be_scanner(self):
-    scanDirs=7  # 7 gives 30deg
+    scanDirs=13  # 13 gives 15 deg
     scanDeltaAngle = 180 / (scanDirs-1)
     if (self.currentState != Robot.SCANNER):
           rptstr = "\nI'm Scanning now"
@@ -217,9 +221,11 @@ class Robot():
         self.do_thinking()
         for scanAngle in range(180,-1,-scanDeltaAngle):
           tiltpan.pan_servo(scanAngle)
+          time.sleep(3)  # to be sure sensor has been polled
           usDist = self.usDistance.inInches()
-          print "angle: %d  dist: %d inches" % (scanAngle, usDist)
-          time.sleep(5.0)      
+          irDist = irDistance.inInches()
+          print "angle: %d  usDist: %0.1f  irDist: %0.1f inches" % (scanAngle, usDist, irDist)
+          time.sleep(2.0)      
     
                
 
