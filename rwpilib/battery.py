@@ -96,9 +96,9 @@ def printLifeTable():
 
 BatteryCutOff = 6.53  # 10 minutes 7/2017
 
-def batteryTooLow():
-  if (volts() < BatteryCutOff): return True
-  else:                         return False
+def batteryTooLow(limit=BatteryCutOff):
+  if (volts() < limit): return True
+  else:                 return False
 
 
 # ##### MAIN ######
