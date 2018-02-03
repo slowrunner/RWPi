@@ -2,20 +2,33 @@
 #
 # batt_life.py   Run Battery down while printing status
 #
+# The 7v2 unregulated through 2:1 divider must be connected to 
+#      ADC6 (pin 6) for this test
+#
+# This test will loop reading the voltage on ADC6 and current (pin 7)
+#      UNTIL voltage drops below 5.9v 4 times,
+#      then will issue a shutdown now
+#
+# Start this test with $ sudo python batt_life.py
+#
+import sys
+sys.path
+sys.path.append('/home/pi/RWPi')
 
-import PDALib
-import myPDALib
-import myPyLib
-import battery
-import currentsensor
-from usDistanceClass import UltrasonicDistance
-import irDistance
-from bumpersClass import Bumpers
+import rwpilib.PDALib as PDALib
+import rwpilib.myPDALib as myPDALib
 import time
-from datetime import datetime
+import signal
+import rwpilib.currentsensor as currentsensor
+import rwpilib.battery as battery
 import os
 import sys
-import speak
+
+import rwpilib.myPyLib as myPyLib
+from rwpilib.usDistanceClass import UltrasonicDistance
+import rwpilib.irDistance as irDistance
+from rwpilib.bumpersClass import Bumpers
+from datetime import datetime
 
 # Return CPU temperature as a character string                                      
 def getCPUtemperature():
