@@ -78,11 +78,13 @@ def main():
   # #### INIT SENSORS 
   b=Bumpers()
   u=UltrasonicDistance()
-  speak.say("Starting status loop at %.2f volts" % battery.volts())  
+  speak.say("Starting status loop at %.2f volts" % battery.volts())
+  lowBatteryCount = 0  
   try:
     while True:
         printStatus()
-        if (battery.batteryTooLow()):
+        if (battery.batteryTooLow()): lowBatteryCount += 1
+        if (lowBatteryCount > 3):
           speak.say("WARNING, WARNING, SHUTTING DOWN NOW")
           print ("BATTERY %.2f volts BATTERY - SHUTTING DOWN NOW" % battery.volts())
           os.system("sudo shutdown -h now")
