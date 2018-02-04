@@ -60,18 +60,18 @@ def readingToVolts(reading):
 #   July 2017 6.5, 12.5h, 12.17h, 12.65h, 11h55m,
 #             (2x 3yr old EBL cells, 4x 1yr old Tenergy cells)
 #   Nov 2017  8.25 running status.sh - (first hit of battery too low shutdown)            
+#   Feb 2018  8.5-9.5 hrs to four low batt 6.53v readings
 
 #  (V , Time remaining)
 
 lifePoints= (
- (10.0,  9.00),   # guess - exception'd at 9.1v during recharge
- (9.00,  8.75),   # guess    
- (8.50,  8.50),   # guess
- (8.10,  8.25),   # 
- (7.20,  4.00),   # 6x1.2v half discharge point 
- (6.85,  1.00),
- (6.65,  0.02),  # 11 min life left, and 1 min to 6.53v shutdown event #
- (6.45,  0.00),  # battery_life shutdown 7/2017)
+ (10.0,  11.00),   # guess - exception'd at 9.1v during recharge
+ (9.00,  10.25),   #     
+ (8.50,  10.00),   # 
+ (7.60,  8.25),    # 
+ (6.93,  1.00),
+ (6.78,  0.17),  # about 10 min till safe shutdown
+ (6.53,  0.00),  # safe shutdown with about 10 min juice)
  (0.00, -1.00)
  )
 
