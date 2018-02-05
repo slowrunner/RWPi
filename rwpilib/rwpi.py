@@ -69,7 +69,7 @@ class RWPi():
     
   def __init__(self):
       print "RWPi__init__"
-      self.newState(Robot.State.STARTUP)
+      self.newState(RWPi.State.STARTUP)
       self.printStatus=printStatus.PrintStatus
       self.sayStatus=sayStatus.SayStatus
       self.bumpers=Bumpers()           # give robot instance bumpers
@@ -93,9 +93,9 @@ class RWPi():
                Bumpers.ALL       : Motors.NONE }
 
   def do_escape(self):
-          self.newState(Robot.State.ESCAPING)
+          self.newState(RWPi.State.ESCAPING)
           escapeSpin = self.escapeDirDict[self.bumpDir]  
-          while (self.currentState == Robot.State.ESCAPING):
+          while (self.currentState == RWPi.State.ESCAPING):
             # response to bumps
             # spin to escapeDir
             if (escapeSpin != Motors.NONE):
@@ -115,10 +115,10 @@ class RWPi():
               self.report(rptstr)
               self.motors.travel(self.MyDiaInInches/2,Motors.SLOW)
               self.motors.waitForStopped()
-              self.revertState(Robot.State.ESCAPING)
+              self.revertState(RWPi.State.ESCAPING)
             else:
               escapeSpin = Motors.CCW45
-          self.revertState(Robot.State.ESCAPING)
+          self.revertState(RWPi.State.ESCAPING)
               
   def check_clear(self,bodyLengths=2):
     rptstr = "Checking if path is clear for %d bodyLengths" % bodyLengths
@@ -133,8 +133,8 @@ class RWPi():
               
   def do_avoid(self,bodyLengths=2):
     while (self.check_clear(bodyLengths) != True):
-        if (self.currentState != Robot.State.AVOIDING): 
-            self.newState(Robot.State.AVOIDING)
+        if (self.currentState != RWPi.State.AVOIDING): 
+            self.newState(RWPi.State.AVOIDING)
         # Choose an avoidance spin (hard coded right now)
         avoidSpin = Motors.CW45  
         # spin to avoidDir
@@ -142,15 +142,15 @@ class RWPi():
         self.report(rptstr)
         self.motors.turn(avoidSpin)
         self.motors.waitForStopped()
-    if (self.currentState == Robot.State.AVOIDING):
-        self.revertState(Robot.State.AVOIDING)
+    if (self.currentState == RWPi.State.AVOIDING):
+        self.revertState(RWPi.State.AVOIDING)
           
   def do_thinking(self):
     numThoughts=0
-    if (self.currentState != Robot.THINKING):
+    if (self.currentState != RWPi.THINKING):
         rptstr = "\nI'm THINKING now"
         self.report(rptstr)
-        self.newState(Robot.State.THINKING)
+        self.newState(RWPi.State.THINKING)
         tiltpan.center_servos()
         self.printStatus(self)
         self.sayStatus(self)
@@ -163,14 +163,14 @@ class RWPi():
     while (numThoughts < 300):    # think for about 30 seconds
         numThoughts += 1    
         if (self.bumpers.status() != Bumpers.NONE):
-            self.newState(Robot.State.BUMPED)
+            self.newState(RWPi.State.BUMPED)
             self.bumpDir=self.bumpers.status()
             rptstr =  "\nI've been bumped! (%s)" % self.bumpers.toStr(self.bumpDir)       
             self.report(rptstr)
             self.do_escape()  
-            self.revertState(Robot.State.THINKING)              
+            self.revertState(RWPi.State.THINKING)              
         time.sleep(0.1)      
-    self.revertState(Robot.State.THINKING)
+    self.revertState(RWPi.State.THINKING)
 
   '''  egret(): egret inspired behavior
   loop until "tired*":
@@ -190,36 +190,36 @@ class RWPi():
   '''
 
   def be_egret(self):
-    self.newState(Robot.State.EGRET)
-    while (self.currentState != Robot.State.DONE):
+    self.newState(RWPi.State.EGRET)
+    while (self.currentState != RWPi.State.DONE):
         self.do_thinking()
-        self.newState(Robot.State.EGRET)
+        self.newState(RWPi.State.EGRET)
         if (self.check_clear(4) == True):
             print "egret.py:be_egret: MOVING 3 body lengths"
             self.report("Moving 3 body lengths")
-            self.newState(Robot.State.MOVING)
+            self.newState(RWPi.State.MOVING)
             self.motors.travel(self.MyDiaInInches*3,Motors.FAST)
             self.motors.waitForStopped()
-            self.newState(Robot.State.STOPPED)
+            self.newState(RWPi.State.STOPPED)
         elif (self.check_clear(2) == True):
             print "egret.py:be_egret: MOVING 1 body length"
             self.report("Moving 1 body length")
-            self.newState(Robot.State.MOVING)
+            self.newState(RWPi.State.MOVING)
             self.motors.travel(self.MyDiaInInches,Motors.MEDIUM)
             self.motors.waitForStopped()
-            self.newState(Robot.State.STOPPED)
+            self.newState(RWPi.State.STOPPED)
         else:
           self.do_avoid()
 
   def be_scanner(self):
     scanDirs=13  # 13 gives 15 deg
     scanDeltaAngle = 180 / (scanDirs-1)
-    if (self.currentState != Robot.SCANNER):
+    if (self.currentState != RWPi.SCANNER):
           rptstr = "\nI'm Scanning now"
           print rptstr
           self.report(rptstr)
-          self.newState(Robot.State.SCANNER)        
-    while (self.currentState != Robot.State.DONE):
+          self.newState(RWPi.State.SCANNER)        
+    while (self.currentState != RWPi.State.DONE):
         self.do_thinking()
         for scanAngle in range(180,-1,-scanDeltaAngle):
           tiltpan.pan_servo(scanAngle)
@@ -233,15 +233,15 @@ class RWPi():
 
   
   def cancel(self):
-     print "robot.cancel() called"
-     self.report("robot.cancel called")
+     print "RWPi.cancel() called"
+     self.report("RWPi.cancel called")
      self.motors.cancel()
-     self.newState(Robot.State.SHUTDOWN)
+     self.newState(RWPi.State.SHUTDOWN)
      self.printStatus(self)
      self.bumpers.cancel()
      self.usDistance.cancel()
      encoders.cancel()
-     self.newState(Robot.State.DONE)
+     self.newState(RWPi.State.DONE)
 
 #end RWPi() class
 
@@ -250,7 +250,7 @@ def main():
   try:
     print "Starting rwpi.py Main"
     
-    r=Robot()
+    r=RWPi()
     myPyLib.set_cntl_c_handler(r.cancel)  # Set CNTL-C handler 
     r.be_scanner()
   except SystemExit:
