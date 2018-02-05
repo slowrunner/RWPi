@@ -242,6 +242,11 @@ class RWPi():
      self.usDistance.cancel()
      encoders.cancel()
      self.newState(RWPi.State.DONE)
+     myPDALib.PiExit()
+
+  def set_cntl_c_handler(self):
+     myPyLib.set_cntl_c_handler(r.cancel)  # Set CNTL-C handler 
+
 
 #end RWPi() class
 
@@ -251,16 +256,14 @@ def main():
     print "Starting rwpi.py Main"
     
     r=RWPi()
-    myPyLib.set_cntl_c_handler(r.cancel)  # Set CNTL-C handler 
+    r.set_cntl_c_handler()
     r.be_scanner()
   except SystemExit:
-    myPDALib.PiExit()
     print "rwpi.py main: time for threads to quit"
     time.sleep(1)
     print "rwpi.py says: Bye Bye"    
   except:
     print "Exception Raised"
-    # r.cancel()
     traceback.print_exc()
     
 
