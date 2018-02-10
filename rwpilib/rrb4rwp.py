@@ -243,11 +243,11 @@ class RRB3:
 def main():
     print "rrb4rwp:main: *** rrb4rwp.py TEST MAIN ***"
     rr = RRB3()
-    speed = 1.0    
+    spd = 1.0    
 
     def print_status():
         print("Ultrasonic Distance: %.1f cm" % rr.get_distance())
-        print "Speed: ", speed
+        print "Speed: ", spd
 
     def key_input(event):
         key_press = event  # ALAN  for Tkinter was = event.keysym.lower()
@@ -269,9 +269,9 @@ def main():
         
             """
         if key_press == 'w':
-            rr.forward(1,speed)
+            rr.forward(1,spd)
         elif key_press == 's':
-            rr.reverse(1,speed)
+            rr.reverse(1,spd)
         elif key_press == 'a':
             rr.left()
         elif key_press == 'd':
@@ -283,11 +283,11 @@ def main():
         elif key_press == ' ':     # was 'space'
             rr.stop()
         elif key_press == '+':
-            speed+=0.1
-            if (speed > 1.0): speed = 1.0
+            spd+=0.1
+            if (spd > 1.0): spd = 1.0
         elif key_press == '-':
-            speed-=0.1
-            if (speed < 0.1): speed = 0.1
+            spd-=0.1
+            if (spd < 0.1): spd = 0.1
         elif key_press == 'u':
             print rr.get_distance()," cm"
         elif key_press == '=':
