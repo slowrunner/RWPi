@@ -295,7 +295,7 @@ def main():
             print_status()
         elif key_press == 'x':
             rr.cleanup()
-            break
+            quit()
             
 
     # command = tk.Tk()
