@@ -250,6 +250,7 @@ def main():
         print "Speed: ", spd
 
     def key_input(event):
+        global spd
         key_press = event  # ALAN  for Tkinter was = event.keysym.lower()
         print(key_press)
 
