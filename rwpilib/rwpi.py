@@ -245,7 +245,7 @@ class RWPi():
      myPDALib.PiExit()
 
   def set_cntl_c_handler(self):
-     myPyLib.set_cntl_c_handler(r.cancel)  # Set CNTL-C handler 
+     myPyLib.set_cntl_c_handler(self.cancel)  # Set CNTL-C handler 
 
 
 #end RWPi() class
