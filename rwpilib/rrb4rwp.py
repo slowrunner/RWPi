@@ -129,7 +129,7 @@ class RRB3:
 
     def set_driver_pins(self, left_pwm, left_dir, right_pwm, right_dir):  # 0.0 to 1.0, fwd=0 rev=1, 0.0-1.0, fwd=0 rev=1
         #self.left_pwm.ChangeDutyCycle(left_pwm * 100 * self.pwm_scale)
-        PDALib.analogWrite(self.MotorPin[self.LEFT], int( left_pwm * (self.MaxPwr - self.MinPwr2Move) + selft.MinPwr2Move ) ) #set motor pwr level
+        PDALib.analogWrite(self.MotorPin[self.LEFT], int( left_pwm * (self.MaxPwr - self.MinPwr2Move) + self.MinPwr2Move ) ) #set motor pwr level
         #GPIO.output(self.LEFT_1_PIN, left_dir)
         #GPIO.output(self.LEFT_2_PIN, not left_dir)
         PDALib.digitalWrite(MotorDirA[self.LEFT],not left_dir)      # write 1=fwd 0=coast
