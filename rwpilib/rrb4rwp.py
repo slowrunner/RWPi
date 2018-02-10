@@ -243,14 +243,14 @@ class RRB3:
 def main():
     print "rrb4rwp:main: *** rrb4rwp.py TEST MAIN ***"
     rr = RRB3()
-    spd = 1.0    
+    spd = 0.9    
 
     def print_status():
         print("Ultrasonic Distance: %.1f cm" % rr.get_distance())
         print "Speed: ", spd
 
     def key_input(event):
-        global spd
+        spd = 1.0
         key_press = event  # ALAN  for Tkinter was = event.keysym.lower()
         print(key_press)
 
