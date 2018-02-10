@@ -95,6 +95,14 @@ class RRB3:
     ####  __init__  parameters are ignored
 
     def __init__(self, battery_voltage=9.0, motor_voltage=6.0, revision=2):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
+        GPIO.setup(self.TRIGGER_PIN, GPIO.OUT)
+        GPIO.setup(self.ECHO_PIN, GPIO.IN)
+
+
+
+
         PDALib.pinMode(self.RMotor,PDALib.PWM)  # init motor1 speed control pin
         PDALib.pinMode(self.LMotor,PDALib.PWM)  # init motor2 speed control pin 
 
