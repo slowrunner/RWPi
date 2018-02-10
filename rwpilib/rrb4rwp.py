@@ -265,7 +265,7 @@ def main():
             space: stop
             u: ultrasonic dist
             =: status
-            
+            x: exit
             ctrl-c: quit
         
             """
@@ -293,6 +293,9 @@ def main():
             print rr.get_distance()," cm"
         elif key_press == '=':
             print_status()
+        elif key_press == 'x':
+            rr.cleanup()
+            break
             
 
     # command = tk.Tk()
