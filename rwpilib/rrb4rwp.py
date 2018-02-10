@@ -95,19 +95,19 @@ class RRB3:
     ####  __init__  parameters are ignored
 
     def __init__(self, battery_voltage=9.0, motor_voltage=6.0, revision=2):
-        PDALib.pinMode(RMotor,PDALib.PWM)  # init motor1 speed control pin
-        PDALib.pinMode(LMotor,PDALib.PWM)  # init motor2 speed control pin 
+        PDALib.pinMode(self.RMotor,PDALib.PWM)  # init motor1 speed control pin
+        PDALib.pinMode(self.LMotor,PDALib.PWM)  # init motor2 speed control pin 
 
-        PDALib.pinMode(M1DirA,PDALib.OUTPUT)  #init motor1 dirA/Fwd    enable
-        PDALib.pinMode(M1DirB,PDALib.OUTPUT)  #init motor1 dirB/Bkwd  enable
-        PDALib.pinMode(M2DirA,PDALib.OUTPUT)  #init motor2 dirA/Fwd    enable
-        PDALib.pinMode(M2DirB,PDALib.OUTPUT)  #init motor2 dirB/Bkwd  enable
+        PDALib.pinMode(self.M1DirA,PDALib.OUTPUT)  #init motor1 dirA/Fwd    enable
+        PDALib.pinMode(self.M1DirB,PDALib.OUTPUT)  #init motor1 dirB/Bkwd  enable
+        PDALib.pinMode(self.M2DirA,PDALib.OUTPUT)  #init motor2 dirA/Fwd    enable
+        PDALib.pinMode(self.M2DirB,PDALib.OUTPUT)  #init motor2 dirB/Bkwd  enable
 
         # init all direction pins to off
-        PDALib.digitalWrite(M1DirA,0)  #set to off/coast
-        PDALib.digitalWrite(M1DirB,0)  #set to off/coast
-        PDALib.digitalWrite(M2DirA,0)  #set to off/coast
-        PDALib.digitalWrite(M2DirB,0)  #set to off/coast
+        PDALib.digitalWrite(self.M1DirA,0)  #set to off/coast
+        PDALib.digitalWrite(self.M1DirB,0)  #set to off/coast
+        PDALib.digitalWrite(self.M2DirA,0)  #set to off/coast
+        PDALib.digitalWrite(self.M2DirB,0)  #set to off/coast
 
 
 
@@ -121,14 +121,14 @@ class RRB3:
 
     def set_driver_pins(self, left_pwm, left_dir, right_pwm, right_dir):  # 0.0 to 1.0, fwd=0 rev=1, 0.0-1.0, fwd=0 rev=1
         #self.left_pwm.ChangeDutyCycle(left_pwm * 100 * self.pwm_scale)
-        PDALib.analogWrite(MotorPin[self.LEFT], int( left_pwm * (self.MaxPwr - self.MinPwr2Move) + selft.MinPwr2Move ) ) #set motor pwr level
+        PDALib.analogWrite(self.MotorPin[self.LEFT], int( left_pwm * (self.MaxPwr - self.MinPwr2Move) + selft.MinPwr2Move ) ) #set motor pwr level
         #GPIO.output(self.LEFT_1_PIN, left_dir)
         #GPIO.output(self.LEFT_2_PIN, not left_dir)
         PDALib.digitalWrite(MotorDirA[self.LEFT],not left_dir)      # write 1=fwd 0=coast
         PDALib.digitalWrite(MotorDirB[self.LEFT],left_dir)          # write 1=bwd 0=coast
 
         #self.right_pwm.ChangeDutyCycle(right_pwm * 100 * self.pwm_scale)
-        PDALib.analogWrite(MotorPin[self.RIGHT], int( right_pwm * (self.MaxPwr - self.MinPwr2Move) + self.MinPwr2Move ) ) #set motor pwr level
+        PDALib.analogWrite(self.MotorPin[self.RIGHT], int( right_pwm * (self.MaxPwr - self.MinPwr2Move) + self.MinPwr2Move ) ) #set motor pwr level
         #GPIO.output(self.RIGHT_1_PIN, right_dir)
         #GPIO.output(self.RIGHT_2_PIN, not right_dir)
         PDALib.digitalWrite(MotorDirA[self.RIGHT],not right_dir)      # write 1=fwd 0=coast
