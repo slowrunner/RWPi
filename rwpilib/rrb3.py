@@ -264,7 +264,8 @@ class RRB3():
 
 #    reverse(self, seconds=0, speed=1.0):
   def reverse(self, seconds=0, speed=1.0):
-      self.set_motors(speed, 1, speed, 1)
+      #self.set_motors(speed, 1, speed, 1)
+      self.motors.drive(-int(speed*100))  # translate 0-1 to 0..-100
       if seconds >0:
           time.sleep(seconds)
           self.stop()

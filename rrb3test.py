@@ -2,23 +2,26 @@
 
 
 import time
-import rrb3
+import rwpilib.rrb3 as rrb
 
 
 
 # ############ rrb4rwp TEST MAIN ######################
 	
+spd = 0
+
 def main():
+    global spd
     print "*** rrb3test.py TEST MAIN ***"
-    rr = rrb3.RRB3()
+    rr = rrb.RRB3()
     spd = 0.9    
 
     def print_status():
-        print("Ultrasonic Distance: %.1f cm" % rr.get_distance())
+        print("Ultrasonic Distance: %.1f in" % (rr.get_distance()/2.54))
         print "Speed: ", spd
 
     def key_input(event):
-        spd = 1.0
+        global spd
         key_press = event  # ALAN  for Tkinter was = event.keysym.lower()
         print(key_press)
 
@@ -42,9 +45,9 @@ def main():
         elif key_press == 's':
             rr.reverse(1,spd)
         elif key_press == 'a':
-            rr.left()
+            rr.left(1)
         elif key_press == 'd':
-            rr.right()
+            rr.right(1)
         elif key_press == 'q':
             rr.left()
         elif key_press == 'e':
