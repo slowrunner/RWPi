@@ -353,6 +353,8 @@ def main():
     r.right(0.5)
     print("distance: %.1f cm" % r.get_distance()) 
     r.do_thinking()
+    r.cleanup()
+    break
   except SystemExit:
     print "rrb3.py main: time for threads to quit"
     time.sleep(1)
