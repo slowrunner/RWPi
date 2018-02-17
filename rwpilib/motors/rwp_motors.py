@@ -74,7 +74,7 @@ def motor(index,vel):  #mtr 0=lft, 1=rt, +/-100%
         avel = -vel        
         PDALib.digitalWrite(MotorDirA[index],0)  #set to off/coast
         PDALib.digitalWrite(MotorDirB[index],1)  #set to bwd
-    pwr = int( (MaxPwr - MinPwr2Move) * vel)  # compute pct to pwr
+    pwr = int( (MaxPwr - MinPwr2Move) * vel)  # compute pct to pwr (need + MinPwr2Move?)
     PDALib.analogWrite(MotorPin[index], pwr)  #set motor pwr level
 
 # ### DRIVE(TRANS_VEL, ROT_VEL)
