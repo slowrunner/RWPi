@@ -45,43 +45,43 @@ from speak import say
 
 class RRB3():
   # rrb3 stuff
-    MOTOR_DELAY = 0.2
+  MOTOR_DELAY = 0.2
 
-    left_pwm = 0        # 0.0-1.0
-    right_pwm = 0       # 0.0-1.0
+  left_pwm = 0        # 0.0-1.0
+  right_pwm = 0       # 0.0-1.0
 
-    old_left_dir = -1   # 0=fwd, 1=bwd
-    old_right_dir = -1  # 0=fwd, 1=bwd
+  old_left_dir = -1   # 0=fwd, 1=bwd
+  old_right_dir = -1  # 0=fwd, 1=bwd
 
-    # #### RWPi Vars AND CONSTANTS
+  # #### RWPi Vars AND CONSTANTS
 
-    LEFT = 0     # LEFT MOTOR
-    RIGHT = 1    # RIGHT MOTOR
+  LEFT = 0     # LEFT MOTOR
+  RIGHT = 1    # RIGHT MOTOR
 
-    # Motor Pins 
-    # SRV 6		Motor 1 Speed (PWM)
-    # SRV 7		Motor 2 Speed (PWM)
+  # Motor Pins 
+  # SRV 6		Motor 1 Speed (PWM)
+  # SRV 7		Motor 2 Speed (PWM)
 
-    RMotor = 6
-    LMotor = 7
+  RMotor = 6
+  LMotor = 7
 
-    MotorPin = [7,6]  # MotorPin[0] Left, MotorPin[1] Right
+  MotorPin = [7,6]  # MotorPin[0] Left, MotorPin[1] Right
 
-    # DIO 12 (A4)	Motor 1 Dir A (0=coast 1=F/Brake)
-    # DIO 13 (A5)	Motor 1 Dir B (0=coast 1=R/Brake)
+  # DIO 12 (A4)	Motor 1 Dir A (0=coast 1=F/Brake)
+  # DIO 13 (A5)	Motor 1 Dir B (0=coast 1=R/Brake)
 
-    # DIO 14 (A6)	Motor 2 Dir A (0=coast 1=F/Brake)
-    # DIO 15 (A7)	Motor 2 Dir B (0=coast 1=R/Brake)
+  # DIO 14 (A6)	Motor 2 Dir A (0=coast 1=F/Brake)
+  # DIO 15 (A7)	Motor 2 Dir B (0=coast 1=R/Brake)
 
-    M1DirA = 12
-    M1DirB = 13
-    M2DirA = 14
-    M2DirB = 15
-    MotorDirA = [14,12]  # 0 left 1 right
-    MotorDirB = [15,13]  # 0 left 1 right
+  M1DirA = 12
+  M1DirB = 13
+  M2DirA = 14
+  M2DirB = 15
+  MotorDirA = [14,12]  # 0 left 1 right
+  MotorDirB = [15,13]  # 0 left 1 right
 
-    MinPwr2Move = 100
-    MaxPwr = 255
+  MinPwr2Move = 100
+  MaxPwr = 255
 
 
 
@@ -253,18 +253,18 @@ class RRB3():
 
 #    forward(self, seconds=0, speed=1.0):
   def forward(self, seconds=0, speed=1.0):
-      self.motors.forward(int(speed*100))   # translate 0-1 to 0-100
+      self.motors.drive(int(speed*100))   # translate 0-1 to 0-100
       if seconds >0:
           time.sleep(seconds)
           self.stop()
 
 #    stop(self):
-  def stop(self);
+  def stop(self):
       self.motors.stop()
 
 #    reverse(self, seconds=0, speed=1.0):
   def reverse(self, seconds=0, speed=1.0):
-      self.set_mostors(speed, 1, speed, 1)
+      self.set_motors(speed, 1, speed, 1)
       if seconds >0:
           time.sleep(seconds)
           self.stop()
@@ -307,7 +307,7 @@ class RRB3():
         self.old_right_dir = right_dir
 
 #    set_driver_pins(self, left_pwm, left_dir, right_pwm, right_dir):
-    def set_driver_pins(self, left_pwm, left_dir, right_pwm, right_dir):  # 0.0 to 1.0, fwd=0 rev=1, 0.0-1.0, fwd=0 rev=1
+  def set_driver_pins(self, left_pwm, left_dir, right_pwm, right_dir):  # 0.0 to 1.0, fwd=0 rev=1, 0.0-1.0, fwd=0 rev=1
         #self.left_pwm.ChangeDutyCycle(left_pwm * 100 * self.pwm_scale)
         if(left_pwm > 0):
           PDALib.analogWrite(self.MotorPin[self.LEFT], int( left_pwm * (self.MaxPwr - self.MinPwr2Move) + self.MinPwr2Move ) ) #set motor pwr level
