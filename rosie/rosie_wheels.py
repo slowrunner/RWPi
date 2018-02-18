@@ -1,4 +1,5 @@
 # rosie_wheels.py modified for RWPi
+#    also removed extra elif LEFT stanza
 
 # 08_manual_robot_continuous.py
 # Use the arrow keys to direct the robot
@@ -58,9 +59,6 @@ try:
         elif keyp == LEFT:
             rr.left()
             print 'anti clockwise'
-        elif keyp == LEFT:
-            rr.left()
-            print 'anti clockwise'   
         elif keyp == ' ':
             rr.stop()
             print 'stop'
