@@ -130,7 +130,7 @@ class RRB3():
     say(rptstr)
 
     
-  def __init__(self):
+  def __init__(self,dummy1=0,dummy2=0,dummy3=0,dummy4=0):
       print "RRB3__init__"
       self.newState(RRB3.State.STARTUP)
       self.printStatus=printStatus.PrintStatus
