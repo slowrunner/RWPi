@@ -16,6 +16,10 @@
 #    set_motors(self, left_pwm, left_dir, right_pwm, right_dir):
 #    set_driver_pins(self, left_pwm, left_dir, right_pwm, right_dir):
 
+#  added from RWPi
+#    report("something")    #to speaker
+
+
 #    To use:  import rrb3 as rrb
 #             rr=rrb.RRB3()
 #             rr.forward(2,1.0)  # fwd for 2s at full speed
@@ -144,6 +148,7 @@ class RRB3():
       time.sleep(2)
       tiltpan.setup_servo_pins()
       tiltpan.center_servos()
+      self.set_cntl_c_handler()
 
   escapeDirDict={
                Bumpers.NONE      : Motors.NONE,
@@ -340,7 +345,7 @@ def main():
     print "Starting rr3.py Main"
     
     r=RRB3()
-    r.set_cntl_c_handler()
+    # r.set_cntl_c_handler()
     r.stop()
     r.forward(1,1)
     r.left(1,0.75)

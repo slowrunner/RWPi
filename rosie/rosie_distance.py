@@ -4,7 +4,7 @@
 import time
 
 # Import the RasPi Robot Board V3 module and all its functions
-from rrb3 import *
+from rwpilib.rrb3 import *
 
 # Create an instance of the RRB3 object
 rr = RRB3()
@@ -39,7 +39,7 @@ while True:
          alert_level = 2   
          rgb.set_color(RED)
          print("ROSIE: Too close!  Too close!")
-         rr.say("Too close! Too close!")
+         rr.report("Too close! Too close!")
 
    # Else if last and current distances are both below warning level
    # if not already at alert_level 1,
@@ -49,7 +49,7 @@ while True:
          alert_level = 1
          rgb.set_color(YELLOW)
          print("ROSIE: I don't like the look of that...")
-         rr.say("I don't like the look of that...")
+         rr.report("I don't like the look of that...")
 
    # Else if last and current distances are both equal to or above warning level
    # if not already at alert_level 0,
@@ -59,7 +59,7 @@ while True:
          alert_level = 0
          rgb.set_color(BLUE)
          print("ROSIE: It's all good.")
-         rr.say("It's all good.")
+         rr.report("It's all good.")
 
    # Set current distance to be last_distance before looping
    distance_last = distance
