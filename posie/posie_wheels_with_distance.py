@@ -76,7 +76,7 @@ def check_distance():
             if alert_level != 2:
                 alert_level = 2	
                 rgb.set_color(RED)
-                rr.stop()               # Stop Rosie's motors
+                rr.stop()               # Stop Rosie's motors if running
                 print("ROSIE: Too close!  Too close!\r")
                 rr.report("Too close! Too close!")
 
@@ -136,14 +136,14 @@ if __name__ == "__main__":
             if keyp == UP:
                 # If too close, disable control to move forwards and log message instead
                 if alert_level != 2:
-                    rr.forward(0, 0.5)
+                    rr.forward(1, 0.5)
                     print("ROSIE: I'm moving forwards.\r")
                     rr.report("I'm moving forward")
                 else:
                     print("ROSIE: For your safety, forward is currently disabled.\r")
                     rr.report("For my safety, forward is currently disabled.")
             elif keyp == DOWN:
-                rr.reverse(0, 0.5)
+                rr.reverse(0.5, 0.5)
                 print("ROSIE: I'm going backwards.\r")
                 rr.report("I'm going backwards.")
             elif keyp == RIGHT:
@@ -160,6 +160,7 @@ if __name__ == "__main__":
                 rr.report("I've stopped.")
             elif ord(keyp) == 3:
                 print("ROSIE: keyp == 3 detected")
+                rr.cleanup()
                 break
         # ------------------------------------------------------------------------------------------------------------
 
