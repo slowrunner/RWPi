@@ -8,7 +8,7 @@
 import sys, tty, termios        # Modules required for user input using keyboard
 import time	                	# Module required for time.sleep() function
 
-from rrb3 import *              # All functions of module required for RasPiRobot v3
+from rwpilib.rrb3 import *              # All functions of module required for RasPiRobot v3
 from squid import *             # All functions of module required for RGB LED ('squid')
 
 from threading import Thread    # Required for starting and managing threads in Python
