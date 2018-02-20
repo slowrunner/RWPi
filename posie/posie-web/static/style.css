@@ -1,0 +1,18 @@
+body {
+ background: #ff4141;
+ color: #532619;
+}
+
+.button-control {
+ height: 100px;
+ width: 100px;
+ background: #eec6c6;
+ color: #532619;
+ border-radius: 5px;
+}
+
+.button-control:active {
+ color: #eec6c6;
+ background: #532619;
+} 
+
