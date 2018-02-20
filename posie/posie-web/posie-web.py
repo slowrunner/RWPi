@@ -123,8 +123,8 @@ if __name__ == "__main__":
         t.daemon = True                         # Start as a daemon
         t.start()                               # Start thread for distance checking
 
-        # Start Flask web server, make it accessible across the network
-        app.run(host = "10.0.0.184")
+        # Start Flask web server, make it accessible across the network on port 5000
+        app.run(host = "0.0.0.0")
 
     except KeyboardInterrupt:
         #GPIO.cleanup()
