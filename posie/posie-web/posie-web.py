@@ -3,11 +3,15 @@
 # Changes:
 #  GPIO.cleanup() -> rr.cleanup
 #  from rwpilib.rrb3
-#  (assumes running from pi/RWPi/ and templates/ and static/ exist in pi/RWPi)
+#  (assumes running from pi/RWPi/posie/posie-web/
+#  added rr.report("...") to make posie talk
+#  added time limits for all motor commands
+#
+# Point browser to Posie's IP port 5000 e.g. http://RWPi:5000
 
 import time                     # Module required for time.sleep() function
 
-from rrb3 import *              # All functions of module required for RasPiRobot v3
+from rwpilib.rrb3 import *              # All functions of module required for RasPiRobot v3
 from squid import *             # All functions of module required for RGB LED ('squid')
 
 from threading import Thread    # Required for starting and managing threads in Python
@@ -28,7 +32,7 @@ app = Flask(__name__)
 # New function, to be looped in an infinite background thread, that monitors distance and changes alert levels
 # Also changes RGB LED colour and stops motors when too close
 def check_distance():
-    print("ROSIE: I've started my distance sensor...\r")
+    print("POSIE: I've started my distance sensor...\r")
 
     # Parameters for application:
     distance_danger = 25                    # Distance (cm) below which alert level becomes danger
@@ -54,7 +58,8 @@ def check_distance():
                 alert_level = 2	
                 rgb.set_color(RED)
                 rr.stop()               # Stop Rosie's motors
-                print("ROSIE: Too close!  Too close!\r")
+                print("POSIE: Too close!  Too close!\r")
+                rr.report("Too close! Too Close!")
 
         # Else if last and current distances are both below warning level
         # if not already at alert_level 1,
@@ -63,7 +68,8 @@ def check_distance():
             if alert_level != 1:
                 alert_level = 1
                 rgb.set_color(YELLOW)
-                print("ROSIE: I don't like the look of that...\r")
+                print("POSIE: I don't like the look of that...\r")
+                rr.report("I don't like the look of that.")
 
         # Else if last and current distances are both equal to or above warning level
         # if not already at alert_level 0,
@@ -72,7 +78,8 @@ def check_distance():
             if alert_level != 0:
                 alert_level = 0
                 rgb.set_color(BLUE)
-                print("ROSIE: It's all good.\r")
+                print("POSIE: It's all good.\r")
+                rr.report("It's all good now.")
 
         # Set current distance to be last_distance before looping
         distance_last = distance 
@@ -94,21 +101,27 @@ def control_rosie():
         # If too close, disable control to move forwards and log message instead
         if alert_level != 2:
             rr.forward(1.0, 0.5)
-            print("ROSIE: I'm moving forwards.\r")
+            print("POSIE: I'm moving forwards.\r")
+            rr.report("I'm going forwards.")
         else:
-            print("ROSIE: For your safety, forward is currently disabled.\r")
+            print("POSIE: For your safety, forward is currently disabled.\r")
+            rr.report("For your safety, forward is currently disabled.")
     elif control == "Reverse":
         rr.reverse(0.5, 0.5)
-        print("ROSIE: I'm going backwards.\r")
+        print("POSIE: I'm going backwards.\r")
+        rr.report("I'm going backwards.")
     elif control == "Right":
         rr.right(0.25)
-        print("ROSIE: I'm turning right.\r")
+        print("POSIE: I'm turning right.\r")
+        rr.report("I'm turning right.")
     elif control == "Left":
         rr.left(0.25)
-        print("ROSIE: I'm turning left.\r") 
+        print("POSIE: I'm turning left.\r")
+        rr.report("I'm turning left.")
     else:
         rr.stop()
-        print("ROSIE: I've stopped.\r")
+        print("POSIE: I've stopped.\r")
+        rr.report("I've stopped.")
     return redirect(url_for("index"))
 #---------------------------------------------------------------------------------------
 
@@ -116,7 +129,8 @@ def control_rosie():
 if __name__ == "__main__":
     try:
 
-        print("ROSIE: I'm starting up...\r")
+        print("POSIE: I'm starting up...\r")
+        rr.report("I'm starting up.")
 
         # Code to start a continuous background thread, to monitor distance and to change alert level (function: check_distance)
         t = Thread(target = check_distance)     # Declare thread for distance checking
