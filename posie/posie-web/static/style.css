@@ -1,9 +1,20 @@
 body {
- background: #ff4141;
- color: #532619;
+  background-color: coral;
 }
 
 .button-control {
+  height: 100px;
+  width: 100px;
+  text-align: center;
+  border-radius: 12px;
+}
+
+.button-control:active {
+  color: #eec6c6;
+  background-color: #532619;
+}
+
+.button-controlx {
  height: 100px;
  width: 100px;
  background: #eec6c6;
@@ -11,7 +22,7 @@ body {
  border-radius: 5px;
 }
 
-.button-control:active {
+.button-controlx:active {
  color: #eec6c6;
  background: #532619;
 } 

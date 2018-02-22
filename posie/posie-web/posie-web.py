@@ -6,12 +6,14 @@
 #  (assumes running from pi/RWPi/posie/posie-web/
 #  added rr.report("...") to make posie talk
 #  added time limits for all motor commands
-#
+#  changed static/style.css  added text-align: center, changed background to background-color: coral, 12px corners
+# 
 # Point browser to Posie's IP port 5000 e.g. http://RWPi:5000
-
+#   if background color is not set - browse http://RWPi:5000/static/style.css, then go back to root page
+#
 import time                     # Module required for time.sleep() function
 
-from rwpilib.rrb3 import *              # All functions of module required for RasPiRobot v3
+from rwpilib.rrb3 import *      # All functions of module required for RasPiRobot v3
 from squid import *             # All functions of module required for RGB LED ('squid')
 
 from threading import Thread    # Required for starting and managing threads in Python
