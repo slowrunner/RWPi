@@ -15,7 +15,7 @@ import signal
 logger = logging.getLogger('lifelog')
 logger.setLevel(logging.INFO)
 loghandler = logging.FileHandler('/home/pi/RWPi/life.log')
-logformatter = logging.Formatter('%(asctime)s|%(message)s')
+logformatter = logging.Formatter('%(asctime)s|%(message)s',"%Y-%m-%d %H:%M")
 loghandler.setFormatter(logformatter)
 logger.addHandler(loghandler)
 logger.info('-------------')  
@@ -73,10 +73,10 @@ class digitalEntity():
     # logger.info('%s.dEmain started',myname)
     i=0
     while True:
+        time.sleep(tSleep)
+        i+=1
         if debugLevel: print "%s.dEmain execution %i" % (myname,i)
         logger.info('%s.dEmain execution: %i',myname, i )
-        i+=1
-        time.sleep(tSleep)
     
 
     if debugLevel: print("dEmain end reached")
