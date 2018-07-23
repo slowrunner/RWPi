@@ -18,7 +18,7 @@ loghandler = logging.FileHandler('/home/pi/RWPi/life.log')
 logformatter = logging.Formatter('%(asctime)s|%(message)s',"%Y-%m-%d %H:%M")
 loghandler.setFormatter(logformatter)
 logger.addHandler(loghandler)
-logger.info('-------------')  
+#logger.info('-------------')  
 
 debugLevel = 0
 
@@ -69,6 +69,7 @@ class digitalEntity():
   # digitalEntity main process
   def dEmain(self,tSleep=defaultSleep):   
     myname = multiprocessing.current_process().name  
+    logger.info("------------")
     if debugLevel: print "%s.dEmain started with tSleep=%f" % (myname,tSleep)
     # logger.info('%s.dEmain started',myname)
     i=0
