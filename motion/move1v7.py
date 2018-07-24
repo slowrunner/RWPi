@@ -466,11 +466,11 @@ END COMMENT OUT
 """
 
 while True:
- 
+
    sar5 = 0
 
 # take picture
-"""  BEGIN COMMENT OUT
+   """  BEGIN COMMENT OUT
    if use_Pi_Cam == 0:
       image = cam.get_image()
       if Zoom == 0:
@@ -501,19 +501,19 @@ while True:
       if preshot == 1:
          pygame.image.save(image,'/run/shm/test.jpg')
 
-      
+
       catSurfaceObj = image
       windowSurfaceObj.blit(catSurfaceObj,(0,0))
       strim = pygame.image.tostring(image,"RGB",1)
-END COMMENT OUT
-"""          
+   END COMMENT OUT
+   """
    if use_Pi_Cam == 1:
 
       while os.path.exists('/run/shm/test.jpg') == False:
           time.sleep(.005)
       imagefile = ('/run/shm/test.jpg')
 
-"""  BEGIN COMMENT OUT
+   """  BEGIN COMMENT OUT
       try:
          image = pygame.image.load(imagefile)
       except pygame.error:
@@ -558,9 +558,9 @@ END COMMENT OUT
       imagem = pygame.transform.scale(image,[width/sf,height/sf])
       imc = pygame.image.tostring(imagem,"RGB",1)
 
-END COMMENT OUT      
-"""
-   
+   END COMMENT OUT
+   """
+
 # initialise arrays
    mx = []
    my = []
@@ -573,7 +573,7 @@ END COMMENT OUT
       mx = [ord(i) for i in imb]
    if auto_c < 3 or det_area == 0:
       my = [ord(i) for i in imc]
-      
+
    if len(mx) == len(omg) and det_area == 1:
       ar5 = (abs(abs(numpy.array(mx)) - abs(numpy.array(omg))) - Threshold)
       ar5 = numpy.clip(ar5,0,1)
@@ -584,13 +584,13 @@ END COMMENT OUT
       ar5 = numpy.clip(ar5,0,1)
       sar5 = sum(ar5)
 
-   if det_area == 1:   
+   if det_area == 1:
       omg = mx[:]
    else:
       omg = my[:]
-         
- 
-   pic =""   
+
+
+   pic =""
    counter = 0
    if thres == 1:
       if det_area == 1:
@@ -622,7 +622,7 @@ END COMMENT OUT
       if trig2 > 0 and Capture == 1:
          trigmask = 10
       trigmask -=1
-      
+
       if (sar5 > trig and trig2 < 95 and Capture == 1 and ((len(mx) == len(omg) and det_area==1) or (len(my) == len(omg) and det_area==0)) or (lapsed == 1 and timelapse == 1 and ((len(mx) == len(omg) and det_area==1) or (len(my) == len(omg) and det_area==0)))):
          time_start = time.time()
 #         if lapsed == 0:
@@ -636,8 +636,8 @@ END COMMENT OUT
          timestamp = now.strftime("%y%m%d%H%M%S")
          fname = savdir + "pic_" + str(timestamp)+ "_" + str(filno) + '.jpg'
          if use_Pi_Cam == 1:
-            if preshot == 1 and lapsed == 0:            
-               if os.path.exists('/run/shm/oldtest2.jpg') == True: 
+            if preshot == 1 and lapsed == 0:
+               if os.path.exists('/run/shm/oldtest2.jpg') == True:
                   fname = savdir + "pic_" + str(timestamp)+ "_" + str(filno) + '.jpg'
                   shutil.copy('/run/shm/oldtest2.jpg',fname)
                   os.remove('/run/shm/oldtest2.jpg')
@@ -647,7 +647,7 @@ END COMMENT OUT
                   shutil.copy('/run/shm/oldtest.jpg',fname)
                filno = filno + 1
                fname = savdir + "pic_" + str(timestamp)+ "_" + str(filno) + '.jpg'
-               
+
             if lapsed == 0 or (lapsed == 1 and fullsize == 0):
                shutil.copy('/run/shm/test.jpg',fname)
                os.rename('/run/shm/test.jpg','/run/shm/oldtest.jpg')
@@ -673,12 +673,12 @@ END COMMENT OUT
                path = rpistr + ' -w 2592 -h 1944'
                #print path
                os.system (path)
-               restart = 1    
- """  BEGIN COMMENT OUT           
+               restart = 1
+         """  BEGIN COMMENT OUT
          else:
             pygame.image.save(image,fname)
-            if preshot == 1 and lapsed == 0:            
-               if os.path.exists('/run/shm/oldtest2.jpg') == True: 
+            if preshot == 1 and lapsed == 0:
+               if os.path.exists('/run/shm/oldtest2.jpg') == True:
                   fname = savdir + "pic_" + str(timestamp)+ "_" + str(filno) + '.jpg'
                   shutil.copy('/run/shm/oldtest2.jpg',fname)
                   os.remove('/run/shm/oldtest2.jpg')
@@ -690,9 +690,9 @@ END COMMENT OUT
                fname = savdir + "pic_" + str(timestamp)+ "_" + str(filno) + '.jpg'
                shutil.copy('/run/shm/test.jpg',fname)
                os.rename('/run/shm/test.jpg','/run/shm/oldtest.jpg')
-END COMMENT OUT
-"""
-               
+         END COMMENT OUT
+         """
+
          time.sleep(0.1)
 #         if lapsed == 0:
 #            keys2 (str(Trigger),14,3,(b1x+31)-(len(str(Trigger))*4),b1y+143,1)
@@ -700,7 +700,7 @@ END COMMENT OUT
 #            keys2 (str(timeperiod),14,3,(b1x+95)-(len(str(timeperiod))*4),b1y+80,1)
 
          shot = 1
- 
+
          while shot < shots  and lapsed == 0:
             filno = filno + 1
             if use_Pi_Cam == 1:
@@ -708,7 +708,7 @@ END COMMENT OUT
                   time.sleep(.001)
                imagefile = ('/run/shm/test.jpg')
 
-""" BEGIN COMMENT OUT
+            """ BEGIN COMMENT OUT
                try:
                   image = pygame.image.load(imagefile)
                except pygame.error:
@@ -756,7 +756,7 @@ END COMMENT OUT
             if use_Pi_Cam == 1 or preshot == 1:
                os.rename('/run/shm/test.jpg','/run/shm/oldtest.jpg')
             shot +=1
-            
+
 #         pygame.draw.rect(windowSurfaceObj,blackColor,Rect(b3x+6,b3y + 162, 50, 25))
 #         keys2 (str(filno),14,1,(b3x+31)-(len(str(filno))*4),b3y+165,1)
 
@@ -821,7 +821,7 @@ END COMMENT OUT
  #                       keys2 ("Exp Time",12,6,b2x+4,b2y + 100,0)
  #                    else:
  #                       keys2 ("       eV",12,6,b2x+4,b2y + 100,0)
-                     
+
             restart = 2
             change = 1
          if ((sar7 < ave - tol) and rpiexno == 0 and auto_c > 1) or ((sar7 < sar6 - tol) and rpiexno == 0 and auto_c == 1):
@@ -829,7 +829,7 @@ END COMMENT OUT
                rpiss = rpiss + int((128-sar7))*1000
                if rpiss > 100000 and rpiISO < 800:
                   rpiISO = rpiISO +100
-                  
+
             restart = 2
             change = 1
          if smax - smin > 245 and restart != 2 and auto_c > 1:
@@ -842,11 +842,11 @@ END COMMENT OUT
                rpico = rpico + 10
                restart = 2
                change = 1
-            
+
          if rpiISO == 800 and rpiss > 1000000 and auto_c > 1:
             rpibr = 60 + (rpiss-1000000)/100000
 
-"""  BEGIN COMMENT OUT               
+   """  BEGIN COMMENT OUT
    if thres == 1 and det_area == 1:
       #keys2 (str(trig2)+"%",16,3,width + 65,height + 5,1)
       imagep = pygame.image.fromstring(pic,(hWindow,vWindow),"RGB",1)
@@ -858,15 +858,15 @@ END COMMENT OUT
       imagem = pygame.transform.scale(imagep,[width,height])
       catSurfaceObj = imagem
       windowSurfaceObj.blit(catSurfaceObj,(0,0))
-   
+
 # shutdown button pressed (if enabled)
    if switch == 1 and GPIO.input(sw) == 0:
       os.killpg(p.pid, signal.SIGTERM)
       path = 'sudo shutdown -h now '
       os.system (path)
-       
+
 # Display
-   
+
    if change == 1:
 
       if oldCapture != Capture:
@@ -962,16 +962,16 @@ END COMMENT OUT
       if oldrpimmno != rpimmno:
          pygame.draw.rect(windowSurfaceObj,greyColor,Rect(b3x+14,b3y + 79, 38, 16))
          keys2 (rpimmsa[rpimmno],14,3,b3x+14,b3y + 79,0)
-  
+
       pygame.display.update(width,0,width+64,height + hplus)
 
-   if auto_c > 2 or det_area > 0:   
+   if auto_c > 2 or det_area > 0:
       w2 = width/2 + offset3
       h2 = height/2 + offset4
       c1 = hWindow /2
       c2 = vWindow /2
-      c3 = c1 +1 
-      c4 = c2 +1 
+      c3 = c1 +1
+      c4 = c2 +1
       if det_area == 1:
          pygame.draw.line(windowSurfaceObj, greenColor, (w2-c1,h2-c2),(w2+c1,h2-c2))
          pygame.draw.line(windowSurfaceObj, greenColor, (w2+c1,h2-c2),(w2+c1,h2+c2))
@@ -984,7 +984,7 @@ END COMMENT OUT
          pygame.draw.line(windowSurfaceObj, yellowColor, (w2-c3,h2+c4),(w2-c3,h2-c4))
 
 
-      
+
    pygame.display.update(0,0,width,height)
 
 
@@ -1021,16 +1021,16 @@ END COMMENT OUT
              os.killpg(p.pid, signal.SIGTERM)
           pygame.quit()
           sys.exit()
-           
+
        elif event.type == MOUSEBUTTONUP or event.type == KEYDOWN:
           restart = 0
           change = 1
-          
+
           z = 0
           kz = 0
           if event.type == KEYDOWN:
              kz = event.key
-             
+
           if event.type == MOUSEBUTTONUP:
              mousex,mousey = event.pos
              if Display > 3:
@@ -1054,7 +1054,7 @@ END COMMENT OUT
                       y = int((mousey-320)/32)+1
                       z = (10*x)+y
                    #print z
-             
+
              if mousex < width and mousey < height :
                 xycle = 0
                 offset3o = offset3
@@ -1062,12 +1062,12 @@ END COMMENT OUT
                 offset3 = 0-((width/2)- mousex)
                 offset4 = 0-((height/2) - mousey)
                 if ((width/2) + offset3 + (hWindow /2) ) >= width or ((width/2) + offset3 - (hWindow /2) ) <=1:
-                   offset3 = offset3o 
-                   offset4 = offset4o 
-                if ((height/2) + offset4 + (vWindow /2) ) >= height or ((height/2) + offset4 - (vWindow /2) ) <=1:
-                   offset3 = offset3o 
+                   offset3 = offset3o
                    offset4 = offset4o
-                   
+                if ((height/2) + offset4 + (vWindow /2) ) >= height or ((height/2) + offset4 - (vWindow /2) ) <=1:
+                   offset3 = offset3o
+                   offset4 = offset4o
+
           if z == 124 or kz == 304 or kz == 303:
              Capture = Capture + 1
              if Capture > 1:
@@ -1083,7 +1083,7 @@ END COMMENT OUT
              if rpibm > 1:
                 rpibm = 0
              restart = 1
-             
+
           if z == 21 or z == 31:
              timelapse = timelapse + 1
              if timelapse > 1:
@@ -1093,14 +1093,14 @@ END COMMENT OUT
              fullsize = fullsize + 1
              if fullsize > 1:
                 fullsize = 0
-                
+
           if ((z > 60 and z < 76) or z==25 or z==35 or z==121 or z==131 or z==122 or z==132 or z==135 or z==81 or z==91)  and use_Pi_Cam == 1:
              os.killpg(p.pid, signal.SIGTERM)
-             
+
           if z == 125:
              pygame.image.save(windowSurfaceObj, savdir + 'scr_pic' + str(pct)+'.jpg')
              pct +=1
-             
+
           if z == 135 and use_Pi_Cam == 1:
              os.killpg(p.pid, signal.SIGTERM)
              rpistr = "raspistill -o " + fname + " -co " + str(rpico) + " -br " + str(rpibr)
@@ -1128,7 +1128,7 @@ END COMMENT OUT
              Triggers = Triggers +1
              if Triggers > 99:
                 Triggers = 99
-                
+
           if z == 4:
              Triggers = Triggers - 1
              if Triggers < 1:
@@ -1138,7 +1138,7 @@ END COMMENT OUT
              timeperiod = timeperiod +1
              if timeperiod > 9999:
                 timeperiod = 9999
-                
+
           if z == 24:
              auto_c = auto_c - 1
              if auto_c < 0:
@@ -1158,22 +1158,22 @@ END COMMENT OUT
              det_area = det_area +1
              if det_area > 1:
                 det_area = 0
-                
+
           if z == 22:
              timeperiod = timeperiod - 1
              if timeperiod < 1:
                 timeperiod = 1
-                
+
           if z == 133:
              shots = shots +1
              if shots > 99:
                 shots = 99
-                
+
           if z == 123:
              shots = shots - 1
              if shots < 1:
                 shots = 1
-                      
+
           if z == 71 :
              rpibr = rpibr + 2
              if rpibr >= 100:
@@ -1181,7 +1181,7 @@ END COMMENT OUT
              if use_Pi_Cam == 0:
                 cam.set_controls(0,0,rpibr)
              restart = 1
-             
+
           if z == 61 :
              rpibr = rpibr - 2
              if rpibr <= 0:
@@ -1189,19 +1189,19 @@ END COMMENT OUT
              if use_Pi_Cam == 0:
                 cam.set_controls(0,0,rpibr)
              restart = 1
-             
+
           if z == 62 :
              rpico = rpico - 5
              if rpico <= -100:
                 rpico = -100
              restart = 1
-             
+
           if z == 72 :
              rpico = rpico + 5
              if rpico >= 100:
                 rpico = 100
              restart = 1
-             
+
           if z == 63 and use_Pi_Cam == 1 and rpiex == 'off':
              if rpiss < 20000:
                 rpiss = rpiss - 1000
@@ -1212,7 +1212,7 @@ END COMMENT OUT
              if rpiss <= 1000:
                 rpiss = 1000
              restart = 1
-             
+
           if z == 73 and use_Pi_Cam == 1  and rpiex == 'off':
              if rpiss < 20000:
                 rpiss = rpiss + 1000
@@ -1223,17 +1223,17 @@ END COMMENT OUT
              if rpiss >= 6000000:
                 rpiss = 6000000
              restart = 1
-             
+
           if z == 63 and use_Pi_Cam == 1 and rpiex != 'off':
              if rpiev >= -9:
                 rpiev = rpiev - 1
              restart = 1
-             
+
           if z == 73 and use_Pi_Cam == 1  and rpiex != 'off':
              if rpiev <= 9:
                 rpiev = rpiev + 1
              restart = 1
-             
+
           if z == 65 :
              if rpiISO > 0:
                 rpiISO = rpiISO - 100
@@ -1241,14 +1241,14 @@ END COMMENT OUT
              if rpiISO <= 0:
                 rpiISO = 0
              restart = 1
-             
+
           if z == 75 :
              rpiISO = rpiISO + 100
              rpiev = 0
              if rpiISO >= 800:
                 rpiISO = 800
-             restart = 1   
-             
+             restart = 1
+
           if z == 12:
              hWindow  = hWindow  + 5
              if hWindow  > maxwin:
@@ -1257,7 +1257,7 @@ END COMMENT OUT
                 hWindow  = hWindow  - 5
              if ((width/2) + offset3 - (hWindow /2) ) <=1:
                 hWindow  = hWindow  - 5
-              
+
           if z == 2:
              hWindow  = hWindow  - 5
              if hWindow  < minwin:
@@ -1271,12 +1271,12 @@ END COMMENT OUT
                 vWindow  = vWindow  - 5
              if ((height/2) + offset4 - (vWindow /2) ) <=1:
                 vWindow  = vWindow  - 5
-              
+
           if z == 1:
              vWindow  = vWindow  - 5
              if vWindow  < minwin:
                 vWindow  = minwin
-                 
+
           if z == 134 or kz == K_t:
              thres = thres + 1
              if thres > 1:
@@ -1286,7 +1286,7 @@ END COMMENT OUT
              Threshold = Threshold -1
              if Threshold < 1:
                 Threshold = 1
-                
+
           if z == 13:
              Threshold = Threshold +1
              if Threshold > 255:
@@ -1302,7 +1302,7 @@ END COMMENT OUT
                 else:
                    keys2 ("       eV",12,6,b2x+4,b2y + 100,0)
              restart = 1
-             
+
           if kz == K_m and use_Pi_Cam == 1 :
              rpiexno = rpiexno + 1
              if rpiexno > 8:
@@ -1314,7 +1314,7 @@ END COMMENT OUT
              else:
                 keys2 ("       eV",12,6,b2x+4,b2y + 100,0)
              restart = 1
-             
+
           if z == 64 and use_Pi_Cam == 1 :
              if rpiexno > 0:
                 rpiexno = rpiexno - 1
@@ -1363,7 +1363,7 @@ END COMMENT OUT
                 rpimmno = 0
                 rpimm = rpimms[rpimmno]
              restart = 1
-             
+
           if z == 15 :
              if use_Pi_Cam == 1:
                 os.killpg(p.pid, signal.SIGTERM)
@@ -1409,7 +1409,7 @@ END COMMENT OUT
                    offset3 = offset3/2
                    offset4 = offset4/2
              restart = 1
-             
+
           if z == 5 :
              if use_Pi_Cam == 1 :
                 os.killpg(p.pid, signal.SIGTERM)
@@ -1456,9 +1456,9 @@ END COMMENT OUT
                    offset4 = offset4/2
 
              restart = 1
-END COMMENT OUT
-"""
-                
+   END COMMENT OUT
+   """
+
    if use_Pi_Cam == 1 and restart > 0:
       if restart == 2:
          os.killpg(p.pid, signal.SIGTERM)
@@ -1468,7 +1468,7 @@ END COMMENT OUT
          os.remove('/run/shm/test.jpg')
       except OSError:
          pass
-          
+
       rpistr = "raspistill -o /run/shm/test.jpg -co " + str(rpico) + " -br " + str(rpibr)
       if rpiex != 'off':
          rpistr = rpistr + " -t " + str(rpit) + " -tl 0 -st -ex " + rpiex
