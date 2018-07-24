@@ -70,8 +70,8 @@ thres = 0
 Zoom = 0
 # Capture - set to 1 to capture images
 Capture = 1
-# shots on trigger
-shots = 2
+# shots on trigger (was 2)
+shots = 1
 # movement detection area ,0 = FULL, 1 = using cropped area
 det_area = 1
 # save 2 preshots, before trigger, 1 = YES 
@@ -129,12 +129,12 @@ rpiex = rpimodes[rpiexno]
 rpimm = rpimms[rpimmno]
 rpiawb = rpiawbs[rpiawbno]
 
-if switch == 1:
-   GPIO.setwarnings(False)
-   GPIO.setmode (GPIO.BOARD)
-   GPIO.setup(sw,GPIO.IN,pull_up_down = GPIO.PUD_UP)
+#if switch == 1:
+#   GPIO.setwarnings(False)
+#   GPIO.setmode (GPIO.BOARD)
+#   GPIO.setup(sw,GPIO.IN,pull_up_down = GPIO.PUD_UP)
 
-pygame.init()
+#pygame.init()
 scalex = 1
 scaley = 1
 z = 0
@@ -147,16 +147,16 @@ sar7 = 0
 oldttot = 0
 restart = 0
 rgb = ['X','R','G','B','W']
-fontObj = pygame.font.Font(None,16)
-redColor = pygame.Color(255,0,0)
-greenColor = pygame.Color(0,255,0)
-greyColor = pygame.Color(128,128,128)
-dgryColor = pygame.Color(64,64,64)
-lgryColor = pygame.Color(192,192,192)
-blackColor = pygame.Color(0,0,0)
-whiteColor = pygame.Color(255,255,255)
-purpleColor = pygame.Color(255,0,255)
-yellowColor = pygame.Color(255,255,0)
+#fontObj = pygame.font.Font(None,16)
+#redColor = pygame.Color(255,0,0)
+#greenColor = pygame.Color(0,255,0)
+#greyColor = pygame.Color(128,128,128)
+#dgryColor = pygame.Color(64,64,64)
+#lgryColor = pygame.Color(192,192,192)
+#blackColor = pygame.Color(0,0,0)
+#whiteColor = pygame.Color(255,255,255)
+#purpleColor = pygame.Color(255,0,255)
+#yellowColor = pygame.Color(255,255,0)
 
 if Image_window > Zoom:
    Zoom = Image_window
@@ -215,30 +215,30 @@ if width <= 352:
    modewidth = 640
 else:
    modewidth = width + 128      
-windowSurfaceObj = pygame.display.set_mode((modewidth,height + hplus),1,bits)
-pygame.display.set_caption('Movement')
+#windowSurfaceObj = pygame.display.set_mode((modewidth,height + hplus),1,bits)
+#pygame.display.set_caption('Movement')
 
    
-if use_Pi_Cam == 0:
-   pygame.camera.init()
-   if Zoom == 0:
-      cam = pygame.camera.Camera("/dev/video0",(320,240))
-   if Zoom == 1 and max_res >= 1:
-      cam = pygame.camera.Camera("/dev/video0",(352,288))
-   if Zoom == 2 and max_res >= 2:
-      cam = pygame.camera.Camera("/dev/video0",(640,480))
-   if Zoom == 3 and max_res >= 3:
-      cam = pygame.camera.Camera("/dev/video0",(800,600))
-   if Zoom == 4 and max_res >= 4:
-      cam = pygame.camera.Camera("/dev/video0",(960,720))
-   if Zoom == 5 and max_res >= 5:
-      cam = pygame.camera.Camera("/dev/video0",(1280,960))
-   if Zoom == 6 and max_res >= 6:
-      cam = pygame.camera.Camera("/dev/video0",(1920,1440))
-   if Zoom == 7 and max_res >= 7:
-      cam = pygame.camera.Camera("/dev/video0",(2592,1944))
-   cam.start()
-   cam.set_controls(0,0,rpibr)
+#if use_Pi_Cam == 0:
+#   pygame.camera.init()
+#   if Zoom == 0:
+#      cam = pygame.camera.Camera("/dev/video0",(320,240))
+#   if Zoom == 1 and max_res >= 1:
+#      cam = pygame.camera.Camera("/dev/video0",(352,288))
+#   if Zoom == 2 and max_res >= 2:
+#      cam = pygame.camera.Camera("/dev/video0",(640,480))
+#   if Zoom == 3 and max_res >= 3:
+#      cam = pygame.camera.Camera("/dev/video0",(800,600))
+#   if Zoom == 4 and max_res >= 4:
+#      cam = pygame.camera.Camera("/dev/video0",(960,720))
+#   if Zoom == 5 and max_res >= 5:
+#      cam = pygame.camera.Camera("/dev/video0",(1280,960))
+#   if Zoom == 6 and max_res >= 6:
+#      cam = pygame.camera.Camera("/dev/video0",(1920,1440))
+#   if Zoom == 7 and max_res >= 7:
+#      cam = pygame.camera.Camera("/dev/video0",(2592,1944))
+#   cam.start()
+#   cam.set_controls(0,0,rpibr)
 
 if use_Pi_Cam == 1:
    if os.path.exists('/run/shm/test.jpg') == True:
@@ -271,119 +271,120 @@ if use_Pi_Cam == 1:
    #print rpistr
    p=subprocess.Popen(rpistr,shell=True, preexec_fn=os.setsid)
 
-def button2 (bx1,by1,bx2,by2,height,bColor):
-   greyColor = pygame.Color(128,128,128)
-   dgryColor = pygame.Color(64,64,64)
-   blackColor = pygame.Color(0,0,0)
-   whiteColor = pygame.Color(255,255,255)
-   redColor = pygame.Color(255,0,0)
-   colors = [greyColor,dgryColor,redColor]
-   Color = colors[bColor]
-   pygame.draw.rect(windowSurfaceObj,Color,Rect(bx1,height+by1,bx2,by2))
-   pygame.draw.line(windowSurfaceObj,whiteColor,(bx1,height+by1),(bx1+bx2-1,height+by1))
-   pygame.draw.line(windowSurfaceObj,whiteColor,(bx1+1,height+by1+1),(bx1+bx2-2,height+by1+1))
-   return()
+#def button2 (bx1,by1,bx2,by2,height,bColor):
+#   greyColor = pygame.Color(128,128,128)
+#   dgryColor = pygame.Color(64,64,64)
+#   blackColor = pygame.Color(0,0,0)
+#   whiteColor = pygame.Color(255,255,255)
+#   redColor = pygame.Color(255,0,0)
+#   colors = [greyColor,dgryColor,redColor]
+#   Color = colors[bColor]
+#   pygame.draw.rect(windowSurfaceObj,Color,Rect(bx1,height+by1,bx2,by2))
+#   pygame.draw.line(windowSurfaceObj,whiteColor,(bx1,height+by1),(bx1+bx2-1,height+by1))
+#   pygame.draw.line(windowSurfaceObj,whiteColor,(bx1+1,height+by1+1),(bx1+bx2-2,height+by1+1))
+#   return()
 
-button2 (b3x+1,b3y+97,63,31,0,0)
-if use_Pi_Cam  == 1:
+#button2 (b3x+1,b3y+97,63,31,0,0)
+#if use_Pi_Cam  == 1:
    
-   button2 (b3x+1,b3y+33,63,31,0,0)
-   button2 (b3x+1,b3y+65,63,31,0,0)
-   button2 (b1x+65,b1y+97,63,31,0,0)
-   button2 (b1x+65,b1y+129,63,31,0,0)
-   button2 (b1x+65,b1y+161,63,31,0,0)
-   button2 (b2x+65,b2y+33,63,31,0,0)
-button2 (b2x+65,b2y+65,63,31,0,0)
-button2 (b3x+1,b3y+129,31,31,0,0)
-button2 (b3x+33,b3y+129,31,31,0,0)
+#   button2 (b3x+1,b3y+33,63,31,0,0)
+#   button2 (b3x+1,b3y+65,63,31,0,0)
+#   button2 (b1x+65,b1y+97,63,31,0,0)
+#   button2 (b1x+65,b1y+129,63,31,0,0)
+#   button2 (b1x+65,b1y+161,63,31,0,0)
+#   button2 (b2x+65,b2y+33,63,31,0,0)
+#button2 (b2x+65,b2y+65,63,31,0,0)
+#button2 (b3x+1,b3y+129,31,31,0,0)
+#button2 (b3x+33,b3y+129,31,31,0,0)
 
-cy = 33
-while cy <= 161:
-   button2 (b1x+1,b1y+cy,63,31,0,0)
-   cy +=32
-button2 (b1x+65,b1y+33,63,31,0,0)
-button2 (b1x+65,b1y+65,63,31,0,0)
-button2 (b2x+1,b2y+33,63,31,0,0)
-if use_Pi_Cam == 1:
-   cy = 65
-   while cy <= 161:
-      button2 (b2x+1,b2y+cy,63,31,0,0)
-      cy +=32
+#cy = 33
+#while cy <= 161:
+#   button2 (b1x+1,b1y+cy,63,31,0,0)
+#   cy +=32
+#button2 (b1x+65,b1y+33,63,31,0,0)
+#button2 (b1x+65,b1y+65,63,31,0,0)
+#button2 (b2x+1,b2y+33,63,31,0,0)
+#if use_Pi_Cam == 1:
+#   cy = 65
+#   while cy <= 161:
+#      button2 (b2x+1,b2y+cy,63,31,0,0)
+#      cy +=32
 
 
-def keys2(msg,fsize,fcolor,fx,fy,upd):
-   greenColor = pygame.Color(0,255,0)
-   greyColor = pygame.Color(128,128,128)
-   dgryColor = pygame.Color(64,64,64)
-   yellowColor = pygame.Color(255,255,0)
-   redColor = pygame.Color(255,0,0)
-   blueColor = pygame.Color(0,0,255)
-   whiteColor = pygame.Color(255,255,255)
-   blackColor = pygame.Color(0,0,0)
-   purpleColor = pygame.Color(255,0,255)
-   colors = [dgryColor,greenColor,yellowColor,redColor,greenColor,blueColor,whiteColor,greyColor,blackColor,purpleColor]
-   color = colors[fcolor]
-   fontObj = pygame.font.Font('freesansbold.ttf',fsize)
-   msgSurfaceObj = fontObj.render(msg, False,color)
-   msgRectobj = msgSurfaceObj.get_rect()
-   msgRectobj.topleft =(fx,fy)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-   windowSurfaceObj.blit(msgSurfaceObj, msgRectobj)
-   if upd ==1:
-      pygame.display.update(pygame.Rect(fx,fy,64,32))
-   return()
+#def keys2(msg,fsize,fcolor,fx,fy,upd):
+#   greenColor = pygame.Color(0,255,0)
+#   greyColor = pygame.Color(128,128,128)
+#   dgryColor = pygame.Color(64,64,64)
+#   yellowColor = pygame.Color(255,255,0)
+#   redColor = pygame.Color(255,0,0)
+#   blueColor = pygame.Color(0,0,255)
+#   whiteColor = pygame.Color(255,255,255)
+#   blackColor = pygame.Color(0,0,0)
+#   purpleColor = pygame.Color(255,0,255)
+#   colors = [dgryColor,greenColor,yellowColor,redColor,greenColor,blueColor,whiteColor,greyColor,blackColor,purpleColor]
+#   color = colors[fcolor]
+#   fontObj = pygame.font.Font('freesansbold.ttf',fsize)
+#   msgSurfaceObj = fontObj.render(msg, False,color)
+#   msgRectobj = msgSurfaceObj.get_rect()
+#   msgRectobj.topleft =(fx,fy)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+#   windowSurfaceObj.blit(msgSurfaceObj, msgRectobj)
+#   if upd ==1:
+#      pygame.display.update(pygame.Rect(fx,fy,64,32))
+#   return()
 
-Trigger =  str(Triggers)+" %"
-keys2 (str(Threshold),14,3,(b1x+31)-(len(str(Threshold))*4),b1y+111,0)
-keys2 (str(Trigger),14,3,(b1x+31)-(len(str(Trigger))*4),b1y+143,0)
-keys2 (str(Zoom),14,3,b1x+27,b1y+175,0)
-keys2 (str(rpibr),14,3,b2x+24,b2y + 47,0)
-keys2 (str(shots),14,3,(b3x+31)-(len(str(shots))*4),b3y+111,0)
-if use_Pi_Cam == 1:
-   keys2 (str(rpico),14,3,b2x+24,b2y + 79,0)
-   if rpiex == 'off':
-      keys2 (str(int(rpiss/1000)),13,3,(b2x+33)-(len(str(rpiss/1000))*4),b2y + 112,0)
-   else:
-      keys2 (str(int(rpiev)),13,3,(b2x+33)-(len(str(rpiev))*4),b2y + 112,0)
-   keys2 ((rpimodesa[rpiexno]),14,3,b2x+17,b2y + 143,0)
-   if rpist == 0:
-      keys2 ((rpiawbsa[rpiawbno]),14,3,b3x+15,b3y + 48,0)
-   else:
-      keys2 ((rpiawbsa[rpiawbno]),14,0,b3x+15,b3y + 48,0)
-   keys2 ((rpimmsa[rpimmno]),14,3,b3x+14,b3y + 80,0)
-   keys2 (str(rpiISO),14,3,b2x+19,b2y + 175,0)
-   if rpiISO == 0:
-      pygame.draw.rect(windowSurfaceObj,greyColor,Rect(b2x+19,b2y + 175, 26, 16))
-      keys2 ('auto',14,3,b2x+17,b2y + 175,0)
-   keys2 ("Contrast",12,6,b2x+5,b2y + 66,0)
-   keys2 ("-       +",18,6,b2x+8,b2y + 74,0)
-   if rpiex == 'off':
-      keys2 ("Exp Time",12,6,b2x+4,b2y + 100,0)
-   else:
-      keys2 ("       eV",12,6,b2x+4,b2y + 100,0)
-   keys2 ("-       +",18,6,b2x+8,b2y + 106,0)
-   keys2 ("ISO",12,6,b2x+20,b2y + 163,0)
-   keys2 ("-       +",18,6,b2x+8,b2y + 170,0)
-   keys2 ("Exp Mode",12,6,b2x+3,b2y + 129,0)
-   keys2 ("<           >",16,6,b2x+3,b2y + 138,0)
-   keys2 ("  Non",14,rpist,b1x+73,b1y+163,0)
-   keys2 ("Pi Lens",14,rpist,b1x+72,b1y+175,0)
-   keys2 ("Burst",14,rpibm,b2x+78,b2y+34,0)
-   keys2 (" Mode",14,rpibm,b2x+74,b2y+47,0)
-   keys2 ("   awb",14,6,b3x+6,b3y+34,0)
-   keys2 ("<           >",16,6,b3x+3,b3y + 44,0)
-   keys2 ("Metering",14,6,b3x+4,b3y+66,0)
-   keys2 ("<           >",16,6,b3x+3,b3y + 76,0)
-keys2 ("Det Area",12,6,b2x+70,b2y+67,0)
-keys2 ("<           >",16,6,b2x+66,b2y + 77,0)
-if det_area == 0:
-   keys2 (det_areaa[det_area],12,3,b2x+80,b2y+81,0)
-else:
-   keys2 (det_areaa[det_area],12,1,b2x+80,b2y+81,1)
-keys2 ("Dis",14,thres,b3x+36,b3y+130,0)
-keys2 ("play",14,thres,b3x+35,b3y+142,0)
-keys2 (" Shots ",14,6,b3x+10,b3y+98,0)
-keys2 ("-       +",18,6,b3x+8,b3y+110,0)
-   
+#Trigger =  str(Triggers)+" %"
+#keys2 (str(Threshold),14,3,(b1x+31)-(len(str(Threshold))*4),b1y+111,0)
+#keys2 (str(Trigger),14,3,(b1x+31)-(len(str(Trigger))*4),b1y+143,0)
+#keys2 (str(Zoom),14,3,b1x+27,b1y+175,0)
+#keys2 (str(rpibr),14,3,b2x+24,b2y + 47,0)
+#keys2 (str(shots),14,3,(b3x+31)-(len(str(shots))*4),b3y+111,0)
+#if use_Pi_Cam == 1:
+#   keys2 (str(rpico),14,3,b2x+24,b2y + 79,0)
+#   if rpiex == 'off':
+#      keys2 (str(int(rpiss/1000)),13,3,(b2x+33)-(len(str(rpiss/1000))*4),b2y + 112,0)
+#   else:
+#      keys2 (str(int(rpiev)),13,3,(b2x+33)-(len(str(rpiev))*4),b2y + 112,0)
+#   keys2 ((rpimodesa[rpiexno]),14,3,b2x+17,b2y + 143,0)
+#   if rpist == 0:
+#      keys2 ((rpiawbsa[rpiawbno]),14,3,b3x+15,b3y + 48,0)
+#   else:
+#      keys2 ((rpiawbsa[rpiawbno]),14,0,b3x+15,b3y + 48,0)
+#   keys2 ((rpimmsa[rpimmno]),14,3,b3x+14,b3y + 80,0)
+#   keys2 (str(rpiISO),14,3,b2x+19,b2y + 175,0)
+#   if rpiISO == 0:
+#      pygame.draw.rect(windowSurfaceObj,greyColor,Rect(b2x+19,b2y + 175, 26, 16))
+#      keys2 ('auto',14,3,b2x+17,b2y + 175,0)
+#   keys2 ("Contrast",12,6,b2x+5,b2y + 66,0)
+#   keys2 ("-       +",18,6,b2x+8,b2y + 74,0)
+#   if rpiex == 'off':
+#      keys2 ("Exp Time",12,6,b2x+4,b2y + 100,0)
+#   else:
+#      keys2 ("       eV",12,6,b2x+4,b2y + 100,0)
+#   keys2 ("-       +",18,6,b2x+8,b2y + 106,0)
+#   keys2 ("ISO",12,6,b2x+20,b2y + 163,0)
+#   keys2 ("-       +",18,6,b2x+8,b2y + 170,0)
+#   keys2 ("Exp Mode",12,6,b2x+3,b2y + 129,0)
+#   keys2 ("<           >",16,6,b2x+3,b2y + 138,0)
+#   keys2 ("  Non",14,rpist,b1x+73,b1y+163,0)
+#   keys2 ("Pi Lens",14,rpist,b1x+72,b1y+175,0)
+#   keys2 ("Burst",14,rpibm,b2x+78,b2y+34,0)
+#   keys2 (" Mode",14,rpibm,b2x+74,b2y+47,0)
+#   keys2 ("   awb",14,6,b3x+6,b3y+34,0)
+#   keys2 ("<           >",16,6,b3x+3,b3y + 44,0)
+#   keys2 ("Metering",14,6,b3x+4,b3y+66,0)
+#   keys2 ("<           >",16,6,b3x+3,b3y + 76,0)
+#keys2 ("Det Area",12,6,b2x+70,b2y+67,0)
+#keys2 ("<           >",16,6,b2x+66,b2y + 77,0)
+#if det_area == 0:
+#   keys2 (det_areaa[det_area],12,3,b2x+80,b2y+81,0)
+#else:
+#   keys2 (det_areaa[det_area],12,1,b2x+80,b2y+81,1)
+#keys2 ("Dis",14,thres,b3x+36,b3y+130,0)
+#keys2 ("play",14,thres,b3x+35,b3y+142,0)
+#keys2 (" Shots ",14,6,b3x+10,b3y+98,0)
+#keys2 ("-       +",18,6,b3x+8,b3y+110,0)
+
+"""   BEGIN COMMENT OUT
 keys2 (str(hWindow),14,3,(b1x+31)-(len(str(hWindow))*4),b1y+79,0)
 keys2 (str(vWindow),14,3,(b1x+31)-(len(str(vWindow))*4),b1y+47,0)
 keys2 ("Cap",14,Capture,b3x+3,b3y+130,0)
@@ -416,6 +417,8 @@ if use_Pi_Cam == 1:
 
 keys2 (str(timeperiod),14,3,(b1x+95)-(len(str(timeperiod))*4),b1y+80,0)
 pygame.display.update() 
+END COMMENT OUT
+"""
 
 oldvWindow  = vWindow
 oldhWindow = hWindow
@@ -449,6 +452,7 @@ filno = 0
 time_start = time.time()
 trigmask = 0
 
+""" BEGIN COMMENT OUT
 greenColor = pygame.Color(0,255,0)
 greyColor = pygame.Color(128,128,128)
 dgryColor = pygame.Color(64,64,64)
@@ -458,13 +462,15 @@ blueColor = pygame.Color(0,0,255)
 whiteColor = pygame.Color(255,255,255)
 blackColor = pygame.Color(0,0,0)
 purpleColor = pygame.Color(255,0,255)
+END COMMENT OUT
+"""
 
 while True:
  
    sar5 = 0
 
 # take picture
-
+"""  BEGIN COMMENT OUT
    if use_Pi_Cam == 0:
       image = cam.get_image()
       if Zoom == 0:
@@ -499,13 +505,15 @@ while True:
       catSurfaceObj = image
       windowSurfaceObj.blit(catSurfaceObj,(0,0))
       strim = pygame.image.tostring(image,"RGB",1)
-          
+END COMMENT OUT
+"""          
    if use_Pi_Cam == 1:
 
       while os.path.exists('/run/shm/test.jpg') == False:
           time.sleep(.005)
       imagefile = ('/run/shm/test.jpg')
 
+"""  BEGIN COMMENT OUT
       try:
          image = pygame.image.load(imagefile)
       except pygame.error:
@@ -549,8 +557,9 @@ while True:
    if auto_c < 3 or det_area == 0:
       imagem = pygame.transform.scale(image,[width/sf,height/sf])
       imc = pygame.image.tostring(imagem,"RGB",1)
-      
 
+END COMMENT OUT      
+"""
    
 # initialise arrays
    mx = []
@@ -616,13 +625,13 @@ while True:
       
       if (sar5 > trig and trig2 < 95 and Capture == 1 and ((len(mx) == len(omg) and det_area==1) or (len(my) == len(omg) and det_area==0)) or (lapsed == 1 and timelapse == 1 and ((len(mx) == len(omg) and det_area==1) or (len(my) == len(omg) and det_area==0)))):
          time_start = time.time()
-         if lapsed == 0:
-            keys2 (str(Trigger),14,1,(b1x+31)-(len(str(Trigger))*4),b1y+143,1)
-         else:
-            keys2 (str(timeperiod),14,1,(b1x+95)-(len(str(timeperiod))*4),b1y+80,1)
-         keys2 (str(filno),14,0,(b1x+31)-(len(str(filno))*4),b3y+165,0)
+#         if lapsed == 0:
+#            keys2 (str(Trigger),14,1,(b1x+31)-(len(str(Trigger))*4),b1y+143,1)
+#         else:
+#            keys2 (str(timeperiod),14,1,(b1x+95)-(len(str(timeperiod))*4),b1y+80,1)
+#         keys2 (str(filno),14,0,(b1x+31)-(len(str(filno))*4),b3y+165,0)
          filno = filno + 1
-         keys2 (str(filno),14,1,(b1x+31)-(len(str(filno))*4),b3y+165,0)
+#         keys2 (str(filno),14,1,(b1x+31)-(len(str(filno))*4),b3y+165,0)
          now = datetime.datetime.now()
          timestamp = now.strftime("%y%m%d%H%M%S")
          fname = savdir + "pic_" + str(timestamp)+ "_" + str(filno) + '.jpg'
@@ -665,7 +674,7 @@ while True:
                #print path
                os.system (path)
                restart = 1    
-            
+ """  BEGIN COMMENT OUT           
          else:
             pygame.image.save(image,fname)
             if preshot == 1 and lapsed == 0:            
@@ -681,12 +690,14 @@ while True:
                fname = savdir + "pic_" + str(timestamp)+ "_" + str(filno) + '.jpg'
                shutil.copy('/run/shm/test.jpg',fname)
                os.rename('/run/shm/test.jpg','/run/shm/oldtest.jpg')
+END COMMENT OUT
+"""
                
          time.sleep(0.1)
-         if lapsed == 0:
-            keys2 (str(Trigger),14,3,(b1x+31)-(len(str(Trigger))*4),b1y+143,1)
-         else:
-            keys2 (str(timeperiod),14,3,(b1x+95)-(len(str(timeperiod))*4),b1y+80,1)
+#         if lapsed == 0:
+#            keys2 (str(Trigger),14,3,(b1x+31)-(len(str(Trigger))*4),b1y+143,1)
+#         else:
+#            keys2 (str(timeperiod),14,3,(b1x+95)-(len(str(timeperiod))*4),b1y+80,1)
 
          shot = 1
  
@@ -697,6 +708,7 @@ while True:
                   time.sleep(.001)
                imagefile = ('/run/shm/test.jpg')
 
+""" BEGIN COMMENT OUT
                try:
                   image = pygame.image.load(imagefile)
                except pygame.error:
@@ -731,19 +743,22 @@ while True:
                   image = pygame.image.fromstring(strim,(width,height),"RGB",1)
                if preshot == 1:
                   pygame.image.save(image,'/run/shm/test.jpg')
+END COMMENT OUT
+"""
+
             now = datetime.datetime.now()
             timestamp = now.strftime("%y%m%d%H%M%S")
             fname = savdir  + "pic_" + str(timestamp)+ "_" + str(filno) + '.jpg'
             if use_Pi_Cam == 1:
                shutil.copy('/run/shm/test.jpg',fname)
-            else:
-               pygame.image.save(image,fname)
+#            else:
+#               pygame.image.save(image,fname)
             if use_Pi_Cam == 1 or preshot == 1:
                os.rename('/run/shm/test.jpg','/run/shm/oldtest.jpg')
             shot +=1
             
-         pygame.draw.rect(windowSurfaceObj,blackColor,Rect(b3x+6,b3y + 162, 50, 25))
-         keys2 (str(filno),14,1,(b3x+31)-(len(str(filno))*4),b3y+165,1)
+#         pygame.draw.rect(windowSurfaceObj,blackColor,Rect(b3x+6,b3y + 162, 50, 25))
+#         keys2 (str(filno),14,1,(b3x+31)-(len(str(filno))*4),b3y+165,1)
 
       if preshot == 1:
          if os.path.exists('/run/shm/oldtest.jpg') == True:
@@ -782,11 +797,11 @@ while True:
                rpiexno = 0
                rpiex = rpimodes[rpiexno]
                rpiISO = 400
-               pygame.draw.rect(windowSurfaceObj,greyColor,Rect(b2x+2,b2y + 99, 60, 15))
-               if rpiex == 'off':
-                  keys2 ("Exp Time",12,6,b2x+4,b2y + 100,0)
-               else:
-                  keys2 ("       eV",12,6,b2x+4,b2y + 100,0)
+ #              pygame.draw.rect(windowSurfaceObj,greyColor,Rect(b2x+2,b2y + 99, 60, 15))
+ #              if rpiex == 'off':
+ #                 keys2 ("Exp Time",12,6,b2x+4,b2y + 100,0)
+ #              else:
+ #                 keys2 ("       eV",12,6,b2x+4,b2y + 100,0)
             restart = 2
             change = 1
          if ((sar7 > ave + tol) and rpiexno == 0 and auto_c > 1) or ((sar7 > sar6 + tol) and rpiexno == 0 and auto_c == 1):
@@ -801,11 +816,11 @@ while True:
                      rpiev = 0
                      rpiexno = 1
                      rpiex = rpimodes[rpiexno]
-                     pygame.draw.rect(windowSurfaceObj,greyColor,Rect(b2x+2,b2y + 99, 60, 15))
-                     if rpiex == 'off':
-                        keys2 ("Exp Time",12,6,b2x+4,b2y + 100,0)
-                     else:
-                        keys2 ("       eV",12,6,b2x+4,b2y + 100,0)
+ #                    pygame.draw.rect(windowSurfaceObj,greyColor,Rect(b2x+2,b2y + 99, 60, 15))
+ #                    if rpiex == 'off':
+ #                       keys2 ("Exp Time",12,6,b2x+4,b2y + 100,0)
+ #                    else:
+ #                       keys2 ("       eV",12,6,b2x+4,b2y + 100,0)
                      
             restart = 2
             change = 1
@@ -830,7 +845,8 @@ while True:
             
          if rpiISO == 800 and rpiss > 1000000 and auto_c > 1:
             rpibr = 60 + (rpiss-1000000)/100000
-               
+
+"""  BEGIN COMMENT OUT               
    if thres == 1 and det_area == 1:
       #keys2 (str(trig2)+"%",16,3,width + 65,height + 5,1)
       imagep = pygame.image.fromstring(pic,(hWindow,vWindow),"RGB",1)
@@ -970,6 +986,7 @@ while True:
 
       
    pygame.display.update(0,0,width,height)
+
 
    oldvWindow  = vWindow
    oldhWindow = hWindow
@@ -1439,6 +1456,8 @@ while True:
                    offset4 = offset4/2
 
              restart = 1
+END COMMENT OUT
+"""
                 
    if use_Pi_Cam == 1 and restart > 0:
       if restart == 2:
