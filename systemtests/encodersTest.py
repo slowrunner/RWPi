@@ -3,6 +3,9 @@
 # encoderDriveTest.py   
 #
 #
+import sys
+sys.path.insert(0, '/home/pi/RWPi/rwpilib')
+
 import PDALib
 import myPDALib
 import myPyLib
@@ -11,7 +14,6 @@ import traceback
 import motorsClass as motors
 import encoders
 import datetime as datetime
-import sys
 
 
 # Motor Class Methods:
@@ -42,6 +44,11 @@ import sys
 #   disable_encoder_interrupts()             # disable encoder interrupt
 #   printStatus()                            # print left, right, bias, and interrupt state
 
+#   CLICKS_PIVOT_360=42   (from pogo lib_rwp)
+#   CLICKS_SPIN_360=43    (from pogo lib_rwp)
+
+
+
 
 # ### TEST MAIN() ######################
 
@@ -56,71 +63,72 @@ def ctrl_c_callback():
 def main():
   global m
 
-  myPyLib.set_cntl_c_handler(ctrl_c_callback)  # Set CNTL-C handler 
+  myPyLib.set_cntl_c_handler(ctrl_c_callback)  # Set CNTL-C handler
   encoders.init()
   encoders.enable_encoder_interrupts()
   m = motors.Motors(30)
 
   try:
     print "\nENCODER DRIVE TEST"
-
+    """
     m.setInitialCounts()
     print "Travel Forward 12 at Medium Speed"
-    m.travel(12,m.MEDIUM)   
+    m.travel(12,m.MEDIUM)
     if (m.mode() == m.STOPPED): time.sleep(0.100)
     while (m.mode() != m.STOPPED): time.sleep(0.01)
     print "\n********************* DONE TRAVEL\n"
     encoders.printStatus()
     print "Distance Traveled: %.1f inches" % m.distanceTraveled()
-    
+
     encoders.reset()
     time.sleep(15)
 
     m.setInitialCounts()
     print "Travel Backward 12 at Medium Speed"
-    m.travel(-12,m.MEDIUM)   
+    m.travel(-12,m.MEDIUM)
     if (m.mode() == m.STOPPED): time.sleep(0.100)
     while (m.mode() != m.STOPPED): time.sleep(0.01)
     print "\n********************* DONE TRAVEL"
-    encoders.printStatus()   
+    encoders.printStatus()
     print "Distance Traveled: %.1f inches" % m.distanceTraveled()
 
-    encoders.reset()
     time.sleep(15)
+    """
 
-    print "Turn CCW90"
-    trn1=Motors.CCW90
-    motors.turn(trn1)
+    print "Turn CCW360"
+    encoders.reset()
+    trn1=m.CCW360
+    m.turn(trn1)
     time.sleep(0.1)
     while (m.mode() != m.STOPPED): time.sleep(0.1)
     print "\n**** STOPPED "
     encoders.printStatus()
 
-    encoders.reset()
     time.sleep(15)
 
-    print "Turn CW90"
-    trn1=Motors.CW90
-    motors.turn(trn1)
+    print "Turn CW360"
+    encoders.reset()
+    trn1=m.CW360
+    m.turn(trn1)
     time.sleep(0.1)
     while (m.mode() != m.STOPPED): time.sleep(0.1)
     print "\n**** STOPPED "
     encoders.printStatus()
-    
+
 
     m.cancel()
     encoders.cancel()
 
-    myPDALib.PiExit()  
+    myPDALib.PiExit()
     sys.exit(0)
-    
+
   except SystemExit:
     myPDALib.PiExit()
-    print "ENCODER DRIVE TEST: Bye Bye"    
+    print "ENCODER DRIVE TEST: Bye Bye"
 
   except:
     print "Exception Raised"
-    traceback.print_exc()  
+    traceback.print_exc()
 
 
 
