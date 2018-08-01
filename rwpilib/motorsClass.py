@@ -465,9 +465,9 @@ class Motors():
       if (self.debugLevel >1):   print "handling motorsMode TURN"
 
       if (self.debugLevel >1):   print "controlTurn:",datetime.datetime.now()
-      if (abs(self.angleTurned()) > abs(self.turnDir - self.degPerSpinCount)):
+      if (abs(self.angleTurned()) > abs(self.turnDir - 1.5*self.degPerSpinCount)):
          if (self.debugLevel >1):   print ("controlTurn: hit requested limit at %s" % datetime.datetime.now() )
-         # self.stop()
+         self.stop()
          self.spinSpeed     = Motors.NONE
          self.driveSpeed    = Motors.NONE
          self.driveDistance = 0
