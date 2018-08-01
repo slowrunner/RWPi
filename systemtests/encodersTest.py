@@ -115,6 +115,41 @@ def main():
     print "\n**** STOPPED "
     encoders.printStatus()
 
+    time.sleep(15)
+
+    print "Turn CCW90"
+    encoders.reset()
+    trn1=m.CCW90
+    m.turn(trn1)
+    time.sleep(0.1)
+    while (m.mode() != m.STOPPED): time.sleep(0.1)
+    print "\n**** STOPPED "
+    encoders.printStatus()
+
+
+    time.sleep(15)
+
+    print "Turn CW180"
+    encoders.reset()
+    trn1=m.CW180
+    m.turn(trn1)
+    time.sleep(0.1)
+    while (m.mode() != m.STOPPED): time.sleep(0.1)
+    print "\n**** STOPPED "
+    encoders.printStatus()
+
+
+    time.sleep(15)
+
+    print "Turn CCW90"
+    encoders.reset()
+    trn1=m.CCW90
+    m.turn(trn1)
+    time.sleep(0.1)
+    while (m.mode() != m.STOPPED): time.sleep(0.1)
+    print "\n**** STOPPED "
+    encoders.printStatus()
+
 
     m.cancel()
     encoders.cancel()

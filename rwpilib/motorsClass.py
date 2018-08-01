@@ -221,6 +221,7 @@ class Motors():
   CW90   = -CCW90 * 0.93
   CW45   = -CCW45 * 0.9
   NOTURN = 0
+  """
 
   CCW360 = 360.0
   CCW180 = 180.0
@@ -296,7 +297,7 @@ class Motors():
     currentRightCount = encoders.rightCount()
     currentMeanCount = ( currentLeftCount + currentRightCount) / 2.0
     countsTurned = (currentMeanCount - self.initialMeanCount)
-    angle = countsTurned * degPerSpinCount * sign(turnDir)
+    angle = countsTurned * self.degPerSpinCount * sign(self.turnDir)
     if (self.debugLevel > 0): 
        print "motorsClass:angleTurned: called"
        print "encoder status:"
@@ -464,7 +465,7 @@ class Motors():
       if (self.debugLevel >1):   print "handling motorsMode TURN"
 
       if (self.debugLevel >1):   print "controlTurn:",datetime.datetime.now()
-      if (abs(angleTurned()) > abs(turnDir):
+      if (abs(self.angleTurned()) > abs(self.turnDir - self.degPerSpinCount)):
          if (self.debugLevel >1):   print ("controlTurn: hit requested limit at %s" % datetime.datetime.now() )
          # self.stop()
          self.spinSpeed     = Motors.NONE
@@ -511,7 +512,7 @@ class Motors():
        if (self.debugLevel >1):   print ("driveSpeed: %s:%d spinSpeed: %s:%d currentSpeed: %d" % (self.SpeedsToStr[self.driveSpeed], self.driveSpeed, self.SpeedsToStr[self.spinSpeed], self.spinSpeed,self._currentSpeed ) )
        if (self.debugLevel >1):   print ("driveDist : %.1f currentDist: %.1f" % (self.driveDistance,self.currentDistance) )
        if (self.debugLevel >1):   print ("turnDir   : %d " % self.turnDir)
-       if (self.debugLevel >1):   print ("angleTurned: %f 
+       if (self.debugLevel >1):   print ("angleTurned: %f" % self.angleTurned()) 
 
        if (self.motorsMode == Motors.DRIVE):    self.controlDrive()
        elif (self.motorsMode == Motors.TRAVEL): self.controlTravel()
