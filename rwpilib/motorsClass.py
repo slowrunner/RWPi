@@ -63,8 +63,8 @@
 #   self.debugLevel  0=off 1=basic 99=all
 
 import sys
-# uncomment when testing below rwpilib\ 
-#sys.path.insert(0,'..')
+# uncomment when testing from rwpilib/motors or RWPi/systemtests
+sys.path.insert(0,'/home/pi/RWPi/rwpilib')
 
 import PDALib
 import myPDALib
@@ -84,7 +84,7 @@ class Motors():
 
   pollThreadHandle=None   # the SINGLE read sensor thread for the Motors class   
   tSleep=0.1            # time for read_sensor thread to sleep 
-  debugLevel=0          # set self.debugLevel (or motors.debugLevel) =99 for all, =1 for some
+  debugLevel=1          # set self.debugLevel (or motors.debugLevel) =99 for all, =1 for some
 
   # Empirical settings for minimum drive to turn each wheel
   # PWM_frequency dependent, PiDALib default is 490
@@ -142,7 +142,8 @@ class Motors():
   targetTime= 0         # time to stop travel (till encoders)
 
   spinSpeed   = 0       # speed to spin ccw(+) cw(-)
-  turnDir     = 0
+  turnDir     = 0           # degrees to turn by spin
+  degPerSpinCount = 4.96    # average degrees of spin per encoder count
 
   #Modes
   STOPPED = 0 
@@ -208,6 +209,7 @@ class Motors():
 
   MotorRampTime = 0.25    # NOT IMPLEMENTED
 
+  """
   CCW360 = 3.15           # seconds to turn at Motors.MEDIUM
   CCW180 = 1.58
   CCW135 = 1.15
@@ -220,12 +222,32 @@ class Motors():
   CW45   = -CCW45 * 0.9
   NOTURN = 0
 
+  CCW360 = 360.0
+  CCW180 = 180.0
+  CCW135 = 135.0
+  CCW90  =  90.0
+  CCW45  =  45.0
+  CCW30  =  30.0
+  CCW15  =  15.0
+  CW360  = -360.0
+  CW180  = -180.0
+  CW135  = -135.0
+  CW90   = -90.0
+  CW45   = -45.0
+  CW30   = -30.0
+  CW15   = -15.0
+  NOTURN =  0.0
+
   DirsToStr = {
+    CCW15  : 'CCW15',
+    CCW30  : 'CCW30',
     CCW45  : 'CCW45',
     CCW90  : 'CCW90',
     CCW135 : 'CCW135',
     CCW180 : 'CCW180',
     CCW360 : 'CCW360',
+    CW15   : 'CW15',
+    CW30   : 'CW30',
     CW45   : 'CW45',
     CW90   : 'CW90',
     CW135  : 'CW135',
@@ -250,6 +272,10 @@ class Motors():
     initialLeftCount=encoders.leftCount()
     initialRightCount=encoders.rightCount()
     initialMeanCount=(initialLeftCount+initialRightCount)/2.0 
+    if (self.debugLevel > 1):
+       print "motorsClass:setInitialCounts() called"
+       print "encoder status:"
+       encoders.printStatus()
 
   def distanceTraveled(self):
     currentLeftCount = encoders.leftCount()
@@ -264,6 +290,21 @@ class Motors():
        print "distance traveled:", distance
 
     return distance
+
+  def angleTurned(self):
+    currentLeftCount = encoders.leftCount()
+    currentRightCount = encoders.rightCount()
+    currentMeanCount = ( currentLeftCount + currentRightCount) / 2.0
+    countsTurned = (currentMeanCount - self.initialMeanCount)
+    angle = countsTurned * degPerSpinCount * sign(turnDir)
+    if (self.debugLevel > 0): 
+       print "motorsClass:angleTurned: called"
+       print "encoder status:"
+       encoders.printStatus()
+       print "angleTurned:", angle
+
+    return angle
+    
     
 
   def __init__(self,readingsPerSec=10):
@@ -423,17 +464,9 @@ class Motors():
       if (self.debugLevel >1):   print "handling motorsMode TURN"
 
       if (self.debugLevel >1):   print "controlTurn:",datetime.datetime.now()
-      if (self.targetTime == 0):
-         trn_time = sign(self.turnDir)*self.turnDir
-         tgt_secs = int(trn_time)
-         tgt_millisec = int( (trn_time - clamp(tgt_secs,0,60) )*1000)
-         tgt_delta=datetime.timedelta(seconds=tgt_secs, milliseconds=tgt_millisec)
-         self.targetTime = datetime.datetime.now()+tgt_delta
-         if (self.debugLevel >1):   print ("tgt_secs: %d tgt_millisec: %d tgt_time: %s" % (tgt_secs, tgt_millisec, self.targetTime))
-      if (datetime.datetime.now() > self.targetTime):
+      if (abs(angleTurned()) > abs(turnDir):
          if (self.debugLevel >1):   print ("controlTurn: hit requested limit at %s" % datetime.datetime.now() )
-         self.targetTime = 0
-#         self.stop()
+         # self.stop()
          self.spinSpeed     = Motors.NONE
          self.driveSpeed    = Motors.NONE
          self.driveDistance = 0
@@ -478,6 +511,7 @@ class Motors():
        if (self.debugLevel >1):   print ("driveSpeed: %s:%d spinSpeed: %s:%d currentSpeed: %d" % (self.SpeedsToStr[self.driveSpeed], self.driveSpeed, self.SpeedsToStr[self.spinSpeed], self.spinSpeed,self._currentSpeed ) )
        if (self.debugLevel >1):   print ("driveDist : %.1f currentDist: %.1f" % (self.driveDistance,self.currentDistance) )
        if (self.debugLevel >1):   print ("turnDir   : %d " % self.turnDir)
+       if (self.debugLevel >1):   print ("angleTurned: %f 
 
        if (self.motorsMode == Motors.DRIVE):    self.controlDrive()
        elif (self.motorsMode == Motors.TRAVEL): self.controlTravel()
