@@ -1,13 +1,21 @@
-import PDALib
-import time
+#!/usr/bin/python
+#
+# currenttest.py
+#
+#
+
 import sys
+sys.path.insert(0, '/home/pi/RWPi/rwpilib')
+import PDALib
+import myPDALib
+import time
 import signal
 import math
 
 
 def signal_handler(signal, frame):
   print '\n** Control-C Detected'
-  PDALib.LibExit()
+  myPDALib.PiExit()
   sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
@@ -61,7 +69,7 @@ for i in dev:
   squares.append(i * i)
 std_dev = math.sqrt(sum(squares)/(len(squares)-1))
 print("std dev: %.2f" % std_dev)
-PDALib.LibExit()
+myPDALib.PiExit()
   
   
 

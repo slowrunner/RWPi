@@ -7,10 +7,11 @@
 # (channel 7 of 0..7 is the ACS712-05 current sensor output voltage)
 #
 
+import sys
+sys.path.insert(0, '/home/pi/RWPi/rwpilib')
 import PDALib
 import myPDALib
 import time
-import sys
 import signal
 
 # ################ Control-C Handling #########
