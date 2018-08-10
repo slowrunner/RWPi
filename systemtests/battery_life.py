@@ -1,8 +1,8 @@
 #!/usr/bin/python
 #
 # battery_life.py  BATTERY LIFE TEST
-# 
-# The 7v2 unregulated through 2:1 divider must be connected to 
+#
+# The 7v2 unregulated through 2:1 divider must be connected to
 #      ADC6 (pin 6) for this test
 #
 # This test will loop reading the voltage on ADC6 and current (pin 7)
@@ -36,23 +36,21 @@ nLow = 0
 while True:
 
   print ("current_sense(): %.0f mA" % currentsensor.current_sense(1000))
-  # V_now = myPDALib.readVoltage(6) * 2.0  # 2:1 resistor divider 
+  # V_now = myPDALib.readVoltage(6) * 2.0  # 2:1 resistor divider
   V_now = battery.volts()
   if (V_now < 6.53):   #if 7v2 =6.53 10min 6.42 5min to knee!
           nLow+=1
-          print "nLow:***************",nLow   
-  else: nLow = 0  
+          print "nLow:***************",nLow
+  else: nLow = 0
   print ( "voltage: %.2f" % V_now)
   print ( "Life Estimate: %.1f" % battery.hoursOfLifeRemaining(V_now) )
   print datetime.datetime.now().strftime('%m-%d-%Y %H:%M:%S')
   print "\n"
-  if (nLow >3):  # four times lower we're out of here         
+  if (nLow >3):  # four times lower we're out of here
           os.system("sudo shutdown -h now")
           sys.exit(0)
-  time.sleep(60)
+  time.sleep(5)
 # end while
 
 myPDALib.PiExit()
-  
-  
 
