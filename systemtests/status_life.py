@@ -1,33 +1,31 @@
 #!/usr/bin/python
 #
-# batt_life.py   Run Battery down while printing status
+# status_life.py   Run Battery down while printing status every 30s
 #
 # The 7v2 unregulated through 2:1 divider must be connected to 
 #      ADC6 (pin 6) for this test
 #
 # This test will loop reading the voltage on ADC6 and current (pin 7)
-#      UNTIL voltage drops below 5.9v 4 times,
+#      UNTIL voltage stays below 5.9v 4 times,
 #      then will issue a shutdown now
 #
-# Start this test with $ sudo python batt_life.py
+# ??? Start this test with $ sudo python status_life.py
 #
 import sys
 sys.path
-sys.path.append('/home/pi/RWPi')
+sys.path.append('/home/pi/RWPi/rwpilib')
 
-import rwpilib.PDALib as PDALib
-import rwpilib.myPDALib as myPDALib
+import PDALib
+import myPDALib
 import time
 import signal
-import rwpilib.currentsensor as currentsensor
-import rwpilib.battery as battery
+import currentsensor
+import battery
 import os
-import sys
-
-import rwpilib.myPyLib as myPyLib
-from rwpilib.usDistanceClass import UltrasonicDistance
-import rwpilib.irDistance as irDistance
-from rwpilib.bumpersClass import Bumpers
+import myPyLib
+from usDistanceClass import UltrasonicDistance
+import irDistance
+from bumpersClass import Bumpers
 from datetime import datetime
 
 # Return CPU temperature as a character string                                      
@@ -96,7 +94,9 @@ def main():
   try:
     while True:
         printStatus()
-        if (battery.batteryTooLow(5.9)): batteryLowCount += 1
+        if (battery.batteryTooLow(5.9)): 
+            batteryLowCount += 1
+        else batteryLowCount = 0
         if (batteryLowCount > 3):
           # speak.say("WARNING, WARNING, SHUTTING DOWN NOW")
           print ("BATTERY %.2f volts BATTERY - SHUTTING DOWN NOW" % battery.volts())
@@ -106,7 +106,7 @@ def main():
     #end while
   except SystemExit:
     myPDALib.PiExit()
-    print "status.py: exiting"
+    print "status_life.py: exiting"
 
 if __name__ == "__main__":
     main()
