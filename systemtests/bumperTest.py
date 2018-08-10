@@ -18,22 +18,10 @@
 #
 #  NONE,LEFT,RIGHT,REAR,FRONT,LEFTREAR,RIGHTREAR,ALL,UNKNOWN
 #
-#  ### INTERNAL METHODS AND VARS
-
-#  __init__(readingsPerSec=10)          # initialize instance of class
-#  pollBumpers(tSleep=0.01)             # thread that reads bumpers
-#
-#  pollThreadHandle
-#  tSleep
-#  leftstate, rightstate, rearstate, state
-#  bumperStrings
-#  pollThreadHandle.do_run
-#
 
 import sys
 sys.path.append("/home/pi/RWPi/rwpilib")
-import bumpersClass 
-#import PDALib
+from bumpersClass import Bumpers
 import myPDALib
 import myPyLib
 import time

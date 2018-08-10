@@ -1,3 +1,7 @@
+#!/usr/bin/python
+
+import sys
+sys.path.append("/home/pi/RWPi/rwpilib")
 import PDALib
 import myPDALib
 import time
