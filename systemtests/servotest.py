@@ -1,12 +1,16 @@
 #!/usr/bin/python
 #
-# encoders.py   ENCODERS TEST
+# servotest.py   TILT PAN TEST
+#                (direct, not using lib class)
 #
+# 11Aug2018 - run from anywhere, term with PiExit()
 # 10Jun2016 - file header added
 
-import PDALib
-import time
 import sys
+sys.path.append("/home/pi/RWPi/rwpilib")
+import PDALib
+import myPDALib
+import time
 import signal
 
 
@@ -42,7 +46,7 @@ def signal_handler(signal, frame):
   print '\n** Control-C Detected'
   print "Servos to Center For Exit"
   center_servos()
-  PDALib.LibExit()
+  myPDALib.PiExit()
   sys.exit(0)
 
 # Setup the callback to catch control-C
@@ -54,7 +58,7 @@ print "Servos Centered"
 
 for panpos in range(PanCenter,PanLimitL+1, ServoStep ):   # move from center to full left
     PDALib.servoWrite(PANSERVO,panpos)                    # set to new position
-    print "pan: ",panpos,"current:",PDALib.analogRead(7)*5.0/1023*0.185*1000.0
+    print "pan: %d  current: %.0f" % (panpos,PDALib.analogRead(7)*5.0/1023*0.185*1000.0)
     time.sleep(ServoDwellTime)
 
 print "At left limit"
@@ -62,7 +66,7 @@ time.sleep(2)
 
 for panpos in range(PanLimitL,PanLimitR-1, -ServoStep ):   # move from full left to full right
     PDALib.servoWrite(PANSERVO,panpos)                 # set to new position
-    print "pan: ",panpos,"current:",PDALib.analogRead(7)*5.0/1023*0.185*1000.0
+    print "pan: %d  current: %.0f" % (panpos,PDALib.analogRead(7)*5.0/1023*0.185*1000.0)
     time.sleep(ServoDwellTime)
 
 print "At right limit"
@@ -70,7 +74,7 @@ time.sleep(2)
 
 for panpos in range(PanLimitR, PanCenter, ServoStep ):   # move from full right to center
     PDALib.servoWrite(PANSERVO,panpos)                 # set to new position
-    print "pan: ",panpos,"current:",PDALib.analogRead(7)*5.0/1023*0.185*1000.0
+    print "pan: %d  current: %.0f" % (panpos,PDALib.analogRead(7)*5.0/1023*0.185*1000.0)
     time.sleep(ServoDwellTime)
 
 print "At center"
@@ -79,7 +83,7 @@ time.sleep(2)
 
 for tiltpos in range(TiltCenter,TiltLimitUp-1, -ServoStep ):   # move from center to full up
     PDALib.servoWrite(TILTSERVO,tiltpos)                      # set to new position
-    print "tilt: ",tiltpos,"current:",PDALib.analogRead(7)*5.0/1023*0.185*1000.0
+    print "tilt: %d current: %.0f" % (tiltpos,PDALib.analogRead(7)*5.0/1023*0.185*1000.0)
     time.sleep(ServoDwellTime)
 
 print "At full up"
@@ -87,7 +91,7 @@ time.sleep(2)
 
 for tiltpos in range(TiltLimitUp,TiltLimitDn+1,ServoStep ):   # move from full up to full down
     PDALib.servoWrite(TILTSERVO, tiltpos)                 # set to new position
-    print "tilt: ",tiltpos,"current:",PDALib.analogRead(7)*5.0/1023*0.185*1000.0
+    print "tilt: %d current: %.0f" % (tiltpos,PDALib.analogRead(7)*5.0/1023*0.185*1000.0)
     time.sleep(ServoDwellTime)
 
 print "At full down"
@@ -95,7 +99,7 @@ time.sleep(2)
 
 for tiltpos in range(TiltLimitDn, TiltCenter, -ServoStep ):   # move from full down back to center
     PDALib.servoWrite(TILTSERVO, tiltpos)                     # set to new position
-    print "tilt: ",tiltpos,"current:",PDALib.analogRead(7)*5.0/1023*0.185*1000.0
+    print "tilt: %d current: %.0f" % (tiltpos,PDALib.analogRead(7)*5.0/1023*0.185*1000.0)
     time.sleep(ServoDwellTime)
 
 print "At center"

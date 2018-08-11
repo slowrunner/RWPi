@@ -1,12 +1,13 @@
 #!/usr/bin/python
 #
-# encoders.py   ENCODERS TEST
+# encoders.py   DIRECT READ ENCODERS TEST
 #
 # 10Jun2016 - changed pins for PDALib v0.93import PDALib
-
+import sys
+sys.path.append("/home/pi/RWPi/rwpilib")
+import myPDALib
 import PDALib
 import time
-import sys
 import signal
 
 
@@ -22,7 +23,7 @@ RightEncoder = 19
 # Callback and setup to catch control-C and quit program
 def signal_handler(signal, frame):
   print '\n** Control-C Detected'
-  PDALib.LibExit()
+  myPDALib.PiExit()
   sys.exit(0)
 
 # Setup the callback to catch control-C

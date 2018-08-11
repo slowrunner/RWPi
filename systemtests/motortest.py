@@ -4,9 +4,11 @@
 #
 # 10Jun2016 - changed pins for PDALib v0.93
 
-import PDALib
-import time
 import sys
+sys.path.append("/home/pi/RWPi/rwpilib")
+import PDALib
+import myPDALib
+import time
 import signal
 
 # ################# MOTOR TEST ###########
@@ -36,7 +38,7 @@ def signal_handler(signal, frame):
   PDALib.analogWrite(RMotor,0)  #set motor1 to zero speed 
   PDALib.analogWrite(LMotor,0)  #set motor2 to zero speed
   print 'bye bye'
-  PDALib.LibExit()
+  myPDALib.PiExit()
   sys.exit(0)
 
 # Setup the callback to catch control-C
@@ -79,3 +81,6 @@ PDALib.digitalWrite(M2DirA,0)  #set to off/coast to stop
 # turn off the speed pin - not needed when dir pins are off, but good idea
 PDALib.analogWrite(RMotor,0)  #set motor1 to zero speed 
 PDALib.analogWrite(LMotor,0)  #set motor2 to zero speed
+
+
+myPDALib.PiExit()
