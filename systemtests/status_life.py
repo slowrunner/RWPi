@@ -96,7 +96,7 @@ def main():
         printStatus()
         if (battery.batteryTooLow(5.9)): 
             batteryLowCount += 1
-        else batteryLowCount = 0
+        else: batteryLowCount = 0
         if (batteryLowCount > 3):
           # speak.say("WARNING, WARNING, SHUTTING DOWN NOW")
           print ("BATTERY %.2f volts BATTERY - SHUTTING DOWN NOW" % battery.volts())
