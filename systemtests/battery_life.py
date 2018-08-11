@@ -32,6 +32,10 @@ def signal_handler(signal, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
+def getUptime():
+  res = os.popen('uptime').readline()
+  return res.replace("\n","")
+
 nLow = 0
 while True:
 
@@ -44,7 +48,7 @@ while True:
   else: nLow = 0
   print ( "voltage: %.2f" % V_now)
   print ( "Life Estimate: %.1f" % battery.hoursOfLifeRemaining(V_now) )
-  print datetime.datetime.now().strftime('%m-%d-%Y %H:%M:%S')
+  print datetime.datetime.now().date(), getUptime()
   print "\n"
   if (nLow >3):  # four times lower we're out of here
           os.system("sudo shutdown -h now")
