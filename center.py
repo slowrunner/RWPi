@@ -2,15 +2,17 @@
 #
 # center.py   Center servos 
 #
+import sys
+sys.path.append("/home/pi/RWPi/rwpilib")
 
-import rwpilib.tiltpan as tiltpan
+import tiltpan
 import time
 
 
 def main():
     tiltpan.setup_servo_pins()
     tiltpan.center_servos()
-    time.sleep(1.0)
+    time.sleep(0.5)
     tiltpan.servos_off()
     print "Servos Centered"
 
