@@ -2,6 +2,8 @@
 #
 # egret.py   EGRET ROBOT
 #
+import sys
+sys.path.append("/home/pi/RWPi")
 
 import rwpilib.PDALib as PDALib
 import rwpilib.myPDALib as myPDALib
@@ -19,7 +21,6 @@ import rwpilib.encoders as encoders
 import rwpilib.battery as battery
 from enum import Enum
 import os
-import sys
 from rwpilib.speak import say
 
 
@@ -38,7 +39,7 @@ class Robot():
   EGRET=10
   SHUTDOWN=11
   DONE=12
-  
+
   State = Enum('OFF','STARTUP','THINKING','WALKING','STOPPING','STOPPED','AVOIDING','BUMPED', \
                'ESCAPING','MOVING','SHUTDOWN','DONE','EGRET')
 
@@ -52,7 +53,7 @@ class Robot():
     self.lastState = self.currentState
     self.currentState = new
     print "New state: %s" % str(self.currentState)
-    
+
   def revertState(self,old):
     self.currentState = self.lastState
     self.lastState = old
@@ -64,7 +65,7 @@ class Robot():
     print rptstr
     say(rptstr)
 
-    
+
   def __init__(self):
       print "Robot__init__"
       self.newState(Robot.State.STARTUP)
@@ -80,7 +81,7 @@ class Robot():
 
   escapeDirDict={
                Bumpers.NONE      : Motors.NONE,
-               Bumpers.REAR      : Motors.NONE, 
+               Bumpers.REAR      : Motors.NONE,
                Bumpers.FRONT     : Motors.CW180,
                Bumpers.LEFT      : Motors.CW90,
                Bumpers.RIGHT     : Motors.CCW90,
@@ -90,7 +91,7 @@ class Robot():
 
   def do_escape(self):
           self.newState(Robot.State.ESCAPING)
-          escapeSpin = self.escapeDirDict[self.bumpDir]  
+          escapeSpin = self.escapeDirDict[self.bumpDir]
           while (self.currentState == Robot.State.ESCAPING):
             # response to bumps
             # spin to escapeDir
@@ -114,7 +115,7 @@ class Robot():
             else:
               escapeSpin = Motors.CCW45
           self.revertState(Robot.State.ESCAPING)
-              
+
   def check_clear(self,bodyLengths=2):
     rptstr = "Checking if path is clear for %d bodyLengths" % bodyLengths
     self.report(rptstr)
@@ -123,14 +124,14 @@ class Robot():
     rptstr = "Forward path is clear for: %d lengths" % clearLengths
     self.report(rptstr)
     return (clearLengths >= bodyLengths)
-    
-              
+
+
   def do_avoid(self,bodyLengths=2):
     while (self.check_clear(bodyLengths) != True):
-        if (self.currentState != Robot.State.AVOIDING): 
+        if (self.currentState != Robot.State.AVOIDING):
             self.newState(Robot.State.AVOIDING)
         # Choose an avoidance spin (hard coded right now)
-        avoidSpin = Motors.CW45  
+        avoidSpin = Motors.CW45
         # spin to avoidDir
         rptstr =  "\n* Turning to %s" % self.motors.dirToStr(avoidSpin)
         self.report(rptstr)
@@ -138,7 +139,7 @@ class Robot():
         self.motors.waitForStopped()
     if (self.currentState == Robot.State.AVOIDING):
         self.revertState(Robot.State.AVOIDING)
-          
+
   def be_THINKING(self):
     numThoughts=0
     if (self.currentState != Robot.THINKING):
@@ -152,17 +153,17 @@ class Robot():
             self.report(rptstr)
             os.system("sudo shutdown -h now")
             sys.exit(0)
-        
+
     while (numThoughts < 300):    # think for about 30 seconds
-        numThoughts += 1    
+        numThoughts += 1
         if (self.bumpers.status() != Bumpers.NONE):
             self.newState(Robot.State.BUMPED)
             self.bumpDir=self.bumpers.status()
             rptstr =  "\nI've been bumped! (%s)" % self.bumpers.toStr(self.bumpDir)       
             self.report(rptstr)
-            self.do_escape()  
-            self.revertState(Robot.State.THINKING)              
-        time.sleep(0.1)      
+            self.do_escape()
+            self.revertState(Robot.State.THINKING)
+        time.sleep(0.1)
     self.revertState(Robot.State.THINKING)
 
   '''  egret(): egret inspired behavior
@@ -171,12 +172,12 @@ class Robot():
      loop until "tired of standing here":
         "think about something"
      how far is path forward clear*?
-     if path not clear, 
+     if path not clear,
          turn to new direction
-     else: 
+     else:
         move "forward some"*
         reset standing here time to 0
-         
+
 * tired: remaining battery life estimated to be 20%
 * path clear:  ultrasonic distance > 4 body diameters
 * forward some:   3 body diameters
@@ -205,9 +206,7 @@ class Robot():
           self.do_avoid()
 
 
-               
 
-  
   def cancel(self):
      print "robot.cancel() called"
      self.report("robot.cancel called")
@@ -224,25 +223,24 @@ class Robot():
 # ##### MAIN ######
 def main():
   try:
-    print "Starting Main"
+    print "Starting egret.py Main"
     tiltpan.setup_servo_pins()
     tiltpan.center_servos()
-    
+
     r=Robot()
-    myPyLib.set_cntl_c_handler(r.cancel)  # Set CNTL-C handler 
+    myPyLib.set_cntl_c_handler(r.cancel)  # Set CNTL-C handler
     r.be_egret()
   except SystemExit:
     myPDALib.PiExit()
     print "egret main: time for threads to quit"
     time.sleep(1)
-    print "egret.py says: Bye Bye"    
+    print "egret.py says: Bye Bye"
   except:
     print "Exception Raised"
     # r.cancel()
     traceback.print_exc()
-    
 
- 
+
 if __name__ == "__main__":
     main()
 
