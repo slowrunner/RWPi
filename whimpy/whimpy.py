@@ -3,6 +3,9 @@
 # whimpy.py   WHIMPY ROBOT
 #
 
+import sys
+sys.path.append("/home/pi/RWPi/rwpilib")
+
 import PDALib
 import myPDALib
 import myPyLib
@@ -51,7 +54,7 @@ class Robot():
 
   escapeDirDict={
                Bumpers.NONE      : Motors.NONE,
-               Bumpers.REAR      : Motors.NONE, 
+               Bumpers.REAR      : Motors.NONE,
                Bumpers.FRONT     : Motors.CW180,
                Bumpers.LEFT      : Motors.CW90,
                Bumpers.RIGHT     : Motors.CCW90,
@@ -61,7 +64,7 @@ class Robot():
 
   def do_escape(self):
           self.newState(Robot.ESCAPING)
-          escapeSpin = self.escapeDirDict[self.bumpDir]  
+          escapeSpin = self.escapeDirDict[self.bumpDir]
           while (self.currentState == Robot.ESCAPING):
             # response to bumps
             # spin to escapeDir
@@ -81,7 +84,7 @@ class Robot():
               self.currentState=self.DONE
             else:
               escapeSpin = Motors.CCW45
-              
+
   def be_happy(self):
           if (self.currentState != Robot.HAPPY):
               print "\nI'm happy now"
@@ -89,7 +92,7 @@ class Robot():
               self.printStatus(self)
           # DO NOTHING (BEING HAPPY)
           time.sleep(0.1)
-     
+
 
   def be_wimpy(self):
     while True:
@@ -98,13 +101,13 @@ class Robot():
       else:
           self.newState(Robot.BUMPED)
           self.bumpDir=self.bumpers.status()
-          print "\nI've been bumped! (%s)" % self.bumpers.toStr(self.bumpDir)       
+          print "\nI've been bumped! (%s)" % self.bumpers.toStr(self.bumpDir)
           self.do_escape()
 
 
-               
 
-  
+
+
   def cancel(self):
      print "robot.cancel() called"
      self.bumpers.cancel()
@@ -117,10 +120,10 @@ class Robot():
 # ##### MAIN ######
 def main():
   try:
-    print "Starting Main"
+    print "Starting WHIMPY Main"
     tiltpan.setup_servo_pins()
     tiltpan.center_servos()
-    
+
     r=Robot()
     myPyLib.set_cntl_c_handler(r.cancel)  # Set CNTL-C handler 
     r.be_wimpy()
@@ -128,14 +131,14 @@ def main():
     myPDALib.PiExit()
     print "whimpy: time for threads to quit"
     time.sleep(1)
-    print "whimpy.py says: Bye Bye"    
+    print "whimpy.py says: Bye Bye"
   except:
     print "Exception Raised"
     # r.cancel()
     traceback.print_exc()
-    
 
- 
+
+
 if __name__ == "__main__":
     main()
 
