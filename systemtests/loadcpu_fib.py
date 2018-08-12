@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import time
 
 def fib(n):

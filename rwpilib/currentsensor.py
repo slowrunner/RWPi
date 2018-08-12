@@ -1,4 +1,11 @@
 #!/usr/bin/python
+#
+#  currentsensor.py    API for reading current from the ACS712 sensor
+#
+#  Aug2018 tests show readings are generally within 60mA of the actual current
+#  e.g.  idle (w pigpio daemon running)  .31-33 Amps shows 337-379mA
+#        loaded w three systemtests/loadcpu_fib.py .68-.70 Amps shows 664-741mA
+#
 
 import PDALib
 import myPDALib
