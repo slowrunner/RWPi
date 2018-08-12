@@ -3,6 +3,9 @@
 # scanner.py   Scanning ROBOT
 #
 
+import sys
+sys.path.append("/home/pi/RWPi")
+
 import rwpilib.PDALib as PDALib
 import rwpilib.myPDALib as myPDALib
 import rwpilib.myPyLib as myPyLib
@@ -20,7 +23,6 @@ import rwpilib.battery as battery
 import rwpilib.irDistance as irDistance
 from enum import Enum
 import os
-import sys
 from rwpilib.speak import say
 
 
