@@ -1,6 +1,7 @@
 #!/usr/bin/python
 #
-# status_life.py   Run Battery down while printing status every 30s
+# status_nobumpers.py    Status  without bumper object (bumpers shorting)
+#      Run Battery down while printing status every 30s
 #
 # The 7v2 unregulated through 2:1 divider must be connected to 
 #      ADC6 (pin 6) for this test
@@ -9,7 +10,6 @@
 #      UNTIL voltage stays below 5.9v 4 times,
 #      then will issue a shutdown now
 #
-# ??? Start this test with $ sudo python status_life.py
 #
 import sys
 sys.path
@@ -28,12 +28,12 @@ import irDistance
 #from bumpersClass import Bumpers
 from datetime import datetime
 
-# Return CPU temperature as a character string                                      
+# Return CPU temperature as a character string
 def getCPUtemperature():
     res = os.popen('vcgencmd measure_temp').readline()
     return(res.replace("temp=","").replace("\n",""))
 
-# Return Clock Freq as a character string                                      
+# Return Clock Freq as a character string
 def getClockFreq():
     res = os.popen('vcgencmd measure_clock arm').readline()
     res = int(res.split("=")[1])
@@ -42,7 +42,7 @@ def getClockFreq():
     else: res = '{:.2f}'.format(res/1000000000.0)+" GHz"
     return res
 
-# Return throttled flags as a character string                                      
+# Return throttled flags as a character string
 def getThrottled():
     res = os.popen('vcgencmd get_throttled').readline()
     return res.replace("\n","")
@@ -55,7 +55,7 @@ def getUptime():
 def printStatus():
   global b, u
 
-  print "\n********* RWPi STATUS *****"
+  print "\n********* RWPi STATUS (w/o Bumpers) *****"
   print datetime.now().date(), getUptime()
   vBatt = battery.volts()
   print "battery.volts(): %0.2f" % vBatt
@@ -106,9 +106,7 @@ def main():
     #end while
   except SystemExit:
     myPDALib.PiExit()
-    print "status_life.py: exiting"
+    print "status_nobumpers.py: exiting"
 
 if __name__ == "__main__":
     main()
-
-
