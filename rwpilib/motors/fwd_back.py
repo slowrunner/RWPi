@@ -1,23 +1,24 @@
 #!/usr/bin/python
 #
-# fwd_back2.py   FORWARD AND BACK MOTOR TEST
+# fwd_back.py   FORWARD AND BACK MOTOR TEST
 #
 # 10Jun2016 - changed pins for PDALib v0.93
 # Drive forward five seconds, pause 5s, drive back 5s
 # With empirical bias number
-
-import PDALib
-import time
 import sys
+sys.path.append("/home/pi/RWPi/rwpilib")
+import PDALib
+import myPDALib
+import time
 import signal
-
+import currentsensor
 
 # ################# MOTOR TEST ###########
 
-# Motor Pins 
+# Motor Pins
 # SRV 6		Right Motor (Motor 1) Speed (PWM)
 # SRV 7		Left Motor  (Motor 2) Speed (PWM)
-RMotor = 6	
+RMotor = 6
 LMotor = 7
 
 # DIO 12 (A4)	Motor 1 Dir A (0=coast 1=F/Brake)
@@ -86,7 +87,7 @@ def signal_handler(signal, frame):
   print '\n** STOPPING MOTORS **' 
   motors_off()
   print 'bye bye'
-  PDALib.LibExit()
+  myPDALib.PiExit()
   sys.exit(0)
 
 # Setup the callback to catch control-C
@@ -127,27 +128,6 @@ def motors_bwd():
   PDALib.digitalWrite(M1DirB,1)  #set to forward
   PDALib.digitalWrite(M2DirB,1)  #set to forward
 
-ACS712PIN = 7
-def current_sense():   
-    # Sensor puts out 0.185V/A around 2.5v
-    #
-    #   5000mV          1A        1000A
-    #  --ADC---- *   -Sensor-  *  -----  = 26.39358 mA per reading bit
-    #   1024           185mV        1A                 around 512
-    zero_current = 514.00
-    values = []
-    for i in range(0,10):
-      values.append(PDALib.analogRead(ACS712PIN))
-    values.sort()
-    middle = values[4:6]
-    median = sum(middle) / float(len(middle)) # median 
-    average = sum(values) / float(len(values)) # average
-    # print("average current %.0f" % ((zero_current - average)*26.39358))
-    # print("median current %.0f" % ((zero_current - median)*26.39358))
-    pin_value = average  
-    current_now = (zero_current - pin_value)*26.39358
-    return [round(current_now), int(pin_value)]
-  
 
 TILTSERVO = 0
 PANSERVO = 1
@@ -187,16 +167,16 @@ delayTime=(MotorRampTime/((MaxMotorsF+1 - MinMotorsF)/RampStep))
 print "delayTime: ",delayTime
 
 for speed in range(MinMotorsF,MaxMotorsF+1,RampStep):   # range goes up to but not including
-  PDALib.analogWrite(RMotor,speed-RMotorBiasF)  #set motor1 to desired speed 
+  PDALib.analogWrite(RMotor,speed-RMotorBiasF)  #set motor1 to desired speed
   PDALib.analogWrite(LMotor,speed-LMotorBiasF)  #set motor2 to desired speed
   print "speed: ",speed
-  print "current:",current_sense()
-  time.sleep(delayTime)  
+  print "current:",currentsensor.current_sense()
+  time.sleep(delayTime)
 
 print "At max speed"
 for i in range(0,int(DriveTime)):
-  print "current:",current_sense()
-  time.sleep(1.0)  # drive while asleep at the wheel 
+  print "current:",currentsensor.current_sense()
+  time.sleep(1.0)  # drive while asleep at the wheel
                            # (bad idea but this is a test)
 motors_off()
 print "Motors Off"
@@ -204,7 +184,7 @@ print "Motors Off"
 
 # ---- Just sit for a while ----
 time.sleep(3.0)
-print "current:",current_sense()
+print "current:",currentsensor.current_sense()
 time.sleep(2.0)
 
 # ---- Now drive backward -----
@@ -218,12 +198,13 @@ print "delayTime: ",delayTime
 motors_bwd()
 
 for speed in range(MinMotorsB,MaxMotorsB+1,RampStep):   # range goes up to but not including
-  PDALib.analogWrite(RMotor,speed-RMotorBiasB)  #set motor1 to desired speed 
+  PDALib.analogWrite(RMotor,speed-RMotorBiasB)  #set motor1 to desired speed
   PDALib.analogWrite(LMotor,speed-LMotorBiasB)  #set motor2 to desired speed
   print "speed: ",speed
-  time.sleep(delayTime)  
+  time.sleep(delayTime)
 
 print "At max speed"
-time.sleep(int(DriveTime))  # drive while asleep at the wheel for 10 seconds 
+time.sleep(int(DriveTime))  # drive while asleep at the wheel for 10 seconds
                            # (bad idea but this is a test)
 motors_off()
+print "Motors Off"

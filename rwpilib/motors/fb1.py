@@ -5,6 +5,8 @@
 # 10Jun2016 - changed pins for PDALib v0.93
 # Drive forward five seconds, pause 5s, drive back 5s
 # With empirical bias number
+import sys
+sys.path.append("/home/pi/RWPi/rwpilib")
 
 import PDALib
 import time
@@ -173,7 +175,7 @@ for speed in range(MinMotorsF,MaxMotorsF+1,RampStep):   # range goes up to but n
 
 print "At max speed"
 for i in range(0,int(DriveTime)):
-  print ("current: %.0f" % currentsensor.current_sense3())
+  print ("current: %.0f" % currentsensor.current_sense())
   time.sleep(1.0)  # drive while asleep at the wheel 
                            # (bad idea but this is a test)
 motors_off()

@@ -2,6 +2,8 @@
 #
 # kill.py   KILL MOTORS
 #
+import sys
+sys.path.append("/home/pi/RWPi/rwpilib")
 
 import PDALib
 import myPDALib
