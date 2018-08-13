@@ -170,12 +170,12 @@ for speed in range(MinMotorsF,MaxMotorsF+1,RampStep):   # range goes up to but n
   PDALib.analogWrite(RMotor,speed-RMotorBiasF)  #set motor1 to desired speed
   PDALib.analogWrite(LMotor,speed-LMotorBiasF)  #set motor2 to desired speed
   print "speed: ",speed
-  print "current:",currentsense.current_sense()
+  print "current:",currentsensor.current_sense()
   time.sleep(delayTime)
 
 print "At max speed"
 for i in range(0,int(DriveTime)):
-  print "current:",currentsense.current_sense()
+  print "current:",currentsensor.current_sense()
   time.sleep(1.0)  # drive while asleep at the wheel
                            # (bad idea but this is a test)
 motors_off()
@@ -184,7 +184,7 @@ print "Motors Off"
 
 # ---- Just sit for a while ----
 time.sleep(3.0)
-print "current:",currentsense.current_sense()
+print "current:",currentsensor.current_sense()
 time.sleep(2.0)
 
 # ---- Now drive backward -----
