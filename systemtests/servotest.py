@@ -45,7 +45,7 @@ PanLimitL = 2400
 PanCenter = 1450
 PanLimitR =  600
 
-TiltLimitUp = 500
+TiltLimitUp = 550
 TiltCenter = 1400
 TiltLimitDn = 1900
 

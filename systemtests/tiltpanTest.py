@@ -42,7 +42,7 @@ import time
 import tiltpan
 
 debugLevel = 0   # 0 off, 1 some,  99 all
-
+DwellTime  = 0.5
 
 ServoStep = 10  # must be integer for range func
 
@@ -75,6 +75,7 @@ def main():
              ^: tilt sensor platform up 10 deg
             V: tilt sensor platform dn 10 deg            
             c: center servos
+            s: scan
 
             ctrl-c: quit
 
@@ -105,6 +106,22 @@ def main():
                 tiltpan.servos_off()
         elif key_press == 'c':
                 tiltpan.center_servos()   # calls servos_on() 
+        elif key_press == "s":
+                print "Scanning"
+                tiltpan.center_servos()
+                for tiltAngle in range (TiltDegLimitDn,TiltDegLimitUp, 10):
+                   tiltpan.tilt_servo(tiltAngle)
+                   print "tiltAngle: %d" % tiltAngle
+                   time.sleep(DwellTime)
+                tiltAngle = 0
+                tiltpan.tilt_servo(tiltAngle)
+                time.sleep(DwellTime)
+                for panAngle in range (PanDegLimitR, PanDegLimitL, 10):
+                   tiltpan.pan_servo(panAngle)
+                   print "panAngle: %d" % panAngle
+                   time.sleep(DwellTime)
+                tiltpan.pan_servo(90)
+
 
     # command = tk.Tk()
     # command.bind_all('<Key>', key_input)  # ALAN  '' changed to '<Key>'
@@ -119,69 +136,6 @@ def main():
 
 
 
-def mainx():
-  center_servos()
-  print "Servos Centered"
-  time.sleep(1.0)
-  try:
-    myPyLib.set_cntl_c_handler(servos_off)  # Set CNTL-C handler 
-
-
-
-    for panpos in range(PanCenter,PanLimitL+1, ServoStep ):   # move from center to full left
-      PDALib.servoWrite(PANSERVO,panpos)                    # set to new position
-      print "panpos: %d" % panpos
-      time.sleep(ServoDwellTime)
-
-    print "At left limit"
-    time.sleep(1)
-
-    for panpos in range(PanLimitL,PanLimitR-1, -ServoStep ):   # move from full left to full right
-      PDALib.servoWrite(PANSERVO,panpos)                 # set to new position
-      print "panpos: %d" % panpos
-      time.sleep(ServoDwellTime)
-
-    print "At right limit"
-    time.sleep(1)
-
-    for panpos in range(PanLimitR, PanCenter, ServoStep ):   # move from full right to center
-      PDALib.servoWrite(PANSERVO,panpos)                 # set to new position
-      print "panpos: %d" % panpos
-      time.sleep(ServoDwellTime)
-
-    print "At center"
-    time.sleep(1)
-
-
-    for tiltpos in range(TiltCenter,TiltLimitUp-1, -ServoStep ):   # move from center to full up
-      PDALib.servoWrite(TILTSERVO,tiltpos)                      # set to new position
-      print "tiltpos: %d" % (tiltpos)
-      time.sleep(ServoDwellTime)
-
-    print "At full up"
-    time.sleep(1)
-
-    for tiltpos in range(TiltLimitUp,TiltLimitDn+1,ServoStep ):   # move from full up to full down
-      PDALib.servoWrite(TILTSERVO, tiltpos)                 # set to new position
-      print "tiltpos: %d" % (tiltpos)
-      time.sleep(ServoDwellTime)
-
-    print "At full down"
-    time.sleep(1)
-
-    for tiltpos in range(TiltLimitDn, TiltCenter, -ServoStep ):   # move from full down back to center
-      PDALib.servoWrite(TILTSERVO, tiltpos)                     # set to new position
-      print "tiltpos: %d" % (tiltpos)
-      time.sleep(ServoDwellTime)
-
-    print "At center"
-    time.sleep(1)
-    center_servos()
-    servos_off()
-    print "servos off"
-    print "tiltPan Test Main end"
-
-  except SystemExit:
     myPDALib.PiExit()
     print "tiltPan Test Main shutting down"
 
