@@ -5,19 +5,20 @@
 # spin ccw five seconds, pause 5s, spin cw 5s
 # With empirical bias number
 
+import sys
+sys.path.append("/home/pi/RWPi/rwpilib")
 import PDALib
 import myPDALib
 import time
-import sys
 import signal
 import currentsensor
 
 # ################# SPIN TEST ###########
 
-# Motor Pins 
+# Motor Pins
 # SRV 6		Right Motor (Motor 1) Speed (PWM)
 # SRV 7		Left Motor  (Motor 2) Speed (PWM)
-RMotor = 6	
+RMotor = 6
 LMotor = 7
 
 # DIO 12 (A4)	Motor 1 Dir A (0=coast 1=F/Brake)
@@ -49,12 +50,12 @@ DriveTime45  = DriveTime90 / 2.2
 # 33	  22		20
 
 RMotorMinF = 83  # no load (takes more to get right going reliably)
-LMotorMinF = 73  # no load 
+LMotorMinF = 73  # no load
 RMotorMinB = 94  # no load (takes more to get right going reliably)
-LMotorMinB = 86  # no load 
+LMotorMinB = 86  # no load
 
 # compute motor bias based on startup (amount of right more than left needed)
-#MotorBiasF = RMotorMinF-LMotorMinF   # = +10 
+#MotorBiasF = RMotorMinF-LMotorMinF   # = +10
 #MotorBiasB = RMotorMinB-LMotorMinB   # = +8
 MotorBiasCW = RMotorMinB-LMotorMinF   # = +21
 MotorBiasCCW = RMotorMinF-LMotorMinB  # = -3
@@ -63,8 +64,8 @@ MotorBiasCCW = RMotorMinF-LMotorMinB  # = -3
 # MotorBiasCW += 1
 # MotorBiasCCW = 0   # positive anti-cw , negative anti-ccw
 
-if MotorBiasCW >0:   # Right takes more so will need to reduce left 
-  LMotorBiasCW = MotorBiasCW  
+if MotorBiasCW >0:   # Right takes more so will need to reduce left
+  LMotorBiasCW = MotorBiasCW
   RMotorBiasCW = 0
   MinMotorsCW  = RMotorMinB
 else:               # Left takes more so will need to reduce right
@@ -72,8 +73,8 @@ else:               # Left takes more so will need to reduce right
   RMotorBiasCW = -MotorBiasCW
   MinMotorsCW = LMotorMinF
 
-if MotorBiasCCW >0:   # Right takes more so will need to reduce left 
-  LMotorBiasCCW = MotorBiasCCW  
+if MotorBiasCCW >0:   # Right takes more so will need to reduce left
+  LMotorBiasCCW = MotorBiasCCW
   RMotorBiasCCW = 0
   MinMotorsCCW  = RMotorMinF
 else:               # Left takes more so will need to reduce right
@@ -91,7 +92,7 @@ LMotorBias = 0 # variable
 # Callback and setup to catch control-C and quit program
 def signal_handler(signal, frame):
   print '\n** Control-C Detected'
-  print '\n** STOPPING MOTORS **' 
+  print '\n** STOPPING MOTORS **'
   motors_off()
   print 'bye bye'
   myPDALib.PiExit()
@@ -104,7 +105,7 @@ signal.signal(signal.SIGINT, signal_handler)
 
 def setup_motor_pins():
   PDALib.pinMode(RMotor,PDALib.PWM)  # init motor1 speed control pin
-  PDALib.pinMode(LMotor,PDALib.PWM)  # init motor2 speed control pin 
+  PDALib.pinMode(LMotor,PDALib.PWM)  # init motor2 speed control pin
 
   PDALib.pinMode(M1DirA,PDALib.OUTPUT)  #init motor1 dirA/Fwd    enable
   PDALib.pinMode(M1DirB,PDALib.OUTPUT)  #init motor1 dirB/Bkwd  enable
@@ -113,8 +114,8 @@ def setup_motor_pins():
 
 
 def motors_off():
-  # two ways to stop - set speed to 0 or set direction to off/coast 
-  
+  # two ways to stop - set speed to 0 or set direction to off/coast
+
   # all direction pins to off
   PDALib.digitalWrite(M1DirA,0)  #set to off/coast
   PDALib.digitalWrite(M1DirB,0)  #set to off/coast
@@ -122,7 +123,7 @@ def motors_off():
   PDALib.digitalWrite(M2DirB,0)  #set to off/coast
 
   # turn off the speed pin - not needed when dir pins are off, but good idea
-  PDALib.analogWrite(RMotor,0)  #set motor1 to zero speed 
+  PDALib.analogWrite(RMotor,0)  #set motor1 to zero speed
   PDALib.analogWrite(LMotor,0)  #set motor2 to zero speed
 
 CCW = 1
@@ -190,11 +191,11 @@ def ramp_speed():
 #  print "delayTime: ",delayTime
 
   for speed in range(MinMotors,MaxMotors+1,RampStep):   # range goes up to but not including
-    PDALib.analogWrite(RMotor,speed-RMotorBias)  #set motor1 to desired speed 
+    PDALib.analogWrite(RMotor,speed-RMotorBias)  #set motor1 to desired speed
     PDALib.analogWrite(LMotor,speed-LMotorBias)  #set motor2 to desired speed
 #    print ("speed: %d" % speed )
 #    print ("speed: %d current: %.0f" % (speed, currentsensor.current_sense() ))
-    time.sleep(delayTime)  
+    time.sleep(delayTime)
 
 #  print "At max speed"
   for i in range(0,int(DriveTime)):
@@ -202,7 +203,7 @@ def ramp_speed():
     time.sleep(1.0)  # spin
   FractionalTime = DriveTime % 1
   if (FractionalTime > 0.01):
-    time.sleep(FractionalTime) 
+    time.sleep(FractionalTime)
 
 DriveTime=DriveTime360
 # get spin for DriveTime
