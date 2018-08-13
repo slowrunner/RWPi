@@ -2,6 +2,8 @@
 #
 # center2.py   Center servos and measure current 
 #
+import sys
+sys.path.append("/home/pi/RWPi/rwpilib")
 
 import PDALib
 import time
@@ -34,11 +36,11 @@ def servos_off():
   PDALib.pinMode(TILTSERVO,PDALib.INPUT)    # init Tilt servo off
   PDALib.pinMode(PANSERVO,PDALib.INPUT)     # init motor2 servo off
 
-print ("\ncurrent: %.0f \n" % currentsensor.current_sense3())
+print ("\ncurrent: %.0f \n" % currentsensor.current_sense())
 print "setup_servo_pins()"
 setup_servo_pins()
 time.sleep(0.2)
-print ("\ncurrent: %.0f \n" % currentsensor.current_sense3())
+print ("\ncurrent: %.0f \n" % currentsensor.current_sense())
 print "center_servos()"
 center_servos()
 time.sleep(1.0)
@@ -46,23 +48,23 @@ n=0
 values=0
 for i in range(1,100):
   n+=1
-  values += currentsensor.current_sense()
+  values += currentsensor.current_sense(1)
 ave_current = values / n
 print "servos at rest"
 print ("ave current: %.0f" % ave_current)
-print ("\ncurrent: %.0f \n" % currentsensor.current_sense3())
+print ("\ncurrent: %.0f \n" % currentsensor.current_sense())
 print "servos_off()"
 servos_off()
 print "Servos Centered and off"
 time.sleep(0.2)
-print ("\ncurrent: %.0f \n" % currentsensor.current_sense3())
+print ("\ncurrent: %.0f \n" % currentsensor.current_sense())
 n=0
 values=0
 for i in range(1,100):
   n += 1
-  values += currentsensor.current_sense()
+  values += currentsensor.current_sense(1)
 ave_current=values / n
 print ("ave current: %.0f" % ave_current)
-print ("\ncurrent: %.0f \n" % currentsensor.current_sense3())
+print ("\ncurrent: %.0f \n" % currentsensor.current_sense())
 print "Done"
 

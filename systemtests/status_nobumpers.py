@@ -102,7 +102,7 @@ def main():
           print ("BATTERY %.2f volts BATTERY - SHUTTING DOWN NOW" % battery.volts())
           os.system("sudo shutdown -h now")
           sys.exit(0)
-        time.sleep(30)
+        time.sleep(5)
     #end while
   except SystemExit:
     myPDALib.PiExit()

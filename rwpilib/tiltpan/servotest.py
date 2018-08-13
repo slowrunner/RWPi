@@ -25,6 +25,8 @@
 #- All Nylon Gear
 #- Connector Wire Length 150MM
 
+import sys
+sys.path.append("/home/pi/RWPi/rwpilib")
 import PDALib
 import myPDALib
 import myPyLib
@@ -39,12 +41,12 @@ PANSERVO = 1
 
 ServoStep = 10  # must be integer for range func
 
-PanLimitL = 2000
-PanCenter = 1500
-PanLimitR = 1000
+PanLimitL = 2400
+PanCenter = 1450
+PanLimitR =  600
 
-TiltLimitUp = 700
-TiltCenter = 1375
+TiltLimitUp = 500
+TiltCenter = 1400
 TiltLimitDn = 1900
 
 
@@ -149,3 +151,5 @@ time.sleep(10.0)
 #servos_off()
 current_now = currentsensor.current_sense(4)
 print "current: %.0f" % (current_now)
+print "servotest.py Done - Bye Bye"
+
