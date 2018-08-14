@@ -32,6 +32,9 @@ signal.signal(signal.SIGINT, signal_handler)
 
 while True:
   print "\nDIO Chip MCP23S17 Test"
+  print "**** dumpDio() ****"
+  PDALib.dumpDio()
+  print "\n"
   print "**Setting all 16 lines to input with pull-up"
   for pin in range(8,23+1):
       stat=PDALib.pinMode(pin,PDALib.INPUT)
