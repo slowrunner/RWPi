@@ -395,9 +395,9 @@ def getDioBit(reg,bit):
 #
     
 def dumpDio():
-    print "reg val"
-    print "--------"
+    print("reg val")
+    print("--------")
     for r in range(0,16):
-      print "", format(r+r, '02X'), format(readDio(r+r),'04X')
+      print("", format(r+r, '02X'), format(readDio(r+r),'04X'))
 
 

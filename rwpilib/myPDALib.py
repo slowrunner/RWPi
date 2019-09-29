@@ -45,7 +45,7 @@ def readAndResetInterrupt():
 # overload for RoboPiExit()
 def PiExit():
   PDALib.pi.stop()
-  print "myPDALib.PiExit():  PDALib.pi.stop() called"
+  print("myPDALib.PiExit():  PDALib.pi.stop() called")
 
 #
 # Read specified MCP23S17 register (8 bits)
