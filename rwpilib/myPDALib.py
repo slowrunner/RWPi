@@ -1,8 +1,11 @@
 #
 # myPDALib.py   SUPPLIMENTAL Pi Droid Alpha FUNCTIONS
 #
+# v1.0  29Sep2019   add rwpilib to syspath
 # v0.1	14June2016  LibExit()
 
+import sys
+sys.path.append("/home/pi/RWPi/rwpilib")
 import PDALib
 import myPyLib
 import pigpio

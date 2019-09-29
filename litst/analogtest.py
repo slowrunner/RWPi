@@ -14,6 +14,10 @@ import myPDALib
 import time
 import signal
 
+VSUPPLY = 5.07
+VLSB = VSUPPLY / 4095.0
+VDIV = 3.14
+
 # ################ Control-C Handling #########
 def signal_handler(signal, frame):
   print('\n** Control-C Detected')
@@ -29,7 +33,10 @@ signal.signal(signal.SIGINT, signal_handler)
 while True:
   print("\n")
   for pin in range(0,7+1):
-      print ( "pin %d reading: %d voltage: %.2f" % (pin, myPDALib.analogRead12bit(pin), myPDALib.readVoltage(pin) ) )
+      reading = myPDALib.analogRead12bit(pin)
+      v_adc = reading * VLSB
+      v_tst = v_adc * VDIV
+      print ( "pin %d reading: %d v_adc: %.2f v_tst: %.2f" % (pin, reading, round(v_adc,2), round(v_tst,2)) )
   time.sleep(1.0)
 
 
