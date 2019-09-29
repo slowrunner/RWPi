@@ -47,8 +47,27 @@ VLSB = VSUPPLY / 4095.0
 VDIV = 3.14   # roughly 3:1  0.317v = 1v
 BATT_PIN = 6
 
+def read_and_return_batt_v():
+  v_list = []
+  for i in range(10):
+      adc_reading = myPDALib.analogRead12bit(BATT_PIN)
+      v_reading = VLSB * adc_reading
+      v_now = v_reading * VDIV
+      v_list += [v_now]
+      time.sleep(0.1)
+  # print("v_list:",v_list)
+  v_ave = np.average(v_list)
+  strTime = time.strftime("%H:%M:%S")
+
+  strToLog = "{} {:.2f}".format(strTime, round(v_ave,2))
+  return strToLog
+
+
 def signal_handler(signal, frame):
   print('\n** Control-C Detected')
+
+  strToLog = read_and_return_batt_v()
+  logger.info("** End at "+strToLog+" **")
   myPDALib.PiExit()
   sys.exit(0)
 
