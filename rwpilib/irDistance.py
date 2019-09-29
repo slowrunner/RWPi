@@ -15,29 +15,34 @@ import traceback
 # irDist(readings=75)
 #
 IRDISTPIN = 0  # ADC0 connected to IR Distance 10-150cm/4-60" spec
-# Data points  
-#  (reading , dist in inches to center of pan servo axis)
+#
+# Data points
+#  (reading , dist in inches to front of sensor))
+#  At 2.5 inches the readings start going back up - not valid
+#  Readings re-evaluated Aug 2018 for 5.27v Vsupply/Vref
 
 irDistPoints= (
  (000, 999.0),
- (725, 48.0),
- (731, 39.0),
- (738, 36.0),
- (765, 33.0),
- (778, 30.0), 
- (806, 27.0), 
- (849, 24.0), 
- (904, 21.0), 
- (973, 18.0), 
- (1069, 15.0), 
- (1235, 12.0), 
- (1304, 11.0), 
- (1394, 10.0), 
- (1486, 9.0), 
- (1635, 8.0), 
- (2071, 6.0), 
- (2816, 4.0),
- (3535, 2.5),
+ (553, 66.0),
+ (575, 60.0),
+ (618, 48.0),    # (725, 48.0),
+ (661, 39.0),    # (731, 39.0),
+ (674, 36.0),    # (738, 36.0),
+ (703, 33.0),    # (765, 33.0),
+ (729, 30.0),    # (778, 30.0),
+ (767, 27.0),    # (806, 27.0),
+ (806, 24.0),    # (849, 24.0),
+ (858, 21.0),    # (904, 21.0),
+ (922, 18.0),    # (973, 18.0),
+ (1025,15.0),    # (1069, 15.0),
+ (1170,12.0),    # (1235, 12.0),
+ (1235,11.0),    # (1304, 11.0),
+ (1330,10.0),    # (1394, 10.0),
+ (1418, 9.0),    # (1486, 9.0),
+ (1560, 8.0),    # (1635, 8.0),
+ (1950, 6.0),    # (2071, 6.0),
+ (2695, 4.0),    # (2816, 4.0),
+ (3350, 2.5),    # (3535, 2.5),
  (4096, 0.0)
  )
 
@@ -54,7 +59,7 @@ def reading(readings=150):
     else:
       # ir Distance from a single analog reading
       irReading =  myPDALib.analogRead12bit(IRDISTPIN)
-    return irReading 
+    return irReading
 
 def inInches(readings=150):
     return readingDistInchesArray[reading(readings)]
@@ -78,17 +83,18 @@ def main():
   try:
     print "\nIR DISTANCE TEST"
     while True:
-       print "ir sensor distance: %.1f inches" % inInches()
+       r = reading()  # average of 150 readings
+       print "ir sensor reading %4d distance: %4.1f inches" % (r,readingToInches(r))
        time.sleep(1)
 
-    
+
   except SystemExit:
     myPDALib.PiExit()
-    print "IR DISTANCE TEST: Bye Bye"    
+    print "IR DISTANCE TEST: Bye Bye"
 
   except:
     print "Exception Raised"
-    traceback.print_exc()  
+    traceback.print_exc()
 
 
 

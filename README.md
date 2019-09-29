@@ -48,3 +48,4 @@ The bot will sit safely contemplating its navel for 10 hours.
 
 This repository contains my musings in Python to create various robot behaviors.
 
+<img src="RWPi_Pogo_2016.JPG" alt=" RugWarriorPro with Raspberry Pi Brain Transplant " style="max-width:100%;">

@@ -29,11 +29,10 @@ signal.signal(signal.SIGINT, signal_handler)
 while True:
   print "\n"
   for pin in range(0,7+1):
-      print ( "pin %d reading: %d voltage: %.2f" % (pin, myPDALib.analogRead12bit(pin), myPDALib.readVoltage(pin) ) )
+      reading = myPDALib.analogRead12bit(pin)
+      voltage = reading * myPDALib.VperBit
+      print ( "pin %d reading: %4d voltage: %1.3f" % (pin,reading,voltage) )
   time.sleep(1.0)
 
 
 myPDALib.PiExit()
-  
-  
-
