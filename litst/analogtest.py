@@ -14,9 +14,9 @@ import myPDALib
 import time
 import signal
 
-VSUPPLY = 5.07
+VSUPPLY = 5.20 # 5.07
 VLSB = VSUPPLY / 4095.0
-VDIV = 3.14
+VDIV = 3.156
 
 # ################ Control-C Handling #########
 def signal_handler(signal, frame):

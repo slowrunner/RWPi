@@ -42,9 +42,9 @@ logger.addHandler(loghandler)
 
 
 VBATT_LOW = 10.8
-VSUPPLY = 5.07
+VSUPPLY = 5.20  # 5.07
 VLSB = VSUPPLY / 4095.0
-VDIV = 3.14   # roughly 3:1  0.317v = 1v
+VDIV = 3.156   # roughly 3:1  0.317v = 1v
 BATT_PIN = 6
 
 def signal_handler(signal, frame):
