@@ -1,15 +1,15 @@
 #!/usr/bin/python3
 #
-# li_batt_life.py  Lithium BATTERY LIFE TEST
+# li_status.py  Lithium BATTERY LIFE status
 #
 # The 12.6v - 10.8v battery voltage through 0.318:1 divider should be connected to
 #      ADC6 (pin 6) for this test
 #
-# This test will loop reading the voltage on ADC6 and current (pin 7)
+# This test will loop reading the voltage on ADC6 and current (pin 6)
 #      UNTIL voltage drops below 10.8v  5 times,
-#      then will issue a shutdown 
+#      It will warn of low voltage but will not quit or shutdown
 #
-# Start this test with $ ./li_batt_life.py
+# Start this test with $ ./li_status.py
 #
 import sys
 sys.path
@@ -87,11 +87,12 @@ while True:
   strTime = time.strftime("%H:%M:%S")
   print(strTime,", {:.2f}".format(round(v_ave,2)))
   if (nLow >4):  # five times lower we're out of here
-          print("WARNING WARNING WARNING SHUTTING DOWN")
-          strToLog = "** Shutting Down at {} {:.2f}v **".format(strTime, round(v_ave,2))
-          logger.info(strToLog)
-          os.system("sudo shutdown -h +1")
-          sys.exit(0)
+          print("WARNING WARNING WARNING SHUT DOWN")
+          strToLog = "** Voltage at {} {:.2f}v **".format(strTime, round(v_ave,2))
+          print(strToLog)
+          # logger.info(strToLog)
+          # os.system("sudo shutdown -h")
+          # sys.exit(0)
   time.sleep(5)
 # end while
 
