@@ -23,6 +23,7 @@ import signal
 import os
 import numpy as np
 import logging
+import li_batt
 
 
 # create logger
@@ -41,13 +42,13 @@ logger.addHandler(loghandler)
 
 
 
-VBATT_LOW = 10.8
-VSUPPLY = 5.20 # 5.07
-VLSB = VSUPPLY / 4095.0
-VDIV = 3.156   # roughly 3:1  0.317v = 1v
-BATT_PIN = 6
+VBATT_LOW = li_batt.VBATT_LOW
+VSUPPLY = li_batt.VSUPPLY
+VLSB = li_batt.VLSB
+VDIV = li_batt.VDIV
+BATT_PIN = li_batt.BATT_PIN
 
-def read_and_return_batt_v():
+def get_v_batt_ave():
   v_list = []
   for i in range(10):
       adc_reading = myPDALib.analogRead12bit(BATT_PIN)
@@ -57,17 +58,15 @@ def read_and_return_batt_v():
       time.sleep(0.1)
   # print("v_list:",v_list)
   v_ave = np.average(v_list)
-  strTime = time.strftime("%H:%M:%S")
-
-  strToLog = "{} {:.2f}".format(strTime, round(v_ave,2))
-  return strToLog
+  return v_ave
 
 
 def signal_handler(signal, frame):
   print('\n** Control-C Detected')
-
-  strToLog = read_and_return_batt_v()
-  logger.info("** End at "+strToLog+" **")
+  v_ave = get_v_batt_ave()
+  strToLog = "** End at {:.2f} v **".format(round(v_ave,2))
+  logger.info(strToLog)
+  print(strToLog)
   myPDALib.PiExit()
   sys.exit(0)
 
@@ -96,8 +95,9 @@ while True:
   strTime = time.strftime("%H:%M:%S")
 
   if loopcount == 1:
-      strToLog = "** Start at {} {:.2f}v **".format(strTime, round(v_ave,2))
+      strToLog = "** Start at {:.2f}v **".format(round(v_ave,2))
       logger.info(strToLog)
+      print(strToLog)
 
   if (v_ave < VBATT_LOW):
           nLow+=1
@@ -106,9 +106,9 @@ while True:
   strTime = time.strftime("%H:%M:%S")
   print(strTime,", {:.2f}".format(round(v_ave,2)))
   if (nLow >4):  # five times lower we're out of here
-          print("WARNING WARNING WARNING SHUT DOWN")
-          strToLog = "** Voltage at {} {:.2f}v **".format(strTime, round(v_ave,2))
-          print(strToLog)
+          print("WARNING WARNING WARNING NEED TO SHUT DOWN")
+          strToLog = "** Voltage at {:.2f}v **".format(round(v_ave,2))
+          print(strTime, strToLog)
           # logger.info(strToLog)
           # os.system("sudo shutdown -h")
           # sys.exit(0)

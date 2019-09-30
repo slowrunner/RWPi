@@ -13,10 +13,14 @@ import PDALib
 import myPDALib
 import time
 import signal
+import li_batt
 
-VSUPPLY = 5.20 # 5.07
-VLSB = VSUPPLY / 4095.0
-VDIV = 3.156
+VBATT_LOW = li_batt.VBATT_LOW
+VSUPPLY = li_batt.VSUPPLY
+VLSB = li_batt.VLSB
+VDIV = li_batt.VDIV
+BATT_PIN = li_batt.BATT_PIN
+
 
 # ################ Control-C Handling #########
 def signal_handler(signal, frame):
@@ -36,7 +40,10 @@ while True:
       reading = myPDALib.analogRead12bit(pin)
       v_adc = reading * VLSB
       v_tst = v_adc * VDIV
-      print ( "pin %d reading: %d v_adc: %.2f v_tst: %.2f" % (pin, reading, round(v_adc,2), round(v_tst,2)) )
+      if (pin == BATT_PIN):
+          print ( "pin %d reading: %d v_adc: %.2f v_tst: %.2f" % (pin, reading, round(v_adc,2), round(v_tst,2)) )
+      else:
+          print ( "pin %d reading: %d v_adc: %.2f" % (pin, reading, round(v_adc,2)) )
   time.sleep(1.0)
 
 

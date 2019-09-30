@@ -23,77 +23,112 @@ import signal
 import os
 import numpy as np
 import logging
-
-
-# create logger
-# logger = logging.getLogger(__name__)
-logger = logging.getLogger('lifelog')
-logger.setLevel(logging.INFO)
-
-# Uncomment the following to test lifeLog.py locally
-# loghandler = logging.FileHandler('/home/pi/Carl/Projects/LifeLog/test_life.log')
-# Uncomment the following in plib
-loghandler = logging.FileHandler('/home/pi/RWPi/life.log')
-
-logformatter = logging.Formatter('%(asctime)s|[%(filename)s.%(funcName)s]%(message)s',"%Y-%m-%d %H:%M")
-loghandler.setFormatter(logformatter)
-logger.addHandler(loghandler)
+import argparse
+import li_batt
 
 
 
-VBATT_LOW = 10.8
-VSUPPLY = 5.20  # 5.07
-VLSB = VSUPPLY / 4095.0
-VDIV = 3.156   # roughly 3:1  0.317v = 1v
-BATT_PIN = 6
+
+VBATT_LOW = li_batt.VBATT_LOW
+VSUPPLY = li_batt.VSUPPLY
+VLSB = li_batt.VLSB
+VDIV = li_batt.VDIV
+BATT_PIN = li_batt.BATT_PIN
+
+
+LOOP_DELAY = 30
+TENTH_HOUR = int(6 * 60 / LOOP_DELAY)
+LOW_V_DURATION = 120  # seconds
+SHUTDOWN_LIMIT = int(LOW_V_DURATION / LOOP_DELAY)
 
 def signal_handler(signal, frame):
   print('\n** Control-C Detected')
   myPDALib.PiExit()
   sys.exit(0)
 
-signal.signal(signal.SIGINT, signal_handler)
 
 def getUptime():
   res = os.popen('uptime').readline()
   return res.replace("\n","")
 
-nLow = 0
-loopcount = 0
 
-while True:
+def main():
 
-  #print ("current_sense(): %.0f mA" % currentsensor.current_sense(1000))
-  v_list = []
-  for i in range(10):
-      adc_reading = myPDALib.analogRead12bit(BATT_PIN)
-      v_reading = VLSB * adc_reading
-      v_now = v_reading * VDIV
-      v_list += [v_now]
-      time.sleep(0.1)
-  # print("v_list:",v_list)
-  v_ave = np.average(v_list)
-  loopcount +=1
-  strTime = time.strftime("%H:%M:%S")
+    # ARGUMENT PARSING
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-b", "--batt", required=True, help="battery name string")
+    args = vars(ap.parse_args())
+    batt_name = args['batt']
 
-  if loopcount == 1:
-      strToLog = "** Start at {} {:.2f}v **".format(strTime, round(v_ave,2))
-      logger.info(strToLog)
+    signal.signal(signal.SIGINT, signal_handler)
 
-  if (v_ave < VBATT_LOW):
-          nLow+=1
-          print("WARNING: *************  nLow: ",nLow)
-  else: nLow = 0
-  strTime = time.strftime("%H:%M:%S")
-  print(strTime,", {:.2f}".format(round(v_ave,2)))
-  if (nLow >4):  # five times lower we're out of here
-          print("WARNING WARNING WARNING SHUTTING DOWN")
-          strToLog = "** Shutting Down at {} {:.2f}v **".format(strTime, round(v_ave,2))
-          logger.info(strToLog)
-          os.system("sudo shutdown -h +1")
-          sys.exit(0)
-  time.sleep(5)
-# end while
+    # create logger
+    lifelogger = logging.getLogger('lifelog')
+    lifelogger.setLevel(logging.INFO)
+    lifeloghandler = logging.FileHandler('/home/pi/RWPi/life.log')
+    lifelogformatter = logging.Formatter('%(asctime)s|[%(filename)s.%(funcName)s]%(message)s',"%Y-%m-%d %H:%M")
+    lifeloghandler.setFormatter(lifelogformatter)
+    lifelogger.addHandler(lifeloghandler)
 
-myPDALib.PiExit()
+    # create battery logger
+    battlogger = logging.getLogger(batt_name)
+    battlogger.setLevel(logging.INFO)
+    battloghandler = logging.FileHandler('/home/pi/RWPi/litst/'+batt_name+'.log')
+    battlogformatter = logging.Formatter('%(asctime)s|%(message)s',"%Y-%m-%d %H:%M")
+    battloghandler.setFormatter(battlogformatter)
+    battlogger.addHandler(battloghandler)
 
+    nLow = 0
+    loopcount = 0
+
+    print("Starting li_batt_life.py - logging to "+batt_name+".log")
+    print("LOOP_DELAY: {}s  TENTH_HOUR: {} loops LIMIT: {} times low".format(LOOP_DELAY, TENTH_HOUR, SHUTDOWN_LIMIT))
+
+    while True:
+
+    #print ("current_sense(): %.0f mA" % currentsensor.current_sense(1000))
+        v_list = []
+        for i in range(10):
+            adc_reading = myPDALib.analogRead12bit(BATT_PIN)
+            v_reading = VLSB * adc_reading
+            v_now = v_reading * VDIV
+            v_list += [v_now]
+            time.sleep(0.1)
+        # print("v_list:",v_list)
+        v_ave = np.average(v_list)
+        loopcount +=1
+        strTime = time.strftime("%H:%M:%S")
+
+        if loopcount == 1:
+            strToLog = "** Start at {:.2f}v **".format(round(v_ave,2))
+            lifelogger.info(strToLog)
+            battlogger.info(strToLog)
+            print(strToLog)
+        # every 6 minutes (0.1h) log voltage
+        if (loopcount % TENTH_HOUR) == 0:
+            strToLog = "** {:.2f}v **".format(round(v_ave,2))
+            battlogger.info(strToLog)
+
+        if (v_ave < VBATT_LOW):
+            nLow+=1
+            print("WARNING: *************  nLow: ",nLow)
+        else: nLow = 0
+
+        strTime = time.strftime("%H:%M:%S")
+        print(strTime,", {:.2f}".format(round(v_ave,2)))
+
+        if (nLow > SHUTDOWN_LIMIT):  # enough times low, we're out of here
+            print("WARNING WARNING WARNING SHUTTING DOWN")
+            strToLog = "** Shutting Down at {:.2f}v **".format(round(v_ave,2))
+            lifelogger.info(strToLog)
+            battlogger.info(strToLog)
+            print(strTime,strToLog)
+            os.system("sudo shutdown -h +1")
+            sys.exit(0)
+        time.sleep(LOOP_DELAY)
+    # end while
+
+    myPDALib.PiExit()
+
+if __name__ == "__main__":
+    main()
