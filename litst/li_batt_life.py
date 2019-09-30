@@ -57,8 +57,10 @@ def main():
     # ARGUMENT PARSING
     ap = argparse.ArgumentParser()
     ap.add_argument("-b", "--batt", required=True, help="battery name string")
+    ap.add_argument("-n", "--noshutdown", default=False, action='store_true', help="will not shutdown, warning only")
     args = vars(ap.parse_args())
     batt_name = args['batt']
+    noShutdown = args['noshutdown']
 
     signal.signal(signal.SIGINT, signal_handler)
 
@@ -100,13 +102,13 @@ def main():
         strTime = time.strftime("%H:%M:%S")
 
         if loopcount == 1:
-            strToLog = "** Start at {:.2f}v **".format(round(v_ave,2))
+            strToLog = "** {:.2f} v START {} **".format(round(v_ave,2),batt_name)
             lifelogger.info(strToLog)
             battlogger.info(strToLog)
-            print(strToLog)
+            print(strTime, strToLog)
         # every 6 minutes (0.1h) log voltage
         if (loopcount % TENTH_HOUR) == 0:
-            strToLog = "** {:.2f}v **".format(round(v_ave,2))
+            strToLog = "** {:.2f} v **".format(round(v_ave,2))
             battlogger.info(strToLog)
 
         if (v_ave < VBATT_LOW):
@@ -115,17 +117,25 @@ def main():
         else: nLow = 0
 
         strTime = time.strftime("%H:%M:%S")
-        print(strTime,", {:.2f}".format(round(v_ave,2)))
+        print(strTime,"|** {:.2f} v **".format(round(v_ave,2)))
 
         if (nLow > SHUTDOWN_LIMIT):  # enough times low, we're out of here
+          if (noShutdown is False):
             print("WARNING WARNING WARNING SHUTTING DOWN")
-            strToLog = "** Shutting Down at {:.2f}v **".format(round(v_ave,2))
+            strToLog = "** {:.2f} v SHUTDOWN {} **".format(round(v_ave,2),batt_name)
             lifelogger.info(strToLog)
             battlogger.info(strToLog)
             print(strTime,strToLog)
             os.system("sudo shutdown -h +1")
             sys.exit(0)
-        time.sleep(LOOP_DELAY)
+          else:
+            print("WARNING WARNING WARNING")
+            strToLog = "** {:.2f} volts {} **".format(round(v_ave,2),batt_name)
+            lifelogger.info(strToLog)
+            battlogger.info(strToLog)
+            print(strTime,strToLog)
+
+        time.sleep(LOOP_DELAY-1)  # adjust for activities
     # end while
 
     myPDALib.PiExit()
