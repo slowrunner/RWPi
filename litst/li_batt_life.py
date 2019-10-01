@@ -58,9 +58,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("-b", "--batt", required=True, help="battery name string")
     ap.add_argument("-n", "--noshutdown", default=False, action='store_true', help="will not shutdown, warning only")
+    ap.add_argument("-v", "--volts", default=li_batt.VBATT_LOW, type=float, help="shutdown voltage,[{}]".format(li_batt.VBATT_LOW))
     args = vars(ap.parse_args())
     batt_name = args['batt']
     noShutdown = args['noshutdown']
+    batt_low = args['volts']
+
+    if (batt_low != li_batt.VBATT_LOW):
+        VBATT_LOW = batt_low
+        print("New Shutdown Limit:{}".format(VBATT_LOW))
 
     signal.signal(signal.SIGINT, signal_handler)
 
@@ -85,6 +91,10 @@ def main():
 
     print("Starting li_batt_life.py - logging to "+batt_name+".log")
     print("LOOP_DELAY: {}s  TENTH_HOUR: {} loops LIMIT: {} times low".format(LOOP_DELAY, TENTH_HOUR, SHUTDOWN_LIMIT))
+    if (noShutdown is False):
+        print("Shutdown Limit: {:0.2f} v".format(VBATT_LOW))
+    else:
+        print("WILL NOT AUTO SHUTDOWN - Warnings at {:0.2f}".format(VBATT_LOW))
 
     while True:
 

@@ -11,6 +11,7 @@ import PDALib
 import myPDALib
 import li_batt
 import numpy as np
+import time
 
 VBATT_LOW = li_batt.VBATT_LOW
 VSUPPLY = li_batt.VSUPPLY
@@ -20,12 +21,12 @@ BATT_PIN = li_batt.BATT_PIN
 
 
 NUM_SAMPLES = 10
-PIN_TEST = 0   # 6 for battery
+PIN_TEST = 6   # 6 for battery 0 for supply
 
 v_readings_test = []
 
 for sample in range(NUM_SAMPLES):
-        # time.sleep(0.001)
+        time.sleep(0.01)
         v_readings_test += [myPDALib.analogRead12bit(PIN_TEST)]
 
 v_ave_test = np.average(v_readings_test) * VLSB * VDIV
