@@ -20,7 +20,7 @@ VDIV = li_batt.VDIV
 BATT_PIN = li_batt.BATT_PIN
 
 
-NUM_SAMPLES = 10
+NUM_SAMPLES = 25
 PIN_TEST = 6   # 6 for battery 0 for supply
 
 v_readings_test = []
