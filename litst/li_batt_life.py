@@ -19,6 +19,7 @@ sys.path.append('/home/pi/RWPi')
 import rwpilib.PDALib as PDALib
 import rwpilib.myPDALib as myPDALib
 import time
+from datetime import datetime
 import signal
 # import rwpilib.currentsensor as currentsensor
 import os
@@ -98,6 +99,11 @@ def main():
     else:
         print("WILL NOT AUTO SHUTDOWN - Warnings at {:0.2f}".format(VBATT_LOW))
 
+
+    start_time = datetime.now()
+    last_time = start_time
+    total_mAh = 0.0
+
     while True:
 
     #print ("current_sense(): %.0f mA" % currentsensor.current_sense(1000))
@@ -113,6 +119,12 @@ def main():
         # print("v_list:",v_list)
         v_ave = np.average(v_list)
         c_ave = np.average(c_list)
+        dtNow = datetime.now()
+        slice_seconds = (dtNow - last_time).total_seconds()
+        last_time = dtNow
+        slice_mAh = (slice_seconds * c_ave) / 3600.0
+        total_mAh += slice_mAh
+        # print("slice: {:.2f}s {:.2f} mAh total: {:.1f} mAh".format(slice_seconds, slice_mAh, total_mAh))
         loopcount +=1
         strTime = time.strftime("%H:%M:%S")
 
@@ -123,7 +135,7 @@ def main():
             print(strTime, strToLog)
         # every 6 minutes (0.1h) log voltage
         if (loopcount % TENTH_HOUR) == 0:
-            strToLog = "** {:.2f} v {:.0f} ma **".format(round(v_ave,2),round(c_ave,2))
+            strToLog = "** {:.2f} v {:.0f} ma {:.0f} mAh **".format(round(v_ave,2),round(c_ave,2),total_mAh)
             battlogger.info(strToLog)
 
         if (v_ave < VBATT_LOW):
@@ -132,7 +144,7 @@ def main():
         else: nLow = 0
 
         strTime = time.strftime("%H:%M:%S")
-        print(strTime,"|** {:.2f} v {:.0f} ma **".format(round(v_ave,2),round(c_ave,2)))
+        print(strTime,"** {:.2f} v {:.0f} ma {:.0f} mAh **".format(round(v_ave,2),round(c_ave,2),total_mAh))
 
         if (nLow > SHUTDOWN_LIMIT):  # enough times low, we're out of here
           if (noShutdown is False):
@@ -150,7 +162,7 @@ def main():
             battlogger.info(strToLog)
             print(strTime,strToLog)
 
-        time.sleep(LOOP_DELAY-1)  # adjust for activities
+        time.sleep(LOOP_DELAY - 1.56)  # adjust for activities
     # end while
 
     myPDALib.PiExit()
