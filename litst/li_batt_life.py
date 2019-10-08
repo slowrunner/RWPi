@@ -103,6 +103,7 @@ def main():
     start_time = datetime.now()
     last_time = start_time
     total_mAh = 0.0
+    total_wH  = 0.0
 
     while True:
 
@@ -124,7 +125,8 @@ def main():
         last_time = dtNow
         slice_mAh = (slice_seconds * c_ave) / 3600.0
         total_mAh += slice_mAh
-        # print("slice: {:.2f}s {:.2f} mAh total: {:.1f} mAh".format(slice_seconds, slice_mAh, total_mAh))
+        total_wH  += ((slice_mAh * v_ave) / 1000.0)
+        # print("slice: {:.2f}s {:.2f} mAh total: {:.1f} mAh {:.1f} wH".format(slice_seconds, slice_mAh, total_mAh, total_wH))
         loopcount +=1
         strTime = time.strftime("%H:%M:%S")
 
@@ -135,7 +137,7 @@ def main():
             print(strTime, strToLog)
         # every 6 minutes (0.1h) log voltage
         if (loopcount % TENTH_HOUR) == 0:
-            strToLog = "** {:.2f} v {:.0f} ma {:.0f} mAh **".format(round(v_ave,2),round(c_ave,2),total_mAh)
+            strToLog = "** {:.2f} v {:.0f} ma {:.0f} mAh {:.1} wH **".format(round(v_ave,2),round(c_ave,2),total_mAh,total_wH)
             battlogger.info(strToLog)
 
         if (v_ave < VBATT_LOW):
@@ -144,7 +146,7 @@ def main():
         else: nLow = 0
 
         strTime = time.strftime("%H:%M:%S")
-        print(strTime,"** {:.2f} v {:.0f} ma {:.0f} mAh **".format(round(v_ave,2),round(c_ave,2),total_mAh))
+        print(strTime,"** {:.2f} v {:.0f} ma {:.0f} mAh {:.1f} wH **".format(round(v_ave,2),round(c_ave,2),total_mAh,total_wH))
 
         if (nLow > SHUTDOWN_LIMIT):  # enough times low, we're out of here
           if (noShutdown is False):
