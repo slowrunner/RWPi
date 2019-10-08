@@ -137,7 +137,7 @@ def main():
             print(strTime, strToLog)
         # every 6 minutes (0.1h) log voltage
         if (loopcount % TENTH_HOUR) == 0:
-            strToLog = "** {:.2f} v {:.0f} ma {:.0f} mAh {:.1} wH **".format(round(v_ave,2),round(c_ave,2),total_mAh,total_wH)
+            strToLog = "** {:.2f} v {:.0f} ma {:.0f} mAh {:.1f} wH **".format(round(v_ave,2),round(c_ave,2),total_mAh,total_wH)
             battlogger.info(strToLog)
 
         if (v_ave < VBATT_LOW):
@@ -151,7 +151,7 @@ def main():
         if (nLow > SHUTDOWN_LIMIT):  # enough times low, we're out of here
           if (noShutdown is False):
             print("WARNING WARNING WARNING SHUTTING DOWN")
-            strToLog = "** {:.2f} v SHUTDOWN {} **".format(round(v_ave,2),batt_name)
+            strToLog = "** {:.2f} v SHUTDOWN {} {:.0f} mAh {:.1f} wH **".format(round(v_ave,2),batt_name,total_mAh,total_wH)
             lifelogger.info(strToLog)
             battlogger.info(strToLog)
             print(strTime,strToLog)
