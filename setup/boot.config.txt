@@ -52,16 +52,14 @@ dtparam=spi=on
 
 # Additional overlays and parameters are documented /boot/overlays/README
 
+# ALAN's RPI3 CONFIGURATION
+
+# Disable/Enable On-Board WIFI-Bluetooth
+dtoverlay=pi3-disable-wifi
+dtoverlay=pi3-disable-bt
+
 # Enable audio (loads snd_bcm2835)
 dtparam=audio=on
 start_x=1
 gpu_mem=128
-
-# Disable/Enable On-Board WIFI-Bluetooth
-#wifi
-blacklist brcmfmac
-blacklist brcmutil
-#bt
-blacklist btbcm
-blacklist hci_uart
 
