@@ -5,9 +5,13 @@
 # (channel 0 of 0..7 is 5v supply)
 # (channel 6 of 0..7 is 3:1 divider test channel)
 
-# Results -- no capacitor on supply
-# SUPPLY: ave:  5.20 min:  5.18 max:  5.20  std: 0.003 lsb: 0.001 snr: 2004
-# TEST  : ave: 10.99 min: 10.94 max: 11.11  std: 0.023 lsb: 0.001 snr: 470
+# Results --
+# SUPPLY: ave:  5.19 min:  5.18 max:  5.20  std: 0.003 lsb: 0.001 snr: 1511
+# TEST  : ave: 9.61 min: 9.05 max: 9.74  std: 0.098 lsb: 0.001 snr: 98
+# CURRENT  : ave: 246 min: 120 max: 472  std: 50
+
+# get it from RWPi/litst/
+import currentsensor
 
 import sys
 sys.path.insert(0, '/home/pi/RWPi/rwpilib')
@@ -24,6 +28,10 @@ VLSB = li_batt.VLSB
 VDIV = li_batt.VDIV
 BATT_PIN = li_batt.BATT_PIN
 
+# When powered from USB Power brick
+# VSUPPLY = 5.06  # 5.07
+# VLSB = VSUPPLY / 4095.0
+# VDIV = 3.156   # roughly 3:1  0.317v = 1v
 
 # ################ Control-C Handling #########
 def signal_handler(signal, frame):
@@ -35,12 +43,13 @@ signal.signal(signal.SIGINT, signal_handler)
 # ###############
 
 
-NUM_SAMPLES = 1000
+NUM_SAMPLES = 5000
 PIN_SUPPLY = 0
 PIN_TEST = 6
 
 v_readings_supply = []
 v_readings_test = []
+c_readings = []
 
 loopcount = 0
 LOOPS = 1
@@ -53,7 +62,8 @@ while (loopcount < LOOPS):
         v_readings_supply += [myPDALib.analogRead12bit(PIN_SUPPLY)]
         time.sleep(0.001)
         v_readings_test += [myPDALib.analogRead12bit(PIN_TEST)]
-
+        c_readings += [currentsensor.current_sense(1)]
+        time.sleep(0.001)
     v_lsb_supply = round(VLSB,3)
     v_ave_supply = np.average(v_readings_supply) * VLSB
     v_min_supply = np.amin(v_readings_supply) * VLSB
@@ -74,11 +84,18 @@ while (loopcount < LOOPS):
     else:
         v_snr_test = 999.9
 
+    c_ave = np.average(c_readings)
+    c_max = np.amax(c_readings)
+    c_min = np.amin(c_readings)
+    c_std = np.std(c_readings)
+
     print("Results --")
     print("SUPPLY: ave:  {:0.2f} min:  {:0.2f} max:  {:0.2f}  std: {:0.3f} lsb: {:0.3f} snr: {:0.0f}".format(
                 v_ave_supply, v_min_supply, v_max_supply, v_std_supply, v_lsb_supply, v_snr_supply))
     print("TEST  : ave: {:0.2f} min: {:0.2f} max: {:0.2f}  std: {:0.3f} lsb: {:0.3f} snr: {:0.0f}".format(
                 v_ave_test, v_min_test, v_max_test, v_std_test, v_lsb_supply, v_snr_test))
+    print("CURRENT  : ave: {:0.0f} min: {:0.0f} max: {:0.0f}  std: {:0.0f}".format(
+                c_ave, c_min, c_max, c_std))
     print("\n")
 
 myPDALib.PiExit()
