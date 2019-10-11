@@ -91,6 +91,7 @@ def main():
 
     nLow = 0
     loopcount = 0
+    loop_delay = LOOP_DELAY
 
     print("Starting li_batt_life.py - logging to "+batt_name+".log")
     print("LOOP_DELAY: {}s  TENTH_HOUR: {} loops LIMIT: {} times low".format(LOOP_DELAY, TENTH_HOUR, SHUTDOWN_LIMIT))
@@ -143,7 +144,10 @@ def main():
         if (v_ave < VBATT_LOW):
             nLow+=1
             print("WARNING: *************  nLow: ",nLow)
-        else: nLow = 0
+            loop_delay = 10
+        else: 
+            nLow = 0
+            loop_delay = LOOP_DELAY
 
         strTime = time.strftime("%H:%M:%S")
         print(strTime,"** {:.2f} v {:.0f} ma {:.0f} mAh {:.1f} wH **".format(round(v_ave,2),round(c_ave,2),total_mAh,total_wH))
@@ -155,7 +159,9 @@ def main():
             lifelogger.info(strToLog)
             battlogger.info(strToLog)
             print(strTime,strToLog)
+            time.sleep(1)
             os.system("sudo shutdown -h +1")
+            time.sleep(1)
             sys.exit(0)
           else:
             print("WARNING WARNING WARNING")
@@ -164,7 +170,7 @@ def main():
             battlogger.info(strToLog)
             print(strTime,strToLog)
 
-        time.sleep(LOOP_DELAY - 1.56)  # adjust for activities
+        time.sleep(loop_delay - 1.56)  # adjust for activities
     # end while
 
     myPDALib.PiExit()
