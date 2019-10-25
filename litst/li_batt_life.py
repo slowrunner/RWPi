@@ -38,11 +38,17 @@ VLSB = li_batt.VLSB
 VDIV = li_batt.VDIV
 BATT_PIN = li_batt.BATT_PIN
 
+# When powered from USB Power brick
+VSUPPLY = 5.02
+VLSB = VSUPPLY / 4095.0
+VDIV = 3.29
 
 LOOP_DELAY = 30
+LOOP_ADJ = 16
 TENTH_HOUR = int(6 * 60 / LOOP_DELAY)
 LOW_V_DURATION = 120  # seconds
 SHUTDOWN_LIMIT = int(LOW_V_DURATION / LOOP_DELAY)
+NUM_READINGS = 50
 
 def signal_handler(signal, frame):
   print('\n** Control-C Detected')
@@ -70,6 +76,8 @@ def main():
     if (batt_low != li_batt.VBATT_LOW):
         VBATT_LOW = batt_low
         print("New Shutdown Limit:{}".format(VBATT_LOW))
+    else:
+        VBATT_LOW = li_batt.VBATT_LOW
 
     signal.signal(signal.SIGINT, signal_handler)
 
@@ -111,12 +119,12 @@ def main():
     #print ("current_sense(): %.0f mA" % currentsensor.current_sense(1000))
         v_list = []
         c_list = []
-        for i in range(10):
+        for i in range(NUM_READINGS):
             adc_reading = myPDALib.analogRead12bit(BATT_PIN)
             v_reading = VLSB * adc_reading
             v_now = v_reading * VDIV
             v_list += [v_now]
-            c_list += [currentsensor.current_sense(10)]
+            c_list += [currentsensor.current_sense(50)]
             time.sleep(0.1)
         # print("v_list:",v_list)
         v_ave = np.average(v_list)
@@ -130,12 +138,13 @@ def main():
         # print("slice: {:.2f}s {:.2f} mAh total: {:.1f} mAh {:.1f} wH".format(slice_seconds, slice_mAh, total_mAh, total_wH))
         loopcount +=1
         strTime = time.strftime("%H:%M:%S")
+        strDateTime = time.strftime("%Y-%m-%d ") + strTime
 
         if loopcount == 1:
             strToLog = "** {:.2f} v START {} **".format(round(v_ave,2),batt_name)
             lifelogger.info(strToLog)
             battlogger.info(strToLog)
-            print(strTime, strToLog)
+            print(strDateTime, strToLog)
         # every 6 minutes (0.1h) log voltage
         if (loopcount % TENTH_HOUR) == 0:
             strToLog = "** {:.2f} v {:.0f} ma {:.0f} mAh {:.1f} wH **".format(round(v_ave,2),round(c_ave,2),total_mAh,total_wH)
@@ -147,7 +156,7 @@ def main():
             loop_delay = 10
         else: 
             nLow = 0
-            loop_delay = LOOP_DELAY
+            loop_delay = LOOP_DELAY - LOOP_ADJ
 
         strTime = time.strftime("%H:%M:%S")
         print(strTime,"** {:.2f} v {:.0f} ma {:.0f} mAh {:.1f} wH **".format(round(v_ave,2),round(c_ave,2),total_mAh,total_wH))

@@ -24,24 +24,27 @@ ACS712PIN = 7  # Current sensor is on pin 7 (0..7) of the MCP3008
 #mVperBit=6.520806        # MCP3208  12bit reading
 
 # REFERENCE READING - IDLE
-refReading=2026.0 # 2019.0
-refCurrent=220.0  # 280.0    # mA
+refReading=2015.0 # 2019.0
+refCurrent=218.0  # 280.0    # mA
 
 # REFERENCE READING - zero
 # refReading=2129.0 # 2019.0
 # refCurrent=0.0  # 0.0    # mA
 
 # REFERENCE 2 - two fibanacci and currentsensor
-refReading2=1980.0 #1965.0
+refReading2=1988.0  # 1993.0 #1965.0
 # refReading2=1982.0 # with zero pt 1
-refCurrent2=490.0 #560.0
+refCurrent2=397.0 # 325.0 #560.0
 
 mAperDelta= (refCurrent2 - refCurrent) / (refReading - refReading2)
 
 print("mAperDelta: %.2f" % mAperDelta)
 
 # current = (refReading - reading) * mAperDelta + refCurrent
-
+def current(reading):
+    c = (refReading - reading) * mAperDelta + refCurrent
+    return c
+ 
 # current_sense(10) readings:
 #
 # 
