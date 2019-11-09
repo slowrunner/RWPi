@@ -194,6 +194,14 @@ The code is based on Kriswiner's C++ MPU-9250 library located here
 and Sebastian Madgwick's open source IMU and AHRS algorithms located here. 
     https://x-io.co.uk/open-source-imu-and-ahrs-algorithms/
 
+Mounted:
+![MPU9250 Mount](/Resources/MPU9250_Mount.jpg?raw=true)
 
+magCalSlider.py Before Calibration:
+![MPU9250 magCalSlider.py: Before Calibration](/Resources/MPU9250-Before-Calibration.png?raw=true)
 
+and After Calibration:
+![MPU9250 After Calibration](/Resources/MPU9250-Calibration-Values?raw=true)
 
+Test Bed - RPi3B with HiLetgo MPU-9250 connected via I2C:
+![MPU9250 Test Bed](/Resources/MPU9250withLITST.jpg?raw=true)
