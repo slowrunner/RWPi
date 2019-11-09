@@ -411,9 +411,9 @@ class MPU:
 		self.gz /= self.gyroScaleFactor
 
 		# Subtract the offset calibration values for the accelerometers
-		# self.ax -= self.aXcal
-		# self.ay -= self.aYcal
-		# self.az -= self.aZcal
+		if self.aXcal != 0: self.ax -= self.aXcal
+		if self.aYcal != 0: self.ay -= self.aYcal
+		if self.aZcal != 0: self.az -= self.aZcal
 
 
 		# Convert the accelerometer values to g force
@@ -588,7 +588,7 @@ class MPU:
 		if (self.yaw < 0): self.yaw += 360
 
 		# Print data
-		print('R: {:<8.1f} P: {:<8.1f} Y: {:<8.1f}'.format(self.roll,self.pitch,self.yaw))
+		print('R: {:<8.0f} P: {:<8.0f} Y: {:<8.0f}'.format(self.roll,self.pitch,self.yaw))
 
 def main():
 	# Set up class
@@ -604,13 +604,17 @@ def main():
 
 	# Calibrate the mag or provide values that have been verified with the visualizer
 	# mpu.calibrateMagGuide()
-	bias = [270, 5, -120]
-	scale = [1.0, 0.95, 1.05]
+	# from cal.1.out
+
+	bias = [280, 0, -120]
+	scale = [1.0, 1.0, 1.0]
 	mpu.setMagCalibration(bias, scale)
 
 	# Calibrate the gyro with N points
 	mpu.calibrateGyro(1000)
-	mpu.calibrateAccel(1000)
+
+	# only "accurate" if do not cal Accels
+	# mpu.calibrateAccel(1000)
 
 	# Set timer
 	lastUpdate = time.perf_counter()

@@ -5,24 +5,25 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, Button
 
-# last calibration run
+# calibration run cal.1.out
 magXbias = 491.779
-magYbias = 0.0
-magZbias = -212.222
+magYbias = -1.804
+magZbias = -74.8
 
-magXscale = 1.006
-magYscale = 0.948
-magZscale = 1.052
-
+magXscale = 1.137
+magYscale = 1.027
+magZscale = 0.872
 
 # Define the offsets and scale (from magCalSlider.py)
-magXbias = 492
-magYbias = 0.0
-magZbias = -212
+magXbias = 280
+magYbias = 0
+magZbias = -120
 
-magXscale = 1.006
-magYscale = 0.948
-magZscale = 1.052
+magXscale = 1.0
+magYscale = 1.0
+magZscale = 1.0
+
+
 
 
 

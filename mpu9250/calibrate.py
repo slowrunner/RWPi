@@ -407,9 +407,9 @@ class MPU:
 		self.gz -= self.gyroZcal
 
 		# Subtract the offset calibration values for the accel
-		# self.ax -= self.aXcal
-		# self.ay -= self.aYcal
-		# self.az -= self.aZcal
+		if self.aXcal != 0: self.ax -= self.aXcal
+		if self.aYcal != 0: self.ay -= self.aYcal
+		if self.aZcal != 0: self.az -= self.aZcal
 
 
 		# Convert the gyro values to degrees per second
@@ -622,6 +622,7 @@ def main():
 
 	# Calibrate the gyro with N points
 	mpu.calibrateGyro(1000)
+        # mpu.calibrateAccel(1000)
 	print("Done Calibration")
 	print("sleep 10")
 	time.sleep(10)

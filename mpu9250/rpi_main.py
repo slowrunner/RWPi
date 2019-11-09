@@ -92,7 +92,7 @@ class MPU:
         else:
             return val
 
-    def getRawData(self):
+    def getRawData(self, printit=False):
         self.gx = self.eightBit2sixteenBit(0x43)
         self.gy = self.eightBit2sixteenBit(0x45)
         self.gz = self.eightBit2sixteenBit(0x47)
@@ -101,7 +101,8 @@ class MPU:
         self.ay = self.eightBit2sixteenBit(0x3D)
         self.az = self.eightBit2sixteenBit(0x3F)
 
-        # print("Raw Readings: gxyz: {:6d} {:6d} {:6d} axyz: {:6d} {:6d} {:6d}".format(self.gx, self.gy, self.gz, self.ax, self.gy, self.gz))
+        if printit: 
+            print("Raw Readings: gxyz: {:6d} {:6d} {:6d} axyz: {:6d} {:6d} {:6d}".format(self.gx, self.gy, self.gz, self.ax, self.gy, self.gz))
 
 
     def calibrateGyro(self, N):
@@ -169,10 +170,15 @@ class MPU:
         # Update the raw data
         self.getRawData()
 
-        # Subtract the offset calibration values
+        # Subtract the gyro offset calibration values
         self.gx -= self.gyroXcal
         self.gy -= self.gyroYcal
         self.gz -= self.gyroZcal
+
+        # Subtract the accel offset calibration values
+        if self.aXcal != 0: self.ax -= self.aXcal
+        if self.aYcal != 0: self.ay -= self.aYcal
+        if self.aZcal != 0: self.az -= self.aZcal
 
         # Convert to instantaneous degrees per second
         self.gx /= self.gyroScaleFactor
@@ -206,19 +212,17 @@ class MPU:
         self.yaw = self.gyroYaw
 
         # Accellerometer integration 
-        self.dX += self.ax * dt
-        self.dY += self.ay * dt
-        self.dZ += self.az * dt
+        self.dX += (0.5 * self.ax * (dt ** 2)) * 100    # get cm of movement
+        self.dY += (0.5 * self.ay * (dt ** 2)) * 100
+        self.dZ += (0.5 * self.az * (dt ** 2)) * 100
 
         # Comp filter
         self.roll = (self.tau)*(self.roll - self.gy*dt) + (1-self.tau)*(accRoll)
         self.pitch = (self.tau)*(self.pitch + self.gx*dt) + (1-self.tau)*(accPitch)
 
         # Print data
-        print(" R: " + str(round(self.roll,1)) \
-            + " P: " + str(round(self.pitch,1)) \
-            + " Y: " + str(round(self.yaw,1))  \
-            + " dXYZ: [" + str(round(self.dX,1)) + ", " + str(round(self.dY,1)) + ", " + str(round(self.dZ,1)) + "]"  \
+        print("RPY: {:<8.0f} {:8.0f} {:8.0f}  dXYZ: {:<5.1f} {:<5.1f} {:5.1f}".format( \
+                self.roll, self.pitch, self.yaw, self.dX, self.dY, self.dZ           ) \
              )
 
 def main():
@@ -231,17 +235,15 @@ def main():
     # Set up sensor and calibrate gyro with N points
     mpu.setUp()
     mpu.calibrateGyro(500)
-    # mpu.calibrateGyro(500)
-    # mpu.calibrateGyro(500)
-    mpu.calibrateAccel(500)
-    # mpu.calibrateAccel(500)
+
+    # works better without Accel calibration for some reason
     # mpu.calibrateAccel(500)
 
     # Run for 20 secounds
     startTime = time.time()
     while(time.time() < (startTime + 20)):
         mpu.compFilter()
-        # mpu.getRawData()
+        # mpu.getRawData(printit=True)
     # End
     print("Closing")
 
