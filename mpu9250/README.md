@@ -205,3 +205,8 @@ and After Calibration:
 
 Test Bed - RPi3B with HiLetgo MPU-9250 connected via I2C:
 ![MPU9250 Test Bed](Resources/MPU9250withLITST.jpg?raw=true)
+
+# RESULTS
+
+My test was not very successful.  The best I could get after successful calibration is 2 degree repeatability on roll and pitch, neither of which my robot has or wants freedom to explore, and 10-20 degree repeatability on yaw which means it was totally useless.  As far as dX, dY, dZ from a reference point, nothing repeatable or usable.
+
