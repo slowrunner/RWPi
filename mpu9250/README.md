@@ -195,7 +195,7 @@ and Sebastian Madgwick's open source IMU and AHRS algorithms located here.
     https://x-io.co.uk/open-source-imu-and-ahrs-algorithms/
 
 Mounted:
-![MPU9250 Mount](Resources/MPU9250_Mount.jpg)
+![MPU9250 Mount](Resources/MPU9250_Mount.jpg?fixOrientation)
 
 magCalSlider.py Before Calibration:
 ![MPU9250 magCalSlider.py: Before Calibration](Resources/MPU9250-Before-Calibration.png?raw=true)
